@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>OmniCard</title>
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+  <link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.min.css"/>
+  <script src="js/underscore.js"></script>
+  <script src="js/jquery.js"></script>
+  <script src="js/SimpleWidget.js"></script>
+
+  <script src="js/Decks.js"></script>
+  <script src="js/omnicard.js"></script>
+</head>
+  <div class="container-fluid js-root" data-widget="Root"></div>
+
+  <script class="js-tpl-root" type="x/template">
+    <div class="row-fluid">
+      <h3 class="muted span6 offset3 hidden-phone">OmniCard</h3>
+    </div>
+    <div class="row-fluid">
+
+      <div class="span3">
+        <div class="well sidebar-nav js-nav">
+
+        </div>
+      </div>
+
+      <div class="span9">
+        <div class="js-deck">
+
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <footer>
+      <p>© Company 2013</p>
+    </footer>
+  </script>
+
+  <script class="js-tpl-nav" type="x/template">
+    <ul class="nav nav-list">
+      <li class="nav-header">Decks</li>
+      <% _.each(decks, function(deck) { %><li class="js-deckItem"><%= deck.name %></li><% }); %>
+    </ul>
+  </script>
+  <script class="js-tpl-deck" type="x/template">
+    <div class="well">
+      <h4 class="muted"><%= deck.name %></h4>
+      <% if (deck.description) { %><p><%= deck.description %></p><% } %>
+      <% if (deck.tags && deck.tags.length) { %><p class="text-right muted"><small><%= deck.tags.join(', ') %></small></p><% } %>
+      <p><a href="#" class="btn btn-primary">Start »</a></p>
+    </div>
+
+    <div class="row-fluid">
+      <ul class="unstyled">
+        <% _.each(deck.content, function(card) { %>
+          <li class="js-card form-inline">
+            <label><%= card.q %>
+              <div class="input-append">
+                <input type="text">
+                <div class="btn-group">
+                  <button class="btn btn-success">Answer</button>
+                  <button class="btn btn-warning">Skip</button>
+                </div>
+              </div>
+
+
+            </label>
+          </li>
+        <% }); %>
+      </ul>
+    </div>
+  </script>
+</body>
+</html>
