@@ -4,16 +4,25 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>OmniCard</title>
-  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
-  <link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.min.css"/>
+
+  <link rel="stylesheet" href="css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="css/bootstrap-responsive.min.css"/>
+  <link rel="stylesheet" href="css/deckNav.css"/>
+  <link rel="stylesheet" href="css/deckView.css"/>
+
+
   <script src="js/underscore.js"></script>
   <script src="js/jquery.js"></script>
+  <script src="js/jquery.form2JSON.js"></script>
   <script src="js/SimpleWidget.js"></script>
+
 
   <script src="js/Decks.js"></script>
   <script src="js/omnicard.js"></script>
 </head>
+<body>
   <div class="container-fluid js-root" data-widget="Root"></div>
+
 
   <script class="js-tpl-root" type="x/template">
     <div class="row-fluid">
@@ -22,13 +31,17 @@
     <div class="row-fluid">
 
       <div class="span3">
-        <div class="well sidebar-nav js-nav">
+        <div class="well sidebar-nav js-nav deckNav">
 
         </div>
       </div>
 
       <div class="span9">
-        <div class="js-deck">
+        <div class="js-deck deckView">
+
+        </div>
+
+        <div class="js-edit">
 
         </div>
       </div>
@@ -41,39 +54,141 @@
     </footer>
   </script>
 
+
   <script class="js-tpl-nav" type="x/template">
     <ul class="nav nav-list">
-      <li class="nav-header">Decks</li>
-      <% _.each(decks, function(deck) { %><li class="js-deckItem"><%= deck.name %></li><% }); %>
+      <li class="nav-header"><h6><i class="icon-tags"></i> Decks</h6></li>
+      <% _.each(decks, function(deck) { %><li class="deckNav-item deckNav-item__deck js-deckItem"><%= deck.name %></li><% }); %>
+      <li class="deckNav-item"><i class="icon-plus"></i> New deck…</li>
+      <li><hr/></li>
+
+      <li class="nav-header"><h6><i class="icon-cog"></i> Settings</h6></li>
+      <li class="deckNav-item"><i class="icon-hdd"></i> Import/export…</li>
     </ul>
   </script>
+
+
   <script class="js-tpl-deck" type="x/template">
-    <div class="well">
+    <div class="well deckView-header">
+      <div class="btn-group pull-right">
+        <button class="btn js-editDeck" title="Edit deck"><i class="icon-pencil"></i></button>
+        <button class="btn" title="Delete deck"><i class="icon-trash"></i></button>
+      </div>
       <h4 class="muted"><%= deck.name %></h4>
       <% if (deck.description) { %><p><%= deck.description %></p><% } %>
       <% if (deck.tags && deck.tags.length) { %><p class="text-right muted"><small><%= deck.tags.join(', ') %></small></p><% } %>
-      <p><a href="#" class="btn btn-primary">Start »</a></p>
+      <div class="btn-group">
+        <button class="btn js-start" disabled>Meditation</button>
+        <button class="btn js-start" disabled>Quiz</button>
+        <button class="btn js-start">Exam</button>
+      </div>
     </div>
 
-    <div class="row-fluid">
-      <ul class="unstyled">
-        <% _.each(deck.content, function(card) { %>
-          <li class="js-card form-inline">
-            <label><%= card.q %>
-              <div class="input-append">
-                <input type="text">
-                <div class="btn-group">
-                  <button class="btn btn-success">Answer</button>
-                  <button class="btn btn-warning">Skip</button>
-                </div>
+    <div class="row-fluid deckView-questions">
+      <div class="js-test"></div>
+    </div>
+
+    <div class="row-fluid deckView-score">
+      <div class="js-score"></div>
+      <div class="btn-group">
+        <button class="btn js-start" disabled>Meditation</button>
+        <button class="btn js-start" disabled>Quiz</button>
+        <button class="btn js-start">Exam</button>
+      </div>
+    </div>
+  </script>
+
+  <script class="js-tpl-test" type="x/template">
+    <ul class="unstyled">
+      <% _.each(deck, function(card, index) { %>
+        <li class="js-card form-inline<% if (index) { %> hidden<% } %>">
+          <label><%= card.q %><br/>
+            <div class="input-append">
+              <input type="text">
+              <div class="btn-group">
+                <button class="btn btn-success js-answer">Answer</button>
+                <button class="btn btn-warning js-skip">Skip</button>
               </div>
+            </div>
+          </label>
+        </li>
+      <% }); %>
+    </ul>
+  </script>
 
+  <script class="js-tpl-score" type="x/template">
+    <% if (wrong) { %><p class="text-error">Wrong answers: <span class="badge badge-warning"><%= wrong %></span></p><% } %>
+    <% if (correct) { %><p class="text-success">Correct answers: <span class="badge badge-success"><%= correct %></span></p><% } %>
+    <% if (!wrong) { %>
+      <p class="text-success">Congratulations! You've performed excellent!</p>
+    <% } else if (!correct) { %>
+      <p class="text-error">Do not despair. Next time you will do better!</p>
+    <% } else { %>
+      <% if (wrong > correct) { %>
+        <p class="text-warning">You definitely need more work, but so far so good.</p>
+      <% } else { %>
+        <p class="text-info">Not bad. Keep training!</p>
+      <% } %>
+    <% } %>
+  </script>
 
-            </label>
-          </li>
-        <% }); %>
-      </ul>
-    </div>
+  <script class="js-tpl-editDeck" type="x/template">
+    <form class="form">
+      <h4 class="muted"><% if (deck) { %>Edit deck „<%= deck.name %>“<% } else { print('Create new deck') } %></h4>
+
+      <fieldset>
+        <legend>Deck properties</legend>
+
+        <label>Name:<br/>
+          <input type="text" placeholder="Deck name" name="name" required="required" value="<% if (deck) { print(deck.name) } %>" class="span7"/>
+        </label>
+
+        <label class="control-label">Description:<br/>
+          <textarea name="description" placeholder="Deck description (optional)" class="span7" rows="3"><% if (deck) { print(deck.description) } %></textarea>
+        </label>
+
+        <label>Tags:<br/>
+          <input type="text" name="tags" placeholder="Deck tags (optional)" class="span7" value="<% if (deck) { print(deck.tags.join(', ')) } %>"/>
+          <span class="help-block">Comma-separated list</span>
+        </label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Cards in this deck</legend>
+        <% if (deck) { %>
+            <% _.each(deck.content, function (card, index) { %>
+              <label>Question<br/>
+                <input type="text" value="<%= card.q %>" class="js-question span7" name="cardq"/>
+              </label>
+              <label>Answer<br/>
+                <input type="text" value="<%= card.a %>" class="js-answer span7" name="carda"/>
+              </label>
+
+              <button class="js-deleteCard btn btn-danger btn-small">Delete card</button>
+              <hr/>
+            <% }) %>
+        <% } %>
+
+        <div class="js-addCard">
+          <span class="help-block">Add card:</span>
+          <label>Question<br/>
+            <input type="text" value="" class="js-question span7"/>
+          </label>
+          <label>Answer<br/>
+            <input type="text" value="" class="js-answer span7"/>
+          </label>
+
+          <button class="js-confirm btn btn-success btn-small">Add card</button>
+        </div>
+      </fieldset>
+
+      <br/>
+
+      <div class="form-actions">
+        <button class="btn btn-primary" type="submit">Save deck</button>
+        <button class="btn" type="reset">Revert changes</button>
+      </div>
+    </form>
   </script>
 </body>
 </html>

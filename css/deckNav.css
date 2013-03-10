@@ -1,0 +1,8 @@
+.deckNav {
+}
+    .deckNav .deckNav-item {
+        cursor: pointer;
+    }
+        .deckNav .deckNav-item__deck {
+            margin-left: 1em;
+        }

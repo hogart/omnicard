@@ -59,8 +59,15 @@
     
         render: function (data) {
             this.$el.html(this.getTemplate()(data));
+
+            this.onRender();
         },
-    
+
+        onRender: function () {
+            this.delegateEvents();
+            this._ensureUI();
+        },
+
         _delegateEvents: function(events, emitter) {
           this._undelegateEvents(emitter);
           for (var key in events) {
@@ -113,12 +120,27 @@
             }, this);
         },
 
+        _ensureUI: function (ui) {
+            ui || (ui = _.result(this, '_ui'));
+
+            if (!ui) { // nothing to do here anymore
+                return;
+            }
+
+            this.ui = {};
+
+            _.each(ui, function (selector, name) {
+                this.ui[name] = this.$(selector);
+            }, this)
+        },
+
         registerChild: function (selector, widgetClass, options) {
             this.children[selector] = new widgetClass(this.$(selector), options || {});
         },
 
         unregisterChild: function (name) {
-            if (this.children[name]) {
+            var child = this.children[name];
+            if (child) {
                 child.destroy();
                 delete this.children[name];
             }
@@ -127,6 +149,7 @@
         initialize: function(node, options) {
             this.cid = _.uniqueId('widget');
             this.$el = node;
+            this.$ = node.find.bind(node);
             this.template = this.getTemplate();
 
             options || (options = {});
