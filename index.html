@@ -28,29 +28,25 @@
     <div class="row-fluid">
       <h3 class="muted span6 offset3 hidden-phone">OmniCard</h3>
     </div>
+
     <div class="row-fluid">
 
       <div class="span3">
-        <div class="well sidebar-nav js-nav deckNav">
-
-        </div>
+        <div class="well sidebar-nav js-nav deckNav"></div>
       </div>
 
       <div class="span9">
-        <div class="js-deck deckView">
-
-        </div>
+        <div class="js-deck deckView"></div>
 
         <div class="js-edit">
-
         </div>
       </div>
     </div>
 
-    <hr>
+    <hr class="hidden-phone"/>
 
-    <footer>
-      <p>© Company 2013</p>
+    <footer class="hidden-phone">
+      <p>© Konstantin Kitmanov, 2013</p>
     </footer>
   </script>
 
@@ -155,19 +151,23 @@
 
       <fieldset>
         <legend>Cards in this deck</legend>
-        <% if (deck) { %>
-            <% _.each(deck.content, function (card, index) { %>
-              <label>Question<br/>
-                <input type="text" value="<%= card.q %>" class="js-question span7" name="cardq"/>
-              </label>
-              <label>Answer<br/>
-                <input type="text" value="<%= card.a %>" class="js-answer span7" name="carda"/>
-              </label>
+          <div class="js-cardList">
+            <% if (deck) { %>
+              <% _.each(deck.content, function (card, index) { %>
+                <div class="js-cardForm">
+                  <label>Question<br/>
+                    <input type="text" value="<%= card.q %>" class="js-question span7" name="cardq"/>
+                  </label>
+                  <label>Answer<br/>
+                    <input type="text" value="<%= card.a %>" class="js-answer span7" name="carda"/>
+                  </label>
 
-              <button class="js-deleteCard btn btn-danger btn-small">Delete card</button>
-              <hr/>
-            <% }) %>
-        <% } %>
+                  <button class="js-deleteCard btn btn-danger btn-small">Delete card</button>
+                  <hr/>
+                </div>
+              <% }) %>
+            <% } %>
+          </div>
 
         <div class="js-addCard">
           <span class="help-block">Add card:</span>

@@ -165,19 +165,24 @@ widgets.EditDeck = widgets.Abstract.extend({
     tpl: 'editDeck',
 
     _ui: {
-        frm: 'form'
+        frm: 'form',
+        cardList: '.js-cardList',
+        newQuestion: '.js-addCard .js-question',
+        newAnswer: '.js-addCard .js-answer'
     },
 
     events: {
         'submit form': 'onSubmit',
-        'reset form': 'onReset'
+        'reset form': 'onReset',
+        'click .js-confirm': 'addCard',
+        'click .js-deleteCard': 'deleteCard'
     },
 
     initialize: function (node, options) {
         widgets.EditDeck.__super__.initialize.call(this, node, options);
 
         this.deck = this.params.deck;
-
+        this.renderDeck();
     },
 
     renderDeck: function () {
@@ -226,6 +231,24 @@ widgets.EditDeck = widgets.Abstract.extend({
         this.renderDeck();
 
         return false;
+    },
+
+    addCard: function () {
+        var newCard = this.ui.cardList.find('.js-cardForm').clone();
+        newCard.find('.js-question').val( this.ui.newQuestion.val() );
+        newCard.find('.js-answer').val( this.ui.newAnswer.val() );
+
+        newCard.appendTo(this.ui.cardList);
+
+        this.ui.newQuestion.val('');
+        this.ui.newAnswer.val('');
+    },
+
+    deleteCard: function (evt) {
+        var trgt = $(evt.target),
+            card = trgt.closest('.js-cardForm');
+
+        card.remove();
     }
 });
 
