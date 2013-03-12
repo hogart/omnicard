@@ -24,7 +24,7 @@
   <div class="container-fluid js-root" data-widget="Root"></div>
 
 
-  <script class="js-tpl-root" type="x/template">
+  <script class="js-tpl-root" type="text/x-template">
     <div class="row-fluid">
       <h3 class="muted span6 offset3 hidden-phone">OmniCard</h3>
     </div>
@@ -39,6 +39,8 @@
         <div class="js-deck deckView"></div>
 
         <div class="js-edit">
+
+        <div class="js-dump"></div>
         </div>
       </div>
     </div>
@@ -51,7 +53,7 @@
   </script>
 
 
-  <script class="js-tpl-nav" type="x/template">
+  <script class="js-tpl-nav" type="text/x-template">
     <ul class="nav nav-list">
       <li class="nav-header"><h6><i class="icon-tags"></i> Decks</h6></li>
       <% _.each(decks, function(deck) { %><li class="deckNav-item deckNav-item__deck js-deckItem"><%= deck.name %></li><% }); %>
@@ -59,12 +61,12 @@
       <li><hr/></li>
 
       <li class="nav-header"><h6><i class="icon-cog"></i> Settings</h6></li>
-      <li class="deckNav-item"><i class="icon-hdd"></i> Import/export…</li>
+      <li class="deckNav-item js-importExport"><i class="icon-hdd"></i> Import/export…</li>
     </ul>
   </script>
 
 
-  <script class="js-tpl-deck" type="x/template">
+  <script class="js-tpl-deck" type="text/x-template">
     <div class="well deckView-header">
       <div class="btn-group pull-right">
         <button class="btn js-editDeck" title="Edit deck"><i class="icon-pencil"></i></button>
@@ -94,7 +96,7 @@
     </div>
   </script>
 
-  <script class="js-tpl-test" type="x/template">
+  <script class="js-tpl-test" type="text/x-template">
     <ul class="unstyled">
       <% _.each(deck, function(card, index) { %>
         <li class="js-card form-inline<% if (index) { %> hidden<% } %>">
@@ -112,7 +114,7 @@
     </ul>
   </script>
 
-  <script class="js-tpl-score" type="x/template">
+  <script class="js-tpl-score" type="text/x-template">
     <% if (wrong) { %><p class="text-error">Wrong answers: <span class="badge badge-warning"><%= wrong %></span></p><% } %>
     <% if (correct) { %><p class="text-success">Correct answers: <span class="badge badge-success"><%= correct %></span></p><% } %>
     <% if (!wrong) { %>
@@ -128,7 +130,7 @@
     <% } %>
   </script>
 
-  <script class="js-tpl-editDeck" type="x/template">
+  <script class="js-tpl-editDeck" type="text/x-template">
     <form class="form">
       <h4 class="muted"><% if (deck) { %>Edit deck „<%= deck.name %>“<% } else { print('Create new deck') } %></h4>
 
@@ -139,7 +141,7 @@
           <input type="text" placeholder="Deck name" name="name" required="required" value="<% if (deck) { print(deck.name) } %>" class="span7"/>
         </label>
 
-        <label class="control-label">Description:<br/>
+        <label>Description:<br/>
           <textarea name="description" placeholder="Deck description (optional)" class="span7" rows="3"><% if (deck) { print(deck.description) } %></textarea>
         </label>
 
@@ -187,6 +189,26 @@
       <div class="form-actions">
         <button class="btn btn-primary" type="submit">Save deck</button>
         <button class="btn" type="reset">Revert changes</button>
+      </div>
+    </form>
+  </script>
+
+  <script class="js-tpl-dump" type="text/x-template">
+    <form class="form">
+      <h4 class="muted">Share decks</h4>
+      <label>
+        <textarea class="span7" rows="5"></textarea>
+      </label>
+      <span class="help-block">
+        Copy contents of this field and send it as text via email, any <a href="http://pastebin.com/">pastebin</a>, etc.<br/>
+      </span>
+      <label class="checkbox">
+        <input type="checkbox" class="js-beauty"/> Nice formatting
+      </label>
+
+      <div class="form-actions">
+        <button class="btn btn-primary" type="submit">Save</button>
+        <button class="btn js-reset" type="button">Revert changes</button>
       </div>
     </form>
   </script>

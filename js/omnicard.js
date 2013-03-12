@@ -6,7 +6,8 @@ widgets.Nav = widgets.Abstract.extend({
     tpl: 'nav',
 
     events: {
-        'click li.js-deckItem': 'onDeckClick'
+        'click .js-deckItem': 'onDeckClick',
+        'click .js-importExport': 'onImport'
     },
 
     defaults: {
@@ -28,6 +29,10 @@ widgets.Nav = widgets.Abstract.extend({
             index = target.index() - 1;
 
         this.bus.trigger('displayDeck', this.decks[index]);
+    },
+
+    onImport: function () {
+        this.bus.trigger('displayDump');
     }
 });
 
@@ -252,6 +257,63 @@ widgets.EditDeck = widgets.Abstract.extend({
     }
 });
 
+widgets.Dump = widgets.Abstract.extend({
+    tpl: 'dump',
+
+    _ui: {
+        form: 'form',
+        dump: 'textarea',
+        beauty: '.js-beauty'
+    },
+
+    events: {
+        'submit form': 'saveDeck',
+        'click .js-reset': 'onReset',
+        'change .js-beauty': '_displayDump',
+        'click textarea': 'selectDump'
+    },
+
+    initialize: function (node, options) {
+        widgets.Dump.__super__.initialize.call(this, node, options);
+
+        this.render({});
+        this._displayDump();
+    },
+
+    _displayDump: function () {
+        var str = JSON.stringify(Decks, null, this.ui.beauty.prop('checked') ? 2 : 0);
+
+        this.ui.dump.val(str);
+    },
+
+    saveDeck: function (evt) {
+        evt.preventDefault();
+
+        var raw = this.ui.dump.val(),
+            deck;
+
+        try {
+            deck = JSON.parse(raw);
+        } catch (exception) {
+            alert('Invalid format');
+        }
+
+        if (deck) {
+            Decks = deck;
+        }
+        console.log(Decks)
+    },
+
+    onReset: function () {
+        this.ui.form[0].reset();
+        this._displayDump();
+    },
+
+    selectDump: function () {
+        this.ui.dump[0].select();
+    }
+});
+
 widgets.Root = widgets.Abstract.extend({
     tpl: 'root',
 
@@ -261,26 +323,36 @@ widgets.Root = widgets.Abstract.extend({
 
     busEvents: {
         'displayDeck': 'displayDeck',
-        'editDeck': 'editDeck'
+        'editDeck': 'editDeck',
+        'displayDump': 'displayDump'
     },
 
-    initialize: function (node) {
-        widgets.Root.__super__.initialize.call(this, node);
+    initialize: function (node, options) {
+        widgets.Root.__super__.initialize.call(this, node, options);
         this.render({});
 
         this.ensureSubWidgets();
     },
 
-    editDeck: function (evt, deck) {
+    _clearScreen: function () {
         this.unregisterChild('.js-deck');
         this.unregisterChild('.js-edit');
+        this.unregisterChild('.js-dump');
+    },
+
+    editDeck: function (evt, deck) {
+        this._clearScreen();
         this.registerChild('.js-edit', widgets.EditDeck, {deck: deck});
     },
 
     displayDeck: function (evt, deck) {
-        this.unregisterChild('.js-edit');
-        this.unregisterChild('.js-deck');
+        this._clearScreen();
         this.registerChild('.js-deck', widgets.Deck, {deck: deck});
+    },
+
+    displayDump: function () {
+        this._clearScreen();
+        this.registerChild('.js-dump', widgets.Dump, {});
     }
 });
 
