@@ -119,7 +119,8 @@ widgets.Deck = widgets.Abstract.extend({
     events: {
         'click .js-start': 'onStart',
         'testComplete .js-test': 'onComplete',
-        'click .js-editDeck': 'onEditDeck'
+        'click .js-editDeck': 'onEditDeck',
+        'click .js-deleteDeck': 'onDeleteDeck'
     },
 
     _ui: {
@@ -148,6 +149,10 @@ widgets.Deck = widgets.Abstract.extend({
 
     onEditDeck: function () {
         this.bus.trigger('editDeck', this.params.deck)
+    },
+
+    onDeleteDeck: function () {
+        this.bus.trigger('deleteDeck', this.params.deck);
     },
 
     setState: function (state) {
@@ -324,6 +329,7 @@ widgets.Root = widgets.Abstract.extend({
     busEvents: {
         'displayDeck': 'displayDeck',
         'editDeck': 'editDeck',
+        'deleteDeck': 'deleteDeck',
         'displayDump': 'displayDump'
     },
 
@@ -343,6 +349,12 @@ widgets.Root = widgets.Abstract.extend({
     editDeck: function (evt, deck) {
         this._clearScreen();
         this.registerChild('.js-edit', widgets.EditDeck, {deck: deck});
+    },
+
+    deleteDeck: function () {
+        if (confirm('Really delete this deck?')) {
+            this._clearScreen();
+        }
     },
 
     displayDeck: function (evt, deck) {
