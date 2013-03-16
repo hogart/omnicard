@@ -1,7 +1,7 @@
-var Decks = {};
+var PredefinedDecks = {};
 
 
-Decks['ru-pl'] = [
+PredefinedDecks['ru-pl'] = [
     {
         name: 'Глаголы III спряжения',
         description: 'Колода включает в себя несколько польских глаголов в различных формах.',

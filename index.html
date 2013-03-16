@@ -14,10 +14,11 @@
   <script src="js/underscore.js"></script>
   <script src="js/jquery.js"></script>
   <script src="js/jquery.form2JSON.js"></script>
-  <script src="js/SimpleWidget.js"></script>
+  <script src="js/Chitin.js"></script>
 
 
-  <script src="js/Decks.js"></script>
+  <script src="js/widgets.js"></script>
+  <script src="js/PredefinedDecks.js"></script>
   <script src="js/omnicard.js"></script>
 </head>
 <body>
@@ -56,8 +57,8 @@
   <script class="js-tpl-nav" type="text/x-template">
     <ul class="nav nav-list">
       <li class="nav-header"><h6><i class="icon-tags"></i> Decks</h6></li>
-      <% _.each(decks, function(deck) { %><li class="deckNav-item deckNav-item__deck js-deckItem"><%= deck.name %></li><% }); %>
-      <li class="deckNav-item"><i class="icon-plus"></i> New deck…</li>
+      <% _.each(decks, function(deck, id) { %><li class="deckNav-item deckNav-item__deck js-deckItem" data-id="<%= id %>"><%= deck.name %></li><% }); %>
+      <li class="deckNav-item js-addDeck"><i class="icon-plus"></i> New deck…</li>
       <li><hr/></li>
 
       <li class="nav-header"><h6><i class="icon-cog"></i> Settings</h6></li>
@@ -72,7 +73,7 @@
         <button class="btn js-editDeck" title="Edit deck"><i class="icon-pencil"></i></button>
         <button class="btn js-deleteDeck" title="Delete deck"><i class="icon-trash"></i></button>
       </div>
-      <h4 class="muted"><%= deck.name %></h4>
+      <h4 class="muted"><%= deck.name %> (<%= deck.content.length %>)</h4>
       <% if (deck.description) { %><p><%= deck.description %></p><% } %>
       <% if (deck.tags && deck.tags.length) { %><p class="text-right muted"><small><%= deck.tags.join(', ') %></small></p><% } %>
       <div class="btn-group">
@@ -98,7 +99,7 @@
 
   <script class="js-tpl-test" type="text/x-template">
     <ul class="unstyled">
-      <% _.each(deck, function(card, index) { %>
+      <% _.each(cards, function(card, index) { %>
         <li class="js-card form-inline<% if (index) { %> hidden<% } %>">
           <label><%= card.q %><br/>
             <div class="input-append">
@@ -152,7 +153,7 @@
       </fieldset>
 
       <fieldset>
-        <legend>Cards in this deck</legend>
+        <legend>Cards in this deck <% if (deck && deck.content && deck.content.length) { print('(' + deck.content.length + ')') } %></legend>
           <div class="js-cardList">
             <% if (deck) { %>
               <% _.each(deck.content, function (card, index) { %>
