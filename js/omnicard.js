@@ -30,8 +30,8 @@ var Storable = Chitin.Observable.extend({
         this.attrs = _.extend(this.params.attrs, this.storage.loadDump());
     },
 
-    get: function (key) {
-        return this.attrs[key];
+    get: function (key, defaultVal) {
+        return key in this.attrs ? this.attrs[key] : defaultVal;
     },
 
     set: function (attrs, options) {
@@ -69,6 +69,14 @@ var Decks = Storable.extend({
     }
 });
 
+var Preferences = Storable.extend({
+    defaults: {
+        key: 'prefs',
+        storage: Storage,
+        attrs: {}
+    }
+});
+
 var OmniCard = Chitin.Application.extend({
     defaults: {
         immediateStart: false,
@@ -88,10 +96,15 @@ var OmniCard = Chitin.Application.extend({
             attrs: predef
         });
 
+        this.prefs = new this.params.prefs;
+
         this.start();
     }
 });
 
 $(function () {
-    window.app = new OmniCard({deckClass: Decks});
+    window.app = new OmniCard({
+        deckClass: Decks,
+        prefs: Preferences
+    });
 });

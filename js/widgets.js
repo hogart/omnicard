@@ -42,6 +42,36 @@ widgets.Nav = widgets.Abstract.extend({
     }
 });
 
+widgets.Start = widgets.Abstract.extend({
+    tpl: 'start',
+
+    _ui: {
+        toggled: '.js-content, .js-hide, .js-show'
+    },
+
+    events: {
+        'click button': 'triggerVerbosity'
+    },
+
+    initialize: function (options) {
+        widgets.Start.__super__.initialize.call(this, options);
+
+        this.verbosity = this.bus.prefs.get('showHelp', true);
+
+        this.render({
+            verbosity: this.verbosity
+        });
+    },
+
+    triggerVerbosity: function () {
+        this.verbosity != this.verbosity;
+
+        this.ui.toggled.toggleClass('hidden');
+
+        this.bus.prefs.set({showHelp: this.verbosity});
+    }
+});
+
 widgets.Test = widgets.Abstract.extend({
     tpl: 'test',
 
@@ -232,7 +262,7 @@ widgets.EditDeck = widgets.Abstract.extend({
             }
         });
 
-        var deckContent = _.pick(deckRaw, ['name', 'description', 'tags', 'content'])
+        var deckContent = _.pick(deckRaw, ['name', 'description', 'tags', 'content']);
         if (this.deck) {
             var deck = {};
             deck[this.deck[0]] = deckContent;
@@ -316,6 +346,7 @@ widgets.Dump = widgets.Abstract.extend({
 
         if (deck) {
             this.bus.decks.set(deck);
+            this.bus.trigger('displayStart');
         }
     },
 
@@ -333,10 +364,12 @@ widgets.Root = widgets.Abstract.extend({
     tpl: 'root',
 
     subWidgets: {
-        '.js-nav': [widgets.Nav, function () { return {decks: this.bus.decks } }]
+        '.js-nav': [widgets.Nav, function () { return {decks: this.bus.decks } }],
+        '.js-start': widgets.Start
     },
 
     busEvents: {
+        'displayStart': 'displayStart',
         'displayDeck': 'displayDeck',
         'editDeck': 'editDeck',
         'addDeck': 'editDeck',
@@ -352,9 +385,15 @@ widgets.Root = widgets.Abstract.extend({
     },
 
     _clearScreen: function () {
+        this.unregisterChild('.js-start');
         this.unregisterChild('.js-deck');
         this.unregisterChild('.js-edit');
         this.unregisterChild('.js-dump');
+    },
+
+    displayStart: function () {
+        this._clearScreen();
+        this.registerChild('.js-start', widgets.Start, {});
     },
 
     editDeck: function (deck) {
