@@ -37,19 +37,27 @@
       </div>
 
       <div class="span9">
+        <div class="js-start"></div>
+
         <div class="js-deck deckView"></div>
 
-        <div class="js-edit">
+        <div class="js-edit"></div>
 
         <div class="js-dump"></div>
-        </div>
       </div>
     </div>
 
     <hr class="hidden-phone"/>
 
     <footer class="hidden-phone">
-      <p>© Konstantin Kitmanov, 2013</p>
+      <ul class="inline">
+        <li>© OmniCard, 2013</li>
+        <li><a href="http://github.com/hogart/OmniCard">GitHub</a></li>
+<!--        <li></li>
+        <li></li>
+        <li></li>-->
+      </ul>
+      <p></p>
     </footer>
   </script>
 
@@ -64,6 +72,51 @@
       <li class="nav-header"><h6><i class="icon-cog"></i> Settings</h6></li>
       <li class="deckNav-item js-importExport"><i class="icon-hdd"></i> Import/export…</li>
     </ul>
+  </script>
+
+
+  <script class="js-tpl-start" type="text/x-template">
+      <h4 class="muted">Choose a deck on your left and start learning!</h4>
+      <p>Each deck provides several modes in which it can be discovered.</p>
+      <dl>
+        <dt>Meditation</dt>
+        <dd>Shows you both sides of card, question and answer, allowing you to learn and remember.</dd>
+        <dt>Test</dt>
+        <dd>Forces you to choose correct answer, intended for further fixing. Not all decks are capable of this mode.</dd>
+        <dt>Exam</dt>
+        <dd>Hardest mode. You should enter answers manually. This is particularly useful in writing training.</dd>
+      </dl>
+      <p>You can also create your own deck, which is great because it forces you to train in writing.</p>
+      <h3 class="muted">FAQ</h3>
+      <dl>
+        <dt>How do I edit deck?</dt>
+        <dd>Open that deck and note two icons in the top left corner of deck's description, pencil and trash bin.
+          Clicking pencil icon brings up deck editing mode, and trash can deletes this deck.
+        </dd>
+
+        <dt>How do I create new deck?</dt>
+        <dd>Use <span class="badge">Add deck…</span> button located beneath deck list.</dd>
+
+        <dt>I created/edited deck(s) to work on my primary PC, how do I get it on my phone/tablet/other PC?</dt>
+        <dd>
+          <ol>
+            <li>
+              Click <span class="badge">Import/export…</span> on the left menu. You'll see big text field with lot of strange text.
+            </li>
+            <li>Copy that text.</li>
+            <li>That's just text, so you can paste it around. Store it to the
+              <a href="https://drive.google.com" target="_blank">Google Drive</a>, send yourself email,
+              use a <a href="http://pastebin.com/">pastebin</a> service, etc.</li>
+            <li>Open the location of your pasted text on device to which you want to transfer your work, and copy that text.</li>
+            <li>Open the OmniCard, and go to <span class="badge">Import/export…</span> again.</li>
+            <li>Clear the content of big text field and paste that text and click <span class="badge">Save</span>. That's it!</li>
+          </ol>
+          <p>Sounds more hard then it is really.</p>
+        </dd>
+
+        <dt>Application misbehaves/error in built-in deck/I have a suggestion/typo!</dt>
+        <dd>Keep calm and <a href="https://github.com/hogart/OmniCard/issues/new">report a bug</a>. Thanks!</dd>
+      </dl>
   </script>
 
 
