@@ -181,7 +181,21 @@
             <input type="text" value="" class="js-answer span7"/>
           </label>
 
-          <button class="js-confirm btn btn-success btn-small">Add card</button>
+          <button class="js-confirm btn btn-success btn-small" type="button">Add card</button>
+        </div>
+
+        <div class="js-cardTemplate hidden">
+          <div class="js-cardForm">
+            <label>Question<br/>
+              <input type="text" value="" class="js-question span7" name="cardq"/>
+            </label>
+            <label>Answer<br/>
+              <input type="text" value="" class="js-answer span7" name="carda"/>
+            </label>
+
+            <button class="js-deleteCard btn btn-danger btn-small">Delete card</button>
+            <hr/>
+          </div>
         </div>
       </fieldset>
 

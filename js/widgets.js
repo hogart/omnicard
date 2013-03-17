@@ -203,7 +203,7 @@ widgets.EditDeck = widgets.Abstract.extend({
 
     renderDeck: function () {
         var tplData = {
-            deck: this.deck[1] || false
+            deck: this.deck ? this.deck[1] : false
         };
         this.render(tplData);
     },
@@ -232,10 +232,18 @@ widgets.EditDeck = widgets.Abstract.extend({
             }
         });
 
-        var deck = {};
-        deck[this.deck[0]] = _.pick(deckRaw, ['name', 'description', 'tags', 'content']);
+        var deckContent = _.pick(deckRaw, ['name', 'description', 'tags', 'content'])
+        if (this.deck) {
+            var deck = {};
+            deck[this.deck[0]] = deckContent;
 
-        this.bus.decks.set(deck);
+            this.bus.decks.set(deck);
+        } else {
+            this.bus.decks.attrs.push(deckContent);
+            this.bus.decks.set({}); // trick to force save and trigger `update` event
+        }
+
+        this.bus.trigger('displayStart');
     },
 
     onReset: function (evt) {
@@ -247,11 +255,11 @@ widgets.EditDeck = widgets.Abstract.extend({
     },
 
     addCard: function () {
-        var newCard = this.ui.cardList.find('.js-cardForm').last().clone();
+        var newCard = this.$('.js-cardTemplate').clone();
         newCard.find('.js-question').val( this.ui.newQuestion.val() );
         newCard.find('.js-answer').val( this.ui.newAnswer.val() );
 
-        newCard.appendTo(this.ui.cardList);
+        newCard.appendTo(this.ui.cardList).removeClass('hidden');
 
         this.ui.newQuestion.val('');
         this.ui.newAnswer.val('');
