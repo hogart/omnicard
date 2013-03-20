@@ -72,14 +72,7 @@ widgets.Start = widgets.Abstract.extend({
     }
 });
 
-widgets.Test = widgets.Abstract.extend({
-    tpl: 'test',
-
-    events: {
-        'click .js-answer': 'onAnswer',
-        'click .js-skip': 'onSkip'
-    },
-
+widgets.TestAbstract = widgets.Abstract.extend({
     _ui: {
         items: '.js-card'
     },
@@ -88,11 +81,13 @@ widgets.Test = widgets.Abstract.extend({
         widgets.Test.__super__.initialize.call(this, options);
 
         this.currentQuestion = 0;
-        this.correct = 0;
-        this.wrong = 0;
 
         this.cards = _.chain(this.params.deck).clone().shuffle().value();
 
+        this.rr();
+    },
+
+    rr: function () {
         this.render({
             cards: this.cards,
             current: this.currentQuestion
@@ -109,6 +104,66 @@ widgets.Test = widgets.Abstract.extend({
         }
 
         this.ui.items.eq(this.currentQuestion).removeClass('hidden');
+    }
+});
+
+widgets.Exam = widgets.TestAbstract.extend({
+    tpl: 'testExam',
+
+    events: {
+        'click .js-answer': 'onAnswer',
+        'click .js-skip': 'onSkip'
+    },
+
+    initialize: function (options) {
+        this.correct = 0;
+        this.wrong = 0;
+
+        widgets.Exam.__super__.initialize.call(this, options);
+    },
+
+    onAnswer: function (evt) {
+        var trgt = $(evt.target),
+            li = trgt.closest('li'),
+            answer = $.trim(li.find('input[type="text"]').val());
+
+        if (answer == this.cards[this.currentQuestion].a) {
+            this.correct++;
+        } else {
+            this.wrong++;
+        }
+
+        this.next()
+    },
+
+    onSkip: function () {
+        this.wrong++;
+
+        this.next();
+    },
+
+    final: function () {
+        this.$el.trigger('examComplete', {wrong: this.wrong, correct: this.correct});
+    }
+});
+
+widgets.Test = widgets.TestAbstract.extend({
+    tpl: 'testTest',
+
+    initialize: function (options) {
+        this.correct = 0;
+        this.wrong = 0;
+
+        widgets.Test.__super__.initialize.call(this, options);
+    },
+
+    events: {
+        'click .js-answer': 'onAnswer',
+        'click .js-skip': 'onSkip'
+    },
+
+    rr: function () {
+
     },
 
     onAnswer: function (evt) {
@@ -133,6 +188,18 @@ widgets.Test = widgets.Abstract.extend({
 
     final: function () {
         this.$el.trigger('testComplete', {wrong: this.wrong, correct: this.correct});
+    }
+});
+
+widgets.Meditation = widgets.TestAbstract.extend({
+    tpl: 'testMeditation',
+
+    events: {
+        'click .js-next': 'next'
+    },
+
+    final: function () {
+        this.$el.trigger('meditationOver');
     }
 });
 
