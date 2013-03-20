@@ -11,13 +11,15 @@ widgets.Nav = widgets.Abstract.extend({
         'click .js-importExport': 'onImport'
     },
 
-    defaults: {
-        pair: 'ru-pl'
-    },
-
     initialize: function (options) {
         widgets.Nav.__super__.initialize.call(this, options);
 
+        this.listenTo(this.bus.decks, 'update', this.rr);
+
+        this.rr();
+    },
+
+    rr: function () {
         this.decks = this.params.decks.attrs;
 
         this.render({
@@ -78,17 +80,19 @@ widgets.TestAbstract = widgets.Abstract.extend({
     },
 
     initialize: function (options) {
-        widgets.Test.__super__.initialize.call(this, options);
+        widgets.TestAbstract.__super__.initialize.call(this, options);
 
         this.currentQuestion = 0;
 
-        this.cards = _.chain(this.params.deck).clone().shuffle().value();
+        this.cards = _.chain(this.params.deck.content).clone().shuffle().value();
+        this.name = this.params.deck.name;
 
         this.rr();
     },
 
     rr: function () {
         this.render({
+            name: this.name,
             cards: this.cards,
             current: this.currentQuestion
         });
@@ -99,7 +103,7 @@ widgets.TestAbstract = widgets.Abstract.extend({
 
         this.currentQuestion++;
 
-        if (this.currentQuestion == this.params.deck.length) {
+        if (this.currentQuestion == this.cards.length) {
             this.final();
         }
 
@@ -143,7 +147,7 @@ widgets.Exam = widgets.TestAbstract.extend({
     },
 
     final: function () {
-        this.$el.trigger('examComplete', {wrong: this.wrong, correct: this.correct});
+        this.$el.trigger('testComplete', {wrong: this.wrong, correct: this.correct});
     }
 });
 
@@ -162,14 +166,50 @@ widgets.Test = widgets.TestAbstract.extend({
         'click .js-skip': 'onSkip'
     },
 
-    rr: function () {
+    _randEntries: function(arr, amount, excludeIndex) {
+        var result = [],
+            randoms = [],
+            maxRand = arr.length - 1,
+            rand;
 
+        for (var i = 0; i < amount; i++) {
+            do {
+                rand = _.random(0, maxRand);
+            } while (_.contains(randoms, rand) || rand == excludeIndex);
+
+            result.push(arr[rand])
+        }
+
+        return result;
+    },
+
+    rr: function () {
+        var randEntries = this._randEntries,
+            cards = this.cards,
+            tests = _.map(cards, function (card, index ) {
+                var test = {
+                        q: card.q
+                    },
+                    answers = _.pluck(randEntries(cards, 3, index), 'a');
+
+                answers.push(card.a);
+
+                test.a = _.shuffle(answers);
+
+                return test;
+            });
+
+        this.render({
+            name: this.name,
+            cards: tests,
+            currentQuestion: this.currentQuestion
+        })
     },
 
     onAnswer: function (evt) {
         var trgt = $(evt.target),
             li = trgt.closest('li'),
-            answer = $.trim(li.find('input[type="text"]').val());
+            answer = li.find('input:checked').val();
 
         if (answer == this.cards[this.currentQuestion].a) {
             this.correct++;
@@ -177,7 +217,7 @@ widgets.Test = widgets.TestAbstract.extend({
             this.wrong++;
         }
 
-        this.next()
+        this.next();
     },
 
     onSkip: function () {
@@ -210,8 +250,10 @@ widgets.Score = widgets.Abstract.extend({
         widgets.Score.__super__.initialize.call(this, options);
 
         this.render({
+            congrats: this.params.congrats,
             wrong: this.params.wrong,
-            correct: this.params.correct
+            correct: this.params.correct,
+            testable: this.params.testable
         });
     }
 });
@@ -220,8 +262,13 @@ widgets.Deck = widgets.Abstract.extend({
     tpl: 'deck',
 
     events: {
-        'click .js-start': 'onStart',
-        'testComplete .js-test': 'onComplete',
+        'click .js-startMeditation': 'onStartMeditation',
+        'click .js-startTest': 'onStartTest',
+        'click .js-startExam': 'onStartExam',
+
+        'meditationOver .js-test': 'onMeditationComplete',
+        'testComplete .js-test': 'onTestComplete',
+
         'click .js-editDeck': 'onEditDeck',
         'click .js-deleteDeck': 'onDeleteDeck'
     },
@@ -233,20 +280,37 @@ widgets.Deck = widgets.Abstract.extend({
     initialize: function (options) {
         widgets.Deck.__super__.initialize.call(this, options);
 
+        this.deck = this.params.deck[1]; // deck is sent as [id, deckObject]
+        this.testable = this.deck.testable && this.deck.content.length > 3;
+
         this.render({
-            deck: this.params.deck[1] // deck is sent as [id, deckObject]
+            deck: this.deck,
+            testable: this.testable
         });
 
         this.setState('browsing');
     },
 
-    onStart: function () {
-        this.setState('testing');
-        this.displayTest({deck: _.shuffle(this.params.deck[1].content)})
+    onStartMeditation: function () {
+        this.displayExercise(widgets.Meditation);
     },
 
-    onComplete: function (evt, data) {
+    onStartTest: function () {
+        this.displayExercise(widgets.Test);
+    },
+
+    onStartExam: function () {
+        this.displayExercise(widgets.Exam);
+    },
+
+    onMeditationComplete: function (evt) {
         this.setState('scoring');
+        this.displayScore({congrats: true, testable: this.testable});
+    },
+
+    onTestComplete: function (evt, data) {
+        this.setState('scoring');
+        data.testable = this.testable;
         this.displayScore(data);
     },
 
@@ -268,9 +332,10 @@ widgets.Deck = widgets.Abstract.extend({
         this.registerChild('.js-score', widgets.Score, params);
     },
 
-    displayTest: function (params) {
+    displayExercise: function (type) {
+        this.setState('testing');
         this.unregisterChild('.js-test');
-        this.registerChild('.js-test', widgets.Test, params);
+        this.registerChild('.js-test', type, {deck: this.deck});
     }
 });
 
@@ -315,6 +380,8 @@ widgets.EditDeck = widgets.Abstract.extend({
                 })
             }
         });
+
+        deckRaw.testable = !!deckRaw.testable;
 
         deckRaw.content = [];
         _.each(deckRaw.cardq, function (cardQuestion, index) {
@@ -468,8 +535,9 @@ widgets.Root = widgets.Abstract.extend({
         this.registerChild('.js-edit', widgets.EditDeck, {deck: deck});
     },
 
-    deleteDeck: function () {
+    deleteDeck: function (deck) {
         if (confirm('Really delete this deck?')) {
+            this.bus.decks.deleteDeck(deck[0]);
             this._clearScreen();
         }
     },

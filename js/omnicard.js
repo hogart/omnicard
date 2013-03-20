@@ -66,6 +66,15 @@ var Decks = Storable.extend({
         key: 'decks',
         attrs: PredefinedDecks,
         storage: Storage
+    },
+
+    deleteDeck: function (deckIndex) {
+        this.attrs[deckIndex] = null;
+        this.attrs = _.compact(this.attrs);
+
+        this.save();
+
+        this.trigger('update');
     }
 });
 

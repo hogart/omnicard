@@ -121,7 +121,6 @@
       <button class="btn btn-primary js-show hidden">Show help</button>
   </script>
 
-
   <script class="js-tpl-deck" type="text/x-template">
     <div class="well deckView-header">
       <div class="btn-group pull-right">
@@ -132,9 +131,9 @@
       <% if (deck.description) { %><p><%= deck.description %></p><% } %>
       <% if (deck.tags && deck.tags.length) { %><p class="text-right muted"><small><%= deck.tags.join(', ') %></small></p><% } %>
       <div class="btn-group">
-        <button class="btn js-start" disabled>Meditation</button>
-        <button class="btn js-start" disabled>Quiz</button>
-        <button class="btn js-start">Exam</button>
+        <button class="btn js-startMeditation">Meditation</button>
+        <% if (testable) { %><button class="btn js-startTest">Test</button><% } %>
+        <button class="btn js-startExam">Exam</button>
       </div>
     </div>
 
@@ -145,20 +144,21 @@
     <div class="row-fluid deckView-score">
       <div class="js-score"></div>
       <div class="btn-group">
-        <button class="btn js-start" disabled>Meditation</button>
-        <button class="btn js-start" disabled>Quiz</button>
-        <button class="btn js-start">Exam</button>
+        <button class="btn js-startMeditation">Meditation</button>
+        <% if (testable) { %><button class="btn js-startTest">Test</button><% } %>
+        <button class="btn js-startExam">Exam</button>
       </div>
     </div>
   </script>
 
-  <script class="js-tpl-test" type="text/x-template">
+  <script class="js-tpl-testExam" type="text/x-template">
+    <h4 class="muted"><%= name %></h4>
     <ul class="unstyled">
       <% _.each(cards, function(card, index) { %>
         <li class="js-card form-inline<% if (index) { %> hidden<% } %>">
           <label><%= card.q %><br/>
             <div class="input-append">
-              <input type="text">
+              <input class="input-large" type="text"/>
               <div class="btn-group">
                 <button class="btn btn-success js-answer">Answer</button>
                 <button class="btn btn-warning js-skip">Skip</button>
@@ -170,18 +170,60 @@
     </ul>
   </script>
 
+  <script class="js-tpl-testTest" type="text/x-template">
+    <h4 class="muted"><%= name %></h4>
+    <ul class="unstyled">
+      <% _.each(cards, function(card, index) { %>
+        <li class="js-card form-inline<% if (index) { %> hidden<% } %>">
+          <% _.each(card.a, function (answer) { %>
+            <label class="radio">
+              <input type="radio" name="testTest" value="<%= answer %>"/>
+              <%= answer %>
+            </label>
+          <% }); %>
+          <div class="btn-group">
+            <button class="btn btn-success js-answer">Answer</button>
+            <button class="btn btn-warning js-skip">Skip</button>
+          </div>
+        </li>
+      <% }); %>
+    </ul>
+  </script>
+
+  <script class="js-tpl-testMeditation" type="text/x-template">
+    <h4 class="muted"><%= name %></h4>
+    <ul class="unstyled">
+      <% _.each(cards, function(card, index) { %>
+        <li class="js-card form-inline<% if (index) { %> hidden<% } %>">
+          <label><%= card.q %><br/>
+            <div class="input-append">
+              <span class="input-large uneditable-input"><%= card.a %></span>
+              <div class="btn-group">
+                <button class="btn btn-warning js-next">Next</button>
+              </div>
+            </div>
+          </label>
+        </li>
+      <% }); %>
+    </ul>
+  </script>
+
   <script class="js-tpl-score" type="text/x-template">
-    <% if (wrong) { %><p class="text-error">Wrong answers: <span class="badge badge-warning"><%= wrong %></span></p><% } %>
-    <% if (correct) { %><p class="text-success">Correct answers: <span class="badge badge-success"><%= correct %></span></p><% } %>
-    <% if (!wrong) { %>
-      <p class="text-success">Congratulations! You've performed excellent!</p>
-    <% } else if (!correct) { %>
-      <p class="text-error">Do not despair. Next time you will do better!</p>
+    <% if (congrats) { %>
+      <p class="text-info">Feeling like learned something new? Care to repeat or ready to testify yourself?</p>
     <% } else { %>
-      <% if (wrong > correct) { %>
-        <p class="text-warning">You definitely need more work, but so far so good.</p>
+      <% if (wrong) { %><p class="text-error">Wrong answers: <span class="badge badge-warning"><%= wrong %></span></p><% } %>
+      <% if (correct) { %><p class="text-success">Correct answers: <span class="badge badge-success"><%= correct %></span></p><% } %>
+      <% if (!wrong) { %>
+        <p class="text-success">Congratulations! You've performed excellent!</p>
+      <% } else if (!correct) { %>
+        <p class="text-error">Do not despair. Next time you will do better!</p>
       <% } else { %>
-        <p class="text-info">Not bad. Keep training!</p>
+        <% if (wrong > correct) { %>
+          <p class="text-warning">You definitely need more work, but so far so good.</p>
+        <% } else { %>
+          <p class="text-info">Not bad. Keep training!</p>
+        <% } %>
       <% } %>
     <% } %>
   </script>
@@ -204,6 +246,11 @@
         <label>Tags:<br/>
           <input type="text" name="tags" placeholder="Deck tags (optional)" class="span7" value="<% if (deck) { print(deck.tags.join(', ')) } %>"/>
           <span class="help-block">Comma-separated list</span>
+        </label>
+
+        <label class="checkbox">
+          <input type="checkbox" name="testable" <% if (deck && deck.testable) { print('checked="checked"'); } %>/> Testable
+          <span class="help-block">If deck is suitable for creating test automatically? (Won't work on deck shorter than 5 cards).</span>
         </label>
       </fieldset>
 
