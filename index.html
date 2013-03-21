@@ -75,7 +75,7 @@
 
   <script class="js-tpl-start" type="text/x-template">
       <h4 class="muted">Choose a deck on your left and start learning!</h4>
-      <div class="js-content">
+      <div class="js-content <% if (!verbosity) { print('hidden') }%>">
         <p>Each deck provides several modes in which it can be discovered.</p>
           <dl>
             <dt>Meditation</dt>
@@ -117,8 +117,8 @@
             <dd>Keep calm and <a href="https://github.com/hogart/OmniCard/issues/new">report a bug</a>. Thanks!</dd>
           </dl>
       </div>
-      <button class="btn btn-primary js-hide">Don't show me this</button>
-      <button class="btn btn-primary js-show hidden">Show help</button>
+      <button class="btn btn-primary js-hide <% if (!verbosity) { print('hidden') }%>">Don't show me this</button>
+      <button class="btn btn-primary js-show <% if (verbosity) { print('hidden') }%>">Show help</button>
   </script>
 
   <script class="js-tpl-deck" type="text/x-template">
@@ -289,10 +289,10 @@
         <div class="js-cardTemplate hidden">
           <div class="js-cardForm">
             <label>Question<br/>
-              <input type="text" value="" class="js-question span7" name="cardq"/>
+              <input type="text" class="js-question span7" name="cardq"/>
             </label>
             <label>Answer<br/>
-              <input type="text" value="" class="js-answer span7" name="carda"/>
+              <input type="text" class="js-answer span7" name="carda"/>
             </label>
 
             <button class="js-deleteCard btn btn-danger btn-small">Delete card</button>
@@ -305,7 +305,7 @@
 
       <div class="form-actions">
         <button class="btn btn-primary" type="submit">Save deck</button>
-        <button class="btn" type="reset">Revert changes</button>
+        <button class="btn" type="reset">Cancel</button>
       </div>
     </form>
   </script>
@@ -325,7 +325,7 @@
 
       <div class="form-actions">
         <button class="btn btn-primary" type="submit">Save</button>
-        <button class="btn js-reset" type="button">Revert changes</button>
+        <button class="btn js-reset" type="button">Cancel</button>
       </div>
     </form>
   </script>

@@ -66,7 +66,7 @@ widgets.Start = widgets.Abstract.extend({
     },
 
     triggerVerbosity: function () {
-        this.verbosity != this.verbosity;
+        this.verbosity = !this.verbosity;
 
         this.ui.toggled.toggleClass('hidden');
 
@@ -485,8 +485,7 @@ widgets.Dump = widgets.Abstract.extend({
     },
 
     onReset: function () {
-        this.ui.form[0].reset();
-        this._displayDump();
+        this.bus.trigger('displayStart');
     },
 
     selectDump: function () {
