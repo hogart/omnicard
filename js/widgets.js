@@ -2,6 +2,28 @@ var widgets = {
     Abstract: Chitin.Widget
 };
 
+widgets.Pristine = widgets.Abstract.extend({
+    tpl: 'pristine',
+
+    events: {
+        'submit form': 'onSubmit'
+    },
+
+    initialize: function (options) {
+        widgets.Pristine.__super__.initialize.call(this, options);
+
+        this.render({});
+    },
+
+    onSubmit: function (evt) {
+        evt.preventDefault();
+
+        var data = this.$('form').form2JSON();
+
+        this.bus.trigger('languagesChosen', data);
+    }
+});
+
 widgets.Nav = widgets.Abstract.extend({
     tpl: 'nav',
 
@@ -486,12 +508,18 @@ widgets.Dump = widgets.Abstract.extend({
 widgets.Root = widgets.Abstract.extend({
     tpl: 'root',
 
-    subWidgets: {
+    startWidgets: {
+        '.js-pristine': widgets.Pristine
+    },
+
+    workWidgets: {
         '.js-nav': [widgets.Nav, function () { return {decks: this.bus.decks } }],
         '.js-start': widgets.Start
     },
 
     busEvents: {
+        'startWork': 'startWork',
+
         'displayStart': 'displayStart',
         'displayDeck': 'displayDeck',
         'editDeck': 'editDeck',
@@ -504,10 +532,25 @@ widgets.Root = widgets.Abstract.extend({
         widgets.Root.__super__.initialize.call(this, options);
         this.render({});
 
-        this.ensureSubWidgets();
+        if (this.bus.pair) {
+            this.startWork();
+        } else {
+            this.ensureSubWidgets(this.startWidgets);
+            this.$el
+                .removeClass('root__work')
+                .addClass('root__pristine');
+        }
+    },
+
+    startWork: function () {
+        this.ensureSubWidgets(this.workWidgets);
+        this.$el
+            .removeClass('root__pristine')
+            .addClass('root__work');
     },
 
     _clearScreen: function () {
+        this.unregisterChild('.js-pristine');
         this.unregisterChild('.js-start');
         this.unregisterChild('.js-deck');
         this.unregisterChild('.js-edit');

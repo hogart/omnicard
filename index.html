@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="css/bootstrap-responsive.min.css"/>
   <link rel="stylesheet" href="css/deckNav.css"/>
   <link rel="stylesheet" href="css/deckView.css"/>
+  <link rel="stylesheet" href="css/root.css"/>
 
 
   <script src="js/underscore.js"></script>
@@ -22,21 +23,24 @@
   <script src="js/omnicard.js"></script>
 </head>
 <body>
-  <div class="container-fluid js-root" data-widget="Root"></div>
+  <div class="container-fluid js-root root" data-widget="Root"></div>
 
 
   <script class="js-tpl-root" type="text/x-template">
-    <div class="row-fluid">
+    <div class="row-fluid js-pristine root-pristine root-hero"></div>
+
+    <div class="row-fluid root-work">
       <h3 class="muted span6 offset3 hidden-phone">OmniCard</h3>
     </div>
 
-    <div class="row-fluid">
+    <div class="row-fluid root-work">
 
       <div class="span3">
         <div class="well sidebar-nav js-nav deckNav"></div>
       </div>
 
       <div class="span9">
+
         <div class="js-start"></div>
 
         <div class="js-deck deckView"></div>
@@ -72,6 +76,38 @@
     </ul>
   </script>
 
+
+  <script class="js-tpl-pristine" type="text/x-template">
+    <div class="hero-unit root-well">
+      <h2 class="muted">Welcome to OmniCard!</h2>
+      <p>We help you learn languages via famous flash-card method. Choose your tongues:</p>
+
+      <form>
+        <label class="span4">
+          I speak…<br/>
+          <select name="native">
+            <option value="ru">Russian</option>
+          </select>
+        </label>
+        <label class="span4">
+          I learn…<br/>
+          <select name="learn">
+            <option value="pl">Polish</option>
+          </select>
+        </label>
+        <label class="span4 muted">
+          I prefer interface in…<br/>
+          <select name="learn" disabled="disabled">
+            <option value="en">English</option>
+          </select>
+        </label>
+
+        <div>
+          <button class="btn btn-primary btn-large">Start!</button>
+        </div>
+      </form>
+    </div>
+  </script>
 
   <script class="js-tpl-start" type="text/x-template">
       <h4 class="muted">Choose a deck on your left and start learning!</h4>

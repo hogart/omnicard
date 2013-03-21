@@ -83,6 +83,25 @@ var Preferences = Storable.extend({
         key: 'prefs',
         storage: Storage,
         attrs: {}
+    },
+
+    getPair: function () {
+        var pair = this.attrs.pair;
+        if (!pair) {
+            return false
+        }
+
+        if (pair.native && pair.learn) {
+            return pair.native + '-' + pair.learn
+        } else {
+            return false;
+        }
+    },
+
+    setPair: function (data) {
+        if (data.native && data.learn) {
+            this.set({pair: {native: data.native, learn: data.learn}});
+        }
     }
 });
 
@@ -96,18 +115,38 @@ var OmniCard = Chitin.Application.extend({
     initialize: function (options) {
         OmniCard.__super__.initialize.call(this, options);
 
-        var pair = 'ru-pl',
-            key = 'deck' + '.' + pair,
-            predef = PredefinedDecks[pair];
+        this.prefs = new this.params.prefs;
+        this.pair = this.prefs.getPair();
+
+        if (this.pair) {
+            this.prepareDecks();
+        }
+
+        this.on('languagesChosen', this.onLang, this);
+
+        this.start();
+    },
+
+    prepareDecks: function () {
+        var key = 'deck' + '.' + this.pair,
+            predef = PredefinedDecks[this.pair];
 
         this.decks = new this.params.deckClass({
             key: key,
             attrs: predef
         });
+    },
 
-        this.prefs = new this.params.prefs;
+    onLang: function (data) {
+        this.pair = data.native + '-' + data.learn;
 
-        this.start();
+        this.prefs.setPair(data);
+
+        this.pair = this.prefs.getPair();
+
+        this.prepareDecks();
+
+        this.trigger('startWork');
     }
 });
 

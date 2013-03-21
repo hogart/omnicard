@@ -1,0 +1,22 @@
+.root {}
+
+    .root .root-pristine {
+        display: none;
+    }
+    .root .root-work {
+        display: none;
+    }
+
+    .root__pristine .root-pristine {
+        display: block;
+    }
+    .root__work .root-work {
+        display: block;
+    }
+
+    .root .root-hero {
+        margin-top: 20px;
+    }
+        .root-hero .root-well {
+            margin-bottom: 0;
+        }
