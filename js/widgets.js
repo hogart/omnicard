@@ -74,13 +74,13 @@ widgets.Start = widgets.Abstract.extend({
     }
 });
 
-widgets.TestAbstract = widgets.Abstract.extend({
+widgets.ExploreAbstract = widgets.Abstract.extend({
     _ui: {
         items: '.js-card'
     },
 
     initialize: function (options) {
-        widgets.TestAbstract.__super__.initialize.call(this, options);
+        widgets.ExploreAbstract.__super__.initialize.call(this, options);
 
         this.currentQuestion = 0;
 
@@ -111,33 +111,39 @@ widgets.TestAbstract = widgets.Abstract.extend({
     }
 });
 
-widgets.Exam = widgets.TestAbstract.extend({
-    tpl: 'testExam',
-
+widgets.TestAbstract = widgets.ExploreAbstract.extend({
     events: {
         'click .js-answer': 'onAnswer',
-        'click .js-skip': 'onSkip'
+        'click .js-skip': 'onSkip',
+        'click .js-next': 'next'
     },
 
     initialize: function (options) {
         this.correct = 0;
         this.wrong = 0;
-
-        widgets.Exam.__super__.initialize.call(this, options);
+this.showCorrections = true;
+        widgets.TestAbstract.__super__.initialize.call(this, options);
     },
 
     onAnswer: function (evt) {
         var trgt = $(evt.target),
             li = trgt.closest('li'),
-            answer = $.trim(li.find('input[type="text"]').val());
+            answer = this.retrieveAnswer(li),
+            correctAnswer = this.cards[this.currentQuestion].a;
 
-        if (answer == this.cards[this.currentQuestion].a) {
+        if (answer == correctAnswer) {
             this.correct++;
+            this.next();
         } else {
             this.wrong++;
-        }
 
-        this.next()
+            if (this.showCorrections) {
+                li.find('.js-correction').html(correctAnswer).removeClass('hidden');
+                li.find('.js-next').removeClass('hidden');
+            } else {
+                this.next();
+            }
+        }
     },
 
     onSkip: function () {
@@ -151,21 +157,25 @@ widgets.Exam = widgets.TestAbstract.extend({
     }
 });
 
+widgets.Exam = widgets.TestAbstract.extend({
+    tpl: 'testExam',
+
+    retrieveAnswer: function (container) {
+        return $.trim(container.find('input[type="text"]').val());
+    }
+});
+
 widgets.Test = widgets.TestAbstract.extend({
     tpl: 'testTest',
 
-    initialize: function (options) {
-        this.correct = 0;
-        this.wrong = 0;
-
-        widgets.Test.__super__.initialize.call(this, options);
-    },
-
-    events: {
-        'click .js-answer': 'onAnswer',
-        'click .js-skip': 'onSkip'
-    },
-
+   /**
+    * Returns `amount` random unique entries from `arr`, excluding `excludeIndex`
+    * @param {Array} arr
+    * @param {Number} amount
+    * @param {Number} excludeIndex
+    * @return {Array}
+    * @private
+    */
     _randEntries: function(arr, amount, excludeIndex) {
         var result = [],
             randoms = [],
@@ -206,32 +216,12 @@ widgets.Test = widgets.TestAbstract.extend({
         })
     },
 
-    onAnswer: function (evt) {
-        var trgt = $(evt.target),
-            li = trgt.closest('li'),
-            answer = li.find('input:checked').val();
-
-        if (answer == this.cards[this.currentQuestion].a) {
-            this.correct++;
-        } else {
-            this.wrong++;
-        }
-
-        this.next();
-    },
-
-    onSkip: function () {
-        this.wrong++;
-
-        this.next();
-    },
-
-    final: function () {
-        this.$el.trigger('testComplete', {wrong: this.wrong, correct: this.correct});
+    retrieveAnswer: function (container) {
+        return container.find('input:checked').val();
     }
 });
 
-widgets.Meditation = widgets.TestAbstract.extend({
+widgets.Meditation = widgets.ExploreAbstract.extend({
     tpl: 'testMeditation',
 
     events: {
