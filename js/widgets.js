@@ -30,7 +30,7 @@ widgets.Nav = widgets.Abstract.extend({
     events: {
         'click .js-deckItem': 'onDeckClick',
         'click .js-addDeck': 'onAddDeck',
-        'click .js-importExport': 'onImport'
+        'click .js-settingsItem': 'onSettings'
     },
 
     initialize: function (options) {
@@ -61,8 +61,8 @@ widgets.Nav = widgets.Abstract.extend({
         this.bus.trigger('addDeck');
     },
 
-    onImport: function () {
-        this.bus.trigger('displayDump');
+    onSettings: function () {
+        this.bus.trigger('displaySettings');
     }
 });
 
@@ -449,6 +449,29 @@ widgets.EditDeck = widgets.Abstract.extend({
     }
 });
 
+widgets.Settings = widgets.Abstract.extend({
+    tpl: 'settings',
+
+    prompt: 'This will erase all your decks, reset all settings and reload entire application.\nAre you sure you want to do this?',
+
+    events: {
+        'click .js-dump': function () { this.bus.trigger('displayDump') },
+        'click .js-reset': 'onResetClick'
+    },
+
+    initialize: function (options) {
+        widgets.Settings.__super__.initialize.call(this, options);
+
+        this.render({});
+    },
+
+    onResetClick: function () {
+        if (confirm(this.prompt)) {
+            this.bus.reset();
+        }
+    }
+});
+
 widgets.Dump = widgets.Abstract.extend({
     tpl: 'dump',
 
@@ -525,7 +548,8 @@ widgets.Root = widgets.Abstract.extend({
         'editDeck': 'editDeck',
         'addDeck': 'editDeck',
         'deleteDeck': 'deleteDeck',
-        'displayDump': 'displayDump'
+        'displayDump': 'displayDump',
+        'displaySettings': 'displaySettings'
     },
 
     initialize: function (options) {
@@ -554,6 +578,7 @@ widgets.Root = widgets.Abstract.extend({
         this.unregisterChild('.js-start');
         this.unregisterChild('.js-deck');
         this.unregisterChild('.js-edit');
+        this.unregisterChild('.js-settings');
         this.unregisterChild('.js-dump');
     },
 
@@ -577,6 +602,11 @@ widgets.Root = widgets.Abstract.extend({
     displayDeck: function (deck) {
         this._clearScreen();
         this.registerChild('.js-deck', widgets.Deck, {deck: deck});
+    },
+
+    displaySettings: function () {
+        this._clearScreen();
+        this.registerChild('.js-settings', widgets.Settings, {});
     },
 
     displayDump: function () {

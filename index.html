@@ -47,6 +47,8 @@
 
         <div class="js-edit"></div>
 
+        <div class="js-settings"></div>
+
         <div class="js-dump"></div>
       </div>
     </div>
@@ -63,19 +65,16 @@
     </footer>
   </script>
 
-
   <script class="js-tpl-nav" type="text/x-template">
     <ul class="nav nav-list">
-      <li class="nav-header"><h6><i class="icon-tags"></i> Decks</h6></li>
+      <li class="nav-header"><h6><i class="icon-book"></i> Decks</h6></li>
       <% _.each(decks, function(deck, id) { %><li class="deckNav-item deckNav-item__deck js-deckItem" data-id="<%= id %>"><%= deck.name %></li><% }); %>
       <li class="deckNav-item js-addDeck"><i class="icon-plus"></i> New deck…</li>
       <li><hr/></li>
 
-      <li class="nav-header"><h6><i class="icon-cog"></i> Settings</h6></li>
-      <li class="deckNav-item js-importExport"><i class="icon-hdd"></i> Import/export…</li>
+      <li class="nav-header deckNav-item js-settingsItem"><h6><i class="icon-cog"></i> Settings</h6></li>
     </ul>
   </script>
-
 
   <script class="js-tpl-pristine" type="text/x-template">
     <div class="hero-unit root-well">
@@ -346,6 +345,18 @@
         <button class="btn" type="reset">Cancel</button>
       </div>
     </form>
+  </script>
+
+  <script class="js-tpl-settings" type="text/x-template">
+    <h4 class="muted">Settings</h4>
+    <p>
+      <button class="btn btn-primary js-dump"><i class="icon-hdd icon-white"></i> Import/export…</button><br/>
+      Lets import and export all your decks as a whole. Useful when transferring them to other device.
+    </p>
+    <p>
+      <button class="btn btn-danger js-reset"><i class="icon-fire icon-white"></i> Clear all</button><br/>
+      Deletes all decks and settings entirely. You must know what you're doing.
+    </p>
   </script>
 
   <script class="js-tpl-dump" type="text/x-template">

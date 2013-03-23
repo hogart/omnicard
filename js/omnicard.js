@@ -3,7 +3,7 @@ var Storage = Chitin.Abstract.extend({
         Storage.__super__.initialize.call(this, options);
     },
 
-    save: function (data) {console.log(data);
+    save: function (data) {
         localStorage.setItem(this.params.key, JSON.stringify(data));
     },
 
@@ -147,6 +147,13 @@ var OmniCard = Chitin.Application.extend({
         this.prepareDecks();
 
         this.trigger('startWork');
+    },
+
+    reset: function () {
+        this.prefs.reset();
+        this.decks.reset();
+
+        window.location.reload();
     }
 });
 
