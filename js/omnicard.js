@@ -127,14 +127,17 @@ var OmniCard = Chitin.Application.extend({
         this.start();
     },
 
-    prepareDecks: function () {
-        var key = 'deck' + '.' + this.pair,
-            predef = PredefinedDecks[this.pair];
+    prepareDecks: function (decks) {
+        var key = 'deck' + '.' + this.pair;
 
         this.decks = new this.params.deckClass({
             key: key,
-            attrs: predef
+            attrs: decks
         });
+
+        if (decks) {
+            this.decks.save()
+        }
     },
 
     onLang: function (data) {
@@ -144,7 +147,7 @@ var OmniCard = Chitin.Application.extend({
 
         this.pair = this.prefs.getPair();
 
-        this.prepareDecks();
+        this.prepareDecks(_.cloneDeep(PredefinedDecks[this.pair]));
 
         this.trigger('startWork');
     },
