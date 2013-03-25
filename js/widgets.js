@@ -358,27 +358,47 @@ widgets.EditDeck = widgets.Abstract.extend({
         frm: 'form',
         cardList: '.js-cardList',
         newQuestion: '.js-addCard .js-question',
-        newAnswer: '.js-addCard .js-answer'
+        newAnswer: '.js-addCard .js-answer',
+
+        dumpDeck: '.js-dumpDeck',
+        dumpDeckDumpster: '.js-dumpDeck .js-dumpster',
+        dumpDeckTA: '.js-dumpDeck textarea',
+        dumpDeckDone: '.js-dumpDeck .js-done',
+
+        dumpCards: '.js-dumpCards',
+        dumpCardsDumpster: '.js-dumpCards .js-dumpster',
+        dumpCardsTA: '.js-dumpCards textarea',
+        dumpCardsDone: '.js-dumpCards .js-done'
     },
 
     events: {
         'submit form': 'onSubmit',
         'reset form': 'onReset',
         'click .js-confirm': 'addCard',
-        'click .js-deleteCard': 'deleteCard'
+        'click .js-deleteCard': 'deleteCard',
+
+        'click .js-dump .js-import, .js-dump .js-export': 'toggleDumpster',
+        'click .js-dump .js-done': 'doneDumpster'
     },
 
     initialize: function (options) {
         widgets.EditDeck.__super__.initialize.call(this, options);
 
-        this.deck = this.params.deck;
+        this.deck = this.params.deck ? this.params.deck[1] : this.bus.createDeck();
+        this.id = this.params.deck ? this.params.deck[0] : null;
+
         this.renderDeck();
     },
 
     renderDeck: function () {
         var tplData = {
-            deck: this.deck ? this.deck[1] : false
+            deck: this.deck
         };
+
+        tplData.cardsDump = _.map(this.deck.content, function (card) {
+            return card.q + '\t' + card.a
+        }).join('\n');
+
         this.render(tplData);
     },
 
@@ -409,14 +429,14 @@ widgets.EditDeck = widgets.Abstract.extend({
         });
 
         var deckContent = _.pick(deckRaw, ['name', 'description', 'tags', 'content']);
-        if (this.deck) {
+        if (_.isNull(this.id)) {
+            this.bus.decks.attrs.push(deckContent);
+            this.bus.decks.set({}); // trick to force save and trigger `update` event
+        } else {
             var deck = {};
             deck[this.deck[0]] = deckContent;
 
             this.bus.decks.set(deck);
-        } else {
-            this.bus.decks.attrs.push(deckContent);
-            this.bus.decks.set({}); // trick to force save and trigger `update` event
         }
 
         this.bus.trigger('displayStart');
@@ -446,6 +466,54 @@ widgets.EditDeck = widgets.Abstract.extend({
             card = trgt.closest('.js-cardForm');
 
         card.remove();
+    },
+
+    toggleDumpster: function (evt) {
+        var trgt = $(evt.target),
+            dumpster = trgt.closest('.js-dump').find('.js-dumpster');
+
+        trgt.toggleClass('active');
+        dumpster.toggleClass('hidden');
+    },
+
+    doneDumpster: function (evt) {
+        var trgt = $(evt.target),
+            container = trgt.closest('.js-dump'),
+            ta = container.find('textarea'),
+            isDeck = container.hasClass('js-dumpDeck');
+
+        var content = $.trim(ta.val());
+
+        if (!content) {
+            this.toggleDumpster(evt);
+            return;
+        } else {
+            if (isDeck) {
+                var deckData;
+                try {
+                    deckData = JSON.parse(content);
+                } catch (e) {
+                    alert('Invalid format');
+                    return
+                }
+
+                this.deck = _.extend(this.deck, deckData);
+            } else {
+                var cards = _.map(content.split('\n'), function (line) {
+                    var parts = line.split(/\t|    /mg);
+                    return {
+                        q: parts[0],
+                        a: parts[1]
+                    }
+                });
+
+                this.deck.content = _.extend(this.deck.content, cards);
+            }
+
+            this.renderDeck();
+
+            return;
+        }
     }
 });
 

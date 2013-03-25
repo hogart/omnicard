@@ -267,48 +267,78 @@
 
   <script class="js-tpl-editDeck" type="text/x-template">
     <form class="form">
-      <h4 class="muted"><% if (deck) { %>Edit deck „<%= deck.name %>“<% } else { print('Create new deck') } %></h4>
+      <h4 class="muted"><% if (!deck.isNew) { %>Edit deck „<%= deck.name %>“<% } else { print('Create new deck') } %></h4>
+
+      <div class="form-actions js-dump js-dumpDeck">
+        <% if (deck.isNew) { %>
+          <button class="btn js-import" type="button"><i class="icon icon-download"></i> Import deck</button>
+        <% } else { %>
+          <button class="btn js-export" type="button"><i class="icon icon-upload"></i> Export whole deck</button>
+        <% } %>
+
+        <div class="hidden js-dumpster">
+          <br/>
+          <br/>
+          <textarea class="span7" rows="5" placeholder="Paste deck here"><% if (!deck.isNew) { print(JSON.stringify(deck)); } %></textarea>
+          <span class="help-block">Entire deck for sharing</span>
+          <button class="btn btn-primary js-done" type="button">Done</button>
+        </div>
+      </div>
 
       <fieldset>
         <legend>Deck properties</legend>
 
         <label>Name:<br/>
-          <input type="text" placeholder="Deck name" name="name" required="required" value="<% if (deck) { print(deck.name) } %>" class="span7"/>
+          <input type="text" placeholder="Deck name" name="name" required="required" value="<%= deck.name %>" class="span7"/>
         </label>
 
         <label>Description:<br/>
-          <textarea name="description" placeholder="Deck description (optional)" class="span7" rows="3"><% if (deck) { print(deck.description) } %></textarea>
+          <textarea name="description" placeholder="Deck description (optional)" class="span7" rows="3"><%= deck.description %></textarea>
         </label>
 
         <label>Tags:<br/>
-          <input type="text" name="tags" placeholder="Deck tags (optional)" class="span7" value="<% if (deck) { print(deck.tags.join(', ')) } %>"/>
+          <input type="text" name="tags" placeholder="Deck tags (optional)" class="span7" value="<%= deck.tags.join(', ') %>"/>
           <span class="help-block">Comma-separated list</span>
         </label>
 
         <label class="checkbox">
-          <input type="checkbox" name="testable" <% if (deck && deck.testable) { print('checked="checked"'); } %>/> Testable
+          <input type="checkbox" name="testable" <% if (deck.testable) { print('checked="checked"'); } %>/> Testable
           <span class="help-block">If deck is suitable for creating test automatically? (Won't work on deck shorter than 5 cards).</span>
         </label>
       </fieldset>
 
       <fieldset>
-        <legend>Cards in this deck <% if (deck && deck.content && deck.content.length) { print('(' + deck.content.length + ')') } %></legend>
-          <div class="js-cardList">
-            <% if (deck) { %>
-              <% _.each(deck.content, function (card, index) { %>
-                <div class="js-cardForm">
-                  <label>Question<br/>
-                    <input type="text" value="<%= card.q %>" class="js-question span7" name="cardq"/>
-                  </label>
-                  <label>Answer<br/>
-                    <input type="text" value="<%= card.a %>" class="js-answer span7" name="carda"/>
-                  </label>
+        <legend>Deck cards <% if (deck.content.length) { print('(' + deck.content.length + ')') } %></legend>
 
-                  <button class="js-deleteCard btn btn-danger btn-small">Delete card</button>
-                  <hr/>
-                </div>
-              <% }) %>
+          <div class="form-actions js-dump js-dumpCards">
+            <% if (deck.isNew) { %>
+              <button class="btn js-import" type="button"><i class="icon icon-download"></i> Import cards</button>
+            <% } else { %>
+              <button class="btn js-export" type="button"><i class="icon icon-upload"></i> Export cards</button>
             <% } %>
+            <div class="hidden js-dumpster">
+              <br/>
+              <br/>
+              <textarea class="span7" rows="5" placeholder="Paste cards here"><%= cardsDump %></textarea>
+              <span class="help-block">Newline separates cards; tab or 4 spaces separates question form answer (question first)</span>
+              <button class="btn btn-primary js-done" type="button">Done</button>
+            </div>
+          </div>
+
+          <div class="js-cardList">
+            <% _.each(deck.content, function (card, index) { %>
+              <div class="js-cardForm">
+                <label>Question<br/>
+                  <input type="text" value="<%= card.q %>" class="js-question span7" name="cardq"/>
+                </label>
+                <label>Answer<br/>
+                  <input type="text" value="<%= card.a %>" class="js-answer span7" name="carda"/>
+                </label>
+
+                <button class="js-deleteCard btn btn-danger btn-small">Delete card</button>
+                <hr/>
+              </div>
+            <% }) %>
           </div>
 
         <div class="js-addCard">

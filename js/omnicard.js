@@ -76,6 +76,18 @@ var Decks = Storable.extend({
 
         this.trigger('update');
     }
+}, {
+    createDeck: function () {
+        return {
+            name: '',
+            description: '',
+            tags: [],
+            content: [],
+            testable: false,
+
+            isNew: true
+        }
+    }
 });
 
 var Preferences = Storable.extend({
@@ -157,6 +169,10 @@ var OmniCard = Chitin.Application.extend({
         this.decks.reset();
 
         window.location.reload();
+    },
+
+    createDeck: function () {
+        return this.params.deckClass.createDeck()
     }
 });
 
