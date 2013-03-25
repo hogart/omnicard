@@ -143,7 +143,7 @@ widgets.TestAbstract = widgets.ExploreAbstract.extend({
     initialize: function (options) {
         this.correct = 0;
         this.wrong = 0;
-this.showCorrections = true;
+        this.showCorrections = !!options.showCorrections;
         widgets.TestAbstract.__super__.initialize.call(this, options);
     },
 
@@ -162,6 +162,7 @@ this.showCorrections = true;
             if (this.showCorrections) {
                 li.find('.js-correction').html(correctAnswer).removeClass('hidden');
                 li.find('.js-next').removeClass('hidden');
+                li.find('.js-answerBlock').addClass('hidden');
             } else {
                 this.next();
             }
@@ -286,7 +287,8 @@ widgets.Deck = widgets.Abstract.extend({
     },
 
     _ui: {
-        score: '.js-score'
+        score: '.js-score',
+        corrections: '[name="showCorrections"]'
     },
 
     initialize: function (options) {
@@ -347,7 +349,14 @@ widgets.Deck = widgets.Abstract.extend({
     displayExercise: function (type) {
         this.setState('testing');
         this.unregisterChild('.js-test');
-        this.registerChild('.js-test', type, {deck: this.deck});
+        this.registerChild(
+            '.js-test',
+            type,
+            {
+                deck: this.deck,
+                showCorrections: this.ui.corrections.is(':checked')
+            }
+        );
     }
 });
 

@@ -165,6 +165,9 @@
       <h4 class="muted"><%= deck.name %> (<%= deck.content.length %>)</h4>
       <% if (deck.description) { %><p><%= deck.description %></p><% } %>
       <% if (deck.tags && deck.tags.length) { %><p class="text-right muted"><small><%= deck.tags.join(', ') %></small></p><% } %>
+      <label class="checkbox">
+        <input type="checkbox" name="showCorrections"/> Show correct answers
+      </label>
       <div class="btn-group">
         <button class="btn js-startMeditation">Meditation</button>
         <% if (testable) { %><button class="btn js-startTest">Test</button><% } %>
@@ -194,13 +197,13 @@
           <label><%= card.q %><br/>
             <div class="input-append">
               <input class="input-large" type="text"/>
-              <div class="btn-group">
+              <div class="btn-group js-answerBlock">
                 <button class="btn btn-success js-answer">Answer</button>
                 <button class="btn btn-warning js-skip">Skip</button>
               </div>
             </div>
           </label>
-          <div class="js-correction hidden"></div>
+          <div class="js-correction text-error hidden"></div>
           <button class="btn js-next hidden">Next</button>
         </li>
       <% }); %>
@@ -220,7 +223,9 @@
             </label><br/>
           <% }); %>
           <br/>
-          <div class="btn-group">
+          <div class="js-correction text-error hidden"></div>
+          <button class="btn js-next hidden">Next</button>
+          <div class="btn-group js-answerBlock">
             <button class="btn btn-success js-answer">Answer</button>
             <button class="btn btn-warning js-skip">Skip</button>
           </div>
