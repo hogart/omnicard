@@ -27,7 +27,7 @@ var Storable = Chitin.Observable.extend({
         Storable.__super__.initialize.call(this, options);
 
         this.storage = new this.params.storage({key: this.params.key});
-        this.attrs = _.extend(this.params.attrs, this.storage.loadDump());
+        this.attrs = _.extend({}, this.params.attrs, this.storage.loadDump());
     },
 
     get: function (key, defaultVal) {
