@@ -106,7 +106,7 @@ widgets.ExploreAbstract = widgets.Abstract.extend({
 
         this.currentQuestion = 0;
 
-        this.cards = _.chain(this.params.deck.content).clone().shuffle().value();
+        this.cards = _.shuffle(_.cloneDeep(this.params.deck.content))
         this.name = this.params.deck.name;
 
         this.rr();
