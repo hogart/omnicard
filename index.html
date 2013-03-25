@@ -212,12 +212,14 @@
     <ul class="unstyled">
       <% _.each(cards, function(card, index) { %>
         <li class="js-card form-inline<% if (index) { %> hidden<% } %>">
+          <h6 class="muted"><%= card.q %></h6>
           <% _.each(card.a, function (answer) { %>
             <label class="radio">
               <input type="radio" name="testTest" value="<%= answer %>"/>
               <%= answer %>
-            </label>
+            </label><br/>
           <% }); %>
+          <br/>
           <div class="btn-group">
             <button class="btn btn-success js-answer">Answer</button>
             <button class="btn btn-warning js-skip">Skip</button>
