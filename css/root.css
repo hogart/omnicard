@@ -1,4 +1,6 @@
-.root {}
+.root {
+    font-family: 'Helvetica Neue', Helvetica, Arial, 'Liberation Sans', sans-serif;
+}
 
     .root .root-pristine {
         display: none;
