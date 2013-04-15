@@ -154,8 +154,10 @@ widgets.TestAbstract = widgets.ExploreAbstract.extend({
     initialize: function (options) {
         this.correct = 0;
         this.wrong = 0;
-        this.showCorrections = this.bus.prefs.get('showCorrections');
+
         widgets.TestAbstract.__super__.initialize.call(this, options);
+
+        this.showCorrections = this.bus.prefs.get('showCorrections');
     },
 
     onAnswer: function (evt) {
