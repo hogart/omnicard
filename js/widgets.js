@@ -1,5 +1,11 @@
 var widgets = {
-    Abstract: Chitin.Widget
+    Abstract: Chitin.Widget.extend({
+        render: function (data) {
+            data = _.extend(data, {locale: this.bus.locale});
+
+            widgets.Abstract.__super__.render.call(this, data);
+        }
+    })
 };
 
 widgets.Pristine = widgets.Abstract.extend({
@@ -12,7 +18,13 @@ widgets.Pristine = widgets.Abstract.extend({
     initialize: function (options) {
         widgets.Pristine.__super__.initialize.call(this, options);
 
-        this.render({});
+        this.render({
+            lang: this.bus.lang,
+            langs: {
+                en: 'English',
+                ru: 'Русский'
+            }
+        });
     },
 
     onSubmit: function (evt) {
@@ -521,7 +533,7 @@ widgets.EditDeck = widgets.Abstract.extend({
                 try {
                     deckData = JSON.parse(content);
                 } catch (e) {
-                    alert('Invalid format');
+                    alert(this.bus.locale.invalidFormat);
                     return
                 }
 
@@ -548,8 +560,6 @@ widgets.EditDeck = widgets.Abstract.extend({
 widgets.Settings = widgets.Abstract.extend({
     tpl: 'settings',
 
-    prompt: 'This will erase all your decks, reset all settings and reload entire application.\nAre you sure you want to do this?',
-
     events: {
         'click .js-dump': function () { this.bus.trigger('displayDump') },
         'click .js-reset': 'onResetClick'
@@ -562,7 +572,7 @@ widgets.Settings = widgets.Abstract.extend({
     },
 
     onResetClick: function () {
-        if (confirm(this.prompt)) {
+        if (confirm(this.bus.locale.confirmClearAll)) {
             this.bus.reset();
         }
     }
@@ -606,7 +616,7 @@ widgets.Dump = widgets.Abstract.extend({
         try {
             deck = JSON.parse(raw);
         } catch (exception) {
-            alert('Invalid format');
+            alert(this.bus.locale.invalidFormat);
         }
 
         if (deck) {
@@ -689,7 +699,7 @@ widgets.Root = widgets.Abstract.extend({
     },
 
     deleteDeck: function (deck) {
-        if (confirm('Really delete this deck?')) {
+        if (confirm(this.bus.locale.deleteDeckConfirm)) {
             this.bus.decks.deleteDeck(deck[0]);
             this._clearScreen();
         }

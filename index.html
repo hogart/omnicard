@@ -17,6 +17,8 @@
   <script src="js/jquery.form2JSON.js"></script>
   <script src="js/Chitin.js"></script>
 
+  <script src="js/locale/en/locale.js"></script>
+  <script src="js/locale/ru/locale.js"></script>
 
   <script src="js/widgets.js"></script>
   <script src="js/PredefinedDecks.js"></script>
@@ -59,7 +61,7 @@
       <ul class="inline">
         <li>© OmniCard, 2013</li>
         <li><a href="http://github.com/hogart/OmniCard">GitHub</a></li>
-        <li><a href="https://github.com/hogart/OmniCard/blob/master/LICENSE.md">MIT license</a></li>
+        <li><a href="https://github.com/hogart/OmniCard/blob/master/LICENSE.md"><%= locale.license %></a></li>
       </ul>
       <p></p>
     </footer>
@@ -67,118 +69,112 @@
 
   <script class="js-tpl-nav" type="text/x-template">
     <ul class="nav nav-list">
-      <li class="nav-header"><h6><i class="icon-book"></i> Decks</h6></li>
+      <li class="nav-header"><h6><i class="icon-book"></i> <%= locale.decksHeader %></h6></li>
       <% _.each(decks, function(deck, id) { %><li class="deckNav-item deckNav-item__deck js-deckItem" data-id="<%= id %>"><%= deck.name %></li><% }); %>
-      <li class="deckNav-item js-addDeck"><i class="icon-plus"></i> New deck…</li>
+      <li class="deckNav-item js-addDeck"><i class="icon-plus"></i> <%= locale.newDeck %></li>
       <li><hr/></li>
 
-      <li class="nav-header deckNav-item js-settingsItem"><h6><i class="icon-cog"></i> Settings</h6></li>
+      <li class="nav-header deckNav-item js-settingsItem"><h6><i class="icon-cog"></i> <%= locale.settings %>…</h6></li>
     </ul>
   </script>
 
   <script class="js-tpl-pristine" type="text/x-template">
     <div class="hero-unit root-well">
-      <h2 class="muted">Welcome to OmniCard!</h2>
-      <p>We help you learn languages via famous flash-card method.</p>
-      <p>OmniCard is not a textbook or manual. Take it as exercise book, which you must create yourself (although we provide some predefined cards).</p>
-      <p>Choose your tongues:</p>
+      <h2 class="muted"><%= locale.welcomeHeader %></h2>
+      <p><%= locale.welcomeFirst %></p>
+      <p><%= locale.welcomeSecond %></p>
+      <p><%= locale.welcomeChoose %></p>
 
       <form>
         <label class="span4">
-          I speak…<br/>
+          <%= locale.welcomeSpeak %><br/>
           <select name="native">
-            <option value="ru">Russian</option>
+            <option value="ru">Русский</option>
           </select>
         </label>
         <label class="span4">
-          I learn…<br/>
+          <%= locale.welcomeLearn %><br/>
           <select name="learn">
-            <option value="pl">Polish</option>
+            <option value="pl">Polszczyzna</option>
           </select>
         </label>
-        <label class="span4 muted">
-          I prefer interface in…<br/>
-          <select name="learn" disabled="disabled">
-            <option value="en">English</option>
+        <label class="span4">
+          <%= locale.welcomeInterface %><br/>
+          <select name="interface">
+            <% _.each(langs, function (name, code) {  %>
+            <option value="<%= code %>" <% if (code == lang) { print('selected="selected"') } %>><%= name %></option>
+            <% }); %>
           </select>
         </label>
 
         <div>
-          <button class="btn btn-primary btn-large">Start!</button>
+          <button class="btn btn-primary btn-large"><%= locale.welcomeStart %></button>
         </div>
       </form>
     </div>
   </script>
 
   <script class="js-tpl-start" type="text/x-template">
-      <h4 class="muted">Choose a deck on your left and start learning!</h4>
+      <h4 class="muted"><%= locale.helpHeader %></h4>
       <div class="js-content <% if (!verbosity) { print('hidden') }%>">
-        <p>Each deck provides several modes in which it can be discovered.</p>
+        <p><%= locale.helpFirst %></p>
           <dl>
-            <dt>Meditation</dt>
-            <dd>Shows you both sides of card, question and answer, allowing you to learn and remember.</dd>
-            <dt>Test</dt>
-            <dd>Forces you to choose correct answer, intended for further fixing. Not all decks are capable of this mode.</dd>
-            <dt>Exam</dt>
-            <dd>Hardest mode. You should enter answers manually. This is particularly useful in writing training.</dd>
+            <dt><%= locale.meditation %></dt>
+            <dd><%= locale.meditationExplanation %></dd>
+            <dt><%= locale.test %></dt>
+            <dd><%= locale.testExplanation %></dd>
+            <dt><%= locale.exam %></dt>
+            <dd><%= locale.examExplanation %></dd>
           </dl>
-          <p>You can also create your own deck, which is great because it forces you to train in writing.</p>
-          <h4 class="muted">FAQ</h4>
+          <p><%= locale.helpAlso %></p>
+          <h4 class="muted"><%= locale.faq %></h4>
           <dl>
-            <dt>How do I edit deck?</dt>
-            <dd>Open that deck and note two icons in the top left corner of deck's description, pencil and trash bin.
-              Clicking pencil icon brings up deck editing mode, and trash can deletes this deck.
-            </dd>
+            <dt><%= locale.faqEditQ %></dt>
+            <dd><%= locale.faqEditA %></dd>
 
-            <dt>How do I create new deck?</dt>
-            <dd>Use <span class="badge">Add deck…</span> button located beneath deck list.</dd>
+            <dt><%= locale.faqCreateQ %></dt>
+            <dd><%= locale.faqCreateA %></dd>
 
-            <dt>I created/edited deck(s) to work on my primary PC, how do I get it on my phone/tablet/other PC?</dt>
+            <dt><%= locale.faqShareQ %></dt>
             <dd>
               <ol>
-                <li>
-                  Open deck you need to transfer and click pencil icon in top left corner.
-                </li>
-                <li>Click <span class="badge">Export whole deck</span> button. You'll see big text field with lot of strange text.</li>
-                <li>Copy that text.</li>
-                <li>That's just text, so you can paste it around. Store it to the
-                  <a href="https://drive.google.com" target="_blank">Google Drive</a>, send yourself email,
-                  use a <a href="http://pastebin.com/">pastebin</a> service, etc.</li>
-                <li>Open the location of your pasted text on device to which you want to transfer your work, and copy that text.</li>
-                <li>
-                  Open the OmniCard, and click <span class="badge">New deck…</span>. Click <span class="badge">Import deck</span>. Text input field would open.
-                </li>
-                <li>Paste copied text ino that field. Click<span class="badge">Done</span> button.</li>
+                <li><%= locale.faqShareA1 %></li>
+                <li><%= locale.faqShareA2 %></li>
+                <li><%= locale.faqShareA3 %></li>
+                <li><%= locale.faqShareA4 %></li>
+                <li><%= locale.faqShareA5 %></li>
+                <li><%= locale.faqShareA6 %></li>
+                <li><%= locale.faqShareA7 %></li>
               </ol>
-              <p>Sounds more hard then it really is:)</p>
-              <p>Additionally you can import/export cards only, and import/export all decks at once.</p>
+              <p><%= locale.faqShareA8 %></p>
+              <p><%= locale.faqShareA9 %></p>
 
             </dd>
 
-            <dt>Application misbehaves/error in built-in deck/I have a suggestion/typo!</dt>
-            <dd>Keep calm and <a href="https://github.com/hogart/OmniCard/issues/new">report a bug</a>. Thanks!</dd>
+            <dt><%= locale.faqFeedbackQ %></dt>
+            <dd><%= locale.faqFeedbackA %></dd>
           </dl>
       </div>
-      <button class="btn btn-primary js-hide <% if (!verbosity) { print('hidden') }%>">Don't show me this</button>
-      <button class="btn btn-primary js-show <% if (verbosity) { print('hidden') }%>">Show help</button>
+      <button class="btn btn-primary js-hide <% if (!verbosity) { print('hidden') }%>"><%= locale.helpHide %></button>
+      <button class="btn btn-primary js-show <% if (verbosity) { print('hidden') }%>"><%= locale.helpShow %></button>
   </script>
 
   <script class="js-tpl-deck" type="text/x-template">
     <div class="well deckView-header">
       <div class="btn-group pull-right">
-        <button class="btn js-editDeck" title="Edit deck"><i class="icon-pencil"></i></button>
-        <button class="btn js-deleteDeck" title="Delete deck"><i class="icon-trash"></i></button>
+        <button class="btn js-editDeck" title="<%= locale.editDeck %>"><i class="icon-pencil"></i></button>
+        <button class="btn js-deleteDeck" title="<%= locale.deleteDeck %>"><i class="icon-trash"></i></button>
       </div>
       <h4 class="muted"><%= deck.name %> (<%= deck.content.length %>)</h4>
       <% if (deck.description) { %><p><%= deck.description %></p><% } %>
       <% if (deck.tags && deck.tags.length) { %><p class="text-right muted"><small><%= deck.tags.join(', ') %></small></p><% } %>
       <label class="checkbox">
-        <input type="checkbox" name="showCorrections" <% if (showCorrections) { print('checked="checked"') } %>/> Show correct answers
+        <input type="checkbox" name="showCorrections" <% if (showCorrections) { print('checked="checked"') } %>/> <%= locale.showCorrections %>
       </label>
       <div class="btn-group">
-        <button class="btn js-startMeditation">Meditation</button>
-        <% if (testable) { %><button class="btn js-startTest">Test</button><% } %>
-        <button class="btn js-startExam">Exam</button>
+        <button class="btn js-startMeditation"><%= locale.meditation %></button>
+        <% if (testable) { %><button class="btn js-startTest"><%= locale.test %></button><% } %>
+        <button class="btn js-startExam"><%= locale.exam %></button>
       </div>
     </div>
 
@@ -189,9 +185,9 @@
     <div class="row-fluid deckView-score">
       <div class="js-score"></div>
       <div class="btn-group">
-        <button class="btn js-startMeditation">Meditation</button>
-        <% if (testable) { %><button class="btn js-startTest">Test</button><% } %>
-        <button class="btn js-startExam">Exam</button>
+        <button class="btn js-startMeditation"><%= locale.meditation %></button>
+        <% if (testable) { %><button class="btn js-startTest"><%= locale.test %></button><% } %>
+        <button class="btn js-startExam"><%= locale.exam %></button>
       </div>
     </div>
   </script>
@@ -208,13 +204,13 @@
             <div class="input-append">
               <input class="input-large" type="text"/>
               <div class="btn-group js-answerBlock">
-                <button class="btn btn-success js-answer">Answer</button>
-                <button class="btn btn-warning js-skip">Skip</button>
+                <button class="btn btn-success js-answer"><%= locale.answer %></button>
+                <button class="btn btn-warning js-skip"><%= locale.skip %></button>
               </div>
             </div>
           </label>
           <div class="js-correction text-error hidden"></div>
-          <button class="btn js-next hidden">Next</button>
+          <button class="btn js-next hidden"><%= locale.next %></button>
         </li>
       <% }); %>
     </ul>
@@ -237,10 +233,10 @@
           <% }); %>
           <br/>
           <div class="js-correction text-error hidden"></div>
-          <button class="btn js-next hidden">Next</button>
+          <button class="btn js-next hidden"><%= locale.next %></button>
           <div class="btn-group js-answerBlock">
-            <button class="btn btn-success js-answer">Answer</button>
-            <button class="btn btn-warning js-skip">Skip</button>
+            <button class="btn btn-success js-answer"><%= locale.answer %></button>
+            <button class="btn btn-warning js-skip"><%= locale.skip %></button>
           </div>
         </li>
       <% }); %>
@@ -257,7 +253,7 @@
         <li class="js-card form-inline<% if (index) { %> hidden<% } %>">
           <h3><%= card.a %></h3>
           <h3><%= card.q %></h3>
-          <button class="btn btn-warning js-next">Next</button>
+          <button class="btn btn-warning js-next"><%= locale.next %></button>
         </li>
       <% }); %>
     </ul>
@@ -265,19 +261,19 @@
 
   <script class="js-tpl-score" type="text/x-template">
     <% if (congrats) { %>
-      <p class="text-info">Feeling like learned something new? Care to repeat or ready to testify yourself?</p>
+      <p class="text-info"><%= locale.learnedNew %></p>
     <% } else { %>
-      <% if (wrong) { %><p class="text-error">Wrong answers: <span class="badge badge-warning"><%= wrong %></span></p><% } %>
-      <% if (correct) { %><p class="text-success">Correct answers: <span class="badge badge-success"><%= correct %></span></p><% } %>
+      <% if (wrong) { %><p class="text-error"><%= locale.wrongs %> <span class="badge badge-warning"><%= wrong %></span></p><% } %>
+      <% if (correct) { %><p class="text-success"><%= locale.corrects %> <span class="badge badge-success"><%= correct %></span></p><% } %>
       <% if (!wrong) { %>
-        <p class="text-success">Congratulations! You've performed excellent!</p>
+        <p class="text-success"><%= locale.congrats %></p>
       <% } else if (!correct) { %>
-        <p class="text-error">Do not despair. Next time you will do better!</p>
+        <p class="text-error"><%= locale.doNotDespair %></p>
       <% } else { %>
         <% if (wrong > correct) { %>
-          <p class="text-warning">You definitely need more work, but so far so good.</p>
+          <p class="text-warning"><%= locale.moreWork %></p>
         <% } else { %>
-          <p class="text-info">Not bad. Keep training!</p>
+          <p class="text-info"><%= locale.notBad %></p>
         <% } %>
       <% } %>
     <% } %>
@@ -285,102 +281,102 @@
 
   <script class="js-tpl-editDeck" type="text/x-template">
     <form class="form">
-      <h4 class="muted"><% if (!deck.isNew) { %>Edit deck „<%= deck.name %>“<% } else { print('Create new deck') } %></h4>
+      <h4 class="muted"><% if (!deck.isNew) { %><%= locale.editDeck %> <%= locale.q.open %><%= deck.name %><%= locale.q.close %><% } else { print(locale.createDeck) } %></h4>
 
       <div class="form-actions js-dump js-dumpDeck">
         <% if (deck.isNew) { %>
-          <button class="btn js-import" type="button"><i class="icon icon-download"></i> Import deck</button>
+          <button class="btn js-import" type="button"><i class="icon icon-download"></i> <%= locale.importDeck %></button>
         <% } else { %>
-          <button class="btn js-export" type="button"><i class="icon icon-upload"></i> Export whole deck</button>
+          <button class="btn js-export" type="button"><i class="icon icon-upload"></i> <%= locale.exportDeck %></button>
         <% } %>
 
         <div class="hidden js-dumpster">
           <br/>
           <br/>
-          <textarea class="span7" rows="5" placeholder="Paste deck here"><% if (!deck.isNew) { print(JSON.stringify(deck)); } %></textarea>
-          <span class="help-block">Entire deck for sharing</span>
-          <button class="btn btn-primary js-done" type="button">Done</button>
+          <textarea class="span7" rows="5" placeholder="<%= locale.pasteDeck %>"><% if (!deck.isNew) { print(JSON.stringify(deck)); } %></textarea>
+          <span class="help-block"><%= locale.shareDeckHelp %></span>
+          <button class="btn btn-primary js-done" type="button"><%= locale.done %></button>
         </div>
       </div>
 
       <fieldset>
-        <legend>Deck properties</legend>
+        <legend><%= locale.deckProperties %></legend>
 
-        <label>Name:<br/>
+        <label><%= locale.deckName %><br/>
           <input type="text" placeholder="Deck name" name="name" required="required" value="<%= deck.name %>" class="span7"/>
         </label>
 
-        <label>Description:<br/>
-          <textarea name="description" placeholder="Deck description (optional)" class="span7" rows="3"><%= deck.description %></textarea>
+        <label><%= locale.deckDescr %><br/>
+          <textarea name="description" placeholder="<%= locale.deckDescrPlaceholder %>" class="span7" rows="3"><%= deck.description %></textarea>
         </label>
 
-        <label>Tags:<br/>
-          <input type="text" name="tags" placeholder="Deck tags (optional)" class="span7" value="<%= deck.tags.join(', ') %>"/>
-          <span class="help-block">Comma-separated list</span>
+        <label><%= locale.deckTags %><br/>
+          <input type="text" name="tags" placeholder="<%= locale.deckTagsPlaceholder %>" class="span7" value="<%= deck.tags.join(', ') %>"/>
+          <span class="help-block"><%= locale.deckTagsHelp %></span>
         </label>
 
         <label class="checkbox">
-          <input type="checkbox" name="testable" <% if (deck.testable) { print('checked="checked"'); } %>/> Testable
-          <span class="help-block">If deck is suitable for creating test automatically? (Won't work on deck shorter than 5 cards).</span>
+          <input type="checkbox" name="testable" <% if (deck.testable) { print('checked="checked"'); } %>/> <%= locale.deckTestable %>
+          <span class="help-block"><%= locale.deckTestableHelp %></span>
         </label>
       </fieldset>
 
       <fieldset>
-        <legend>Deck cards <% if (deck.content.length) { print('(' + deck.content.length + ')') } %></legend>
+        <legend><%= locale.deckCards %> <% if (deck.content.length) { print('(' + deck.content.length + ')') } %></legend>
 
           <div class="form-actions js-dump js-dumpCards">
             <% if (deck.isNew) { %>
-              <button class="btn js-import" type="button"><i class="icon icon-download"></i> Import cards</button>
+              <button class="btn js-import" type="button"><i class="icon icon-download"></i> <%= locale.deckCardsImport %></button>
             <% } else { %>
-              <button class="btn js-export" type="button"><i class="icon icon-upload"></i> Export cards</button>
+              <button class="btn js-export" type="button"><i class="icon icon-upload"></i> <%= locale.deckCardsExport %></button>
             <% } %>
             <div class="hidden js-dumpster">
               <br/>
               <br/>
-              <textarea class="span7" rows="5" placeholder="Paste cards here"><%= cardsDump %></textarea>
-              <span class="help-block">Newline separates cards; tab or 4 spaces separates question form answer (question first)</span>
-              <button class="btn btn-primary js-done" type="button">Done</button>
+              <textarea class="span7" rows="5" placeholder="<%= locale.deckCardsPaste %>"><%= cardsDump %></textarea>
+              <span class="help-block"><%= locale.deckCardsHelp %></span>
+              <button class="btn btn-primary js-done" type="button"><%= locale.done %></button>
             </div>
           </div>
 
           <div class="js-cardList">
             <% _.each(deck.content, function (card, index) { %>
               <div class="js-cardForm">
-                <label>Question<br/>
+                <label><%= locale.question %><br/>
                   <input type="text" value="<%= card.q %>" class="js-question span7" name="cardq"/>
                 </label>
-                <label>Answer<br/>
+                <label><%= locale.answer %><br/>
                   <input type="text" value="<%= card.a %>" class="js-answer span7" name="carda"/>
                 </label>
 
-                <button class="js-deleteCard btn btn-danger btn-small">Delete card</button>
+                <button class="js-deleteCard btn btn-danger btn-small"><%= locale.deleteCard %></button>
                 <hr/>
               </div>
             <% }) %>
           </div>
 
         <div class="js-addCard">
-          <span class="help-block">Add card:</span>
-          <label>Question<br/>
+          <span class="help-block"><%= locale.addCard %></span>
+          <label><%= locale.question %><br/>
             <input type="text" value="" class="js-question span7"/>
           </label>
-          <label>Answer<br/>
+          <label><%= locale.answer %><br/>
             <input type="text" value="" class="js-answer span7"/>
           </label>
 
-          <button class="js-confirm btn btn-success btn-small" type="button">Add card</button>
+          <button class="js-confirm btn btn-success btn-small" type="button"><%= locale.addCard %></button>
         </div>
 
         <div class="js-cardTemplate hidden">
           <div class="js-cardForm">
-            <label>Question<br/>
+            <label><%= locale.question %><br/>
               <input type="text" class="js-question span7" name="cardq"/>
             </label>
-            <label>Answer<br/>
+            <label><%= locale.answer %><br/>
               <input type="text" class="js-answer span7" name="carda"/>
             </label>
 
-            <button class="js-deleteCard btn btn-danger btn-small">Delete card</button>
+            <button class="js-deleteCard btn btn-danger btn-small"><%= locale.deleteCard %></button>
             <hr/>
           </div>
         </div>
@@ -389,40 +385,40 @@
       <br/>
 
       <div class="form-actions">
-        <button class="btn btn-primary" type="submit">Save deck</button>
-        <button class="btn" type="reset">Cancel</button>
+        <button class="btn btn-primary" type="submit"><%= locale.deckSave %></button>
+        <button class="btn" type="reset"><%= locale.cancel %></button>
       </div>
     </form>
   </script>
 
   <script class="js-tpl-settings" type="text/x-template">
-    <h4 class="muted">Settings</h4>
+    <h4 class="muted"><%= locale.settings %></h4>
     <p>
-      <button class="btn btn-primary js-dump"><i class="icon-hdd icon-white"></i> Import/export…</button><br/>
-      Lets import and export all your decks as a whole. Useful when transferring them to other device.
+      <button class="btn btn-primary js-dump"><i class="icon-hdd icon-white"></i> <%= locale.importExport %></button><br/>
+      <%= locale.importExportHelp %>
     </p>
     <p>
-      <button class="btn btn-danger js-reset"><i class="icon-fire icon-white"></i> Clear all</button><br/>
-      Deletes all decks and settings entirely. You must know what you're doing.
+      <button class="btn btn-danger js-reset"><i class="icon-fire icon-white"></i> <%= locale.clearAll %></button><br/>
+      <%= locale.clearAllHelp %>
     </p>
   </script>
 
   <script class="js-tpl-dump" type="text/x-template">
     <form class="form">
-      <h4 class="muted">Share decks</h4>
+      <h4 class="muted"><%= locale.importExport %></h4>
       <label>
         <textarea class="span7" rows="5"></textarea>
       </label>
       <span class="help-block">
-        Copy contents of this field and send it as text via email, any <a href="http://pastebin.com/">pastebin</a>, etc.<br/>
+        <%= locale.dumpHelp %><br/>
       </span>
       <label class="checkbox">
-        <input type="checkbox" class="js-beauty"/> Nice formatting
+        <input type="checkbox" class="js-beauty"/> <%= locale.dumpFormatting %>
       </label>
 
       <div class="form-actions">
-        <button class="btn btn-primary" type="submit">Save</button>
-        <button class="btn js-reset" type="button">Cancel</button>
+        <button class="btn btn-primary" type="submit"><%= locale.save %></button>
+        <button class="btn js-reset" type="button"><%= locale.cancel %></button>
       </div>
     </form>
   </script>
