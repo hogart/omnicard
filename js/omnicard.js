@@ -94,7 +94,9 @@ var Preferences = Storable.extend({
     defaults: {
         key: 'prefs',
         storage: Storage,
-        attrs: {}
+        attrs: {
+            showCorrections: true
+        }
     },
 
     getPair: function () {

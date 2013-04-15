@@ -166,7 +166,7 @@
       <% if (deck.description) { %><p><%= deck.description %></p><% } %>
       <% if (deck.tags && deck.tags.length) { %><p class="text-right muted"><small><%= deck.tags.join(', ') %></small></p><% } %>
       <label class="checkbox">
-        <input type="checkbox" name="showCorrections"/> Show correct answers
+        <input type="checkbox" name="showCorrections" <% if (showCorrections) { print('checked="checked"') } %>/> Show correct answers
       </label>
       <div class="btn-group">
         <button class="btn js-startMeditation">Meditation</button>
@@ -191,10 +191,13 @@
 
   <script class="js-tpl-testExam" type="text/x-template">
     <h4 class="muted"><%= name %></h4>
+    <div class="progress progress-striped active">
+      <div class="bar js-progress" style="width: 0%;"></div>
+    </div>
     <ul class="unstyled">
       <% _.each(cards, function(card, index) { %>
         <li class="js-card form-inline<% if (index) { %> hidden<% } %>">
-          <label><%= card.q %><br/>
+          <label><h3><%= card.q %></h3>
             <div class="input-append">
               <input class="input-large" type="text"/>
               <div class="btn-group js-answerBlock">
@@ -212,10 +215,13 @@
 
   <script class="js-tpl-testTest" type="text/x-template">
     <h4 class="muted"><%= name %></h4>
+    <div class="progress progress-striped active">
+      <div class="bar js-progress" style="width: 0%;"></div>
+    </div>
     <ul class="unstyled">
       <% _.each(cards, function(card, index) { %>
         <li class="js-card form-inline<% if (index) { %> hidden<% } %>">
-          <h6 class="muted"><%= card.q %></h6>
+          <h3><%= card.q %></h3>
           <% _.each(card.a, function (answer) { %>
             <label class="radio">
               <input type="radio" name="testTest" value="<%= answer %>"/>
@@ -236,17 +242,15 @@
 
   <script class="js-tpl-testMeditation" type="text/x-template">
     <h4 class="muted"><%= name %></h4>
+    <div class="progress progress-striped active">
+      <div class="bar js-progress" style="width: 0%;"></div>
+    </div>
     <ul class="unstyled">
       <% _.each(cards, function(card, index) { %>
         <li class="js-card form-inline<% if (index) { %> hidden<% } %>">
-          <label><%= card.q %><br/>
-            <div class="input-append">
-              <span class="input-large uneditable-input"><%= card.a %></span>
-              <div class="btn-group">
-                <button class="btn btn-warning js-next">Next</button>
-              </div>
-            </div>
-          </label>
+          <h3><%= card.a %></h3>
+          <h3><%= card.q %></h3>
+          <button class="btn btn-warning js-next">Next</button>
         </li>
       <% }); %>
     </ul>

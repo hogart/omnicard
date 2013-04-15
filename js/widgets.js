@@ -98,7 +98,8 @@ widgets.Start = widgets.Abstract.extend({
 
 widgets.ExploreAbstract = widgets.Abstract.extend({
     _ui: {
-        items: '.js-card'
+        items: '.js-card',
+        progress: '.js-progress'
     },
 
     initialize: function (options) {
@@ -118,12 +119,22 @@ widgets.ExploreAbstract = widgets.Abstract.extend({
             cards: this.cards,
             current: this.currentQuestion
         });
+        this._renderProgress();
+    },
+
+    /**
+     * @protected
+     */
+    _renderProgress: function () {
+        this.ui.progress.css({width: Math.ceil(this.currentQuestion / this.cards.length * 100) + '%'})
     },
 
     next: function () {
         this.ui.items.eq(this.currentQuestion).addClass('hidden');
 
         this.currentQuestion++;
+
+        this._renderProgress();
 
         if (this.currentQuestion == this.cards.length) {
             this.final();
@@ -143,7 +154,7 @@ widgets.TestAbstract = widgets.ExploreAbstract.extend({
     initialize: function (options) {
         this.correct = 0;
         this.wrong = 0;
-        this.showCorrections = !!options.showCorrections;
+        this.showCorrections = this.bus.prefs.get('showCorrections');
         widgets.TestAbstract.__super__.initialize.call(this, options);
     },
 
@@ -279,6 +290,8 @@ widgets.Deck = widgets.Abstract.extend({
         'click .js-startTest': 'onStartTest',
         'click .js-startExam': 'onStartExam',
 
+        'change [name="showCorrections"]': 'onShowCorrectionsChange',
+
         'meditationOver .js-test': 'onMeditationComplete',
         'testComplete .js-test': 'onTestComplete',
 
@@ -288,7 +301,7 @@ widgets.Deck = widgets.Abstract.extend({
 
     _ui: {
         score: '.js-score',
-        corrections: '[name="showCorrections"]'
+        showCorrections: '[name="showCorrections"]'
     },
 
     initialize: function (options) {
@@ -299,7 +312,8 @@ widgets.Deck = widgets.Abstract.extend({
 
         this.render({
             deck: this.deck,
-            testable: this.testable
+            testable: this.testable,
+            showCorrections: this.bus.prefs.get('showCorrections')
         });
 
         this.setState('browsing');
@@ -353,10 +367,13 @@ widgets.Deck = widgets.Abstract.extend({
             '.js-test',
             type,
             {
-                deck: this.deck,
-                showCorrections: this.ui.corrections.is(':checked')
+                deck: this.deck
             }
         );
+    },
+
+    onShowCorrectionsChange: function (evt) {
+        this.bus.prefs.set({showCorrections: this.ui.showCorrections.is(':checked')})
     }
 });
 
