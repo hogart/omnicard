@@ -77,6 +77,7 @@ locale.en = {
     shareDeckHelp: 'Entire deck for sharing',
     deckProperties: 'Deck properties',
     deckName: 'Name:',
+    deckNamePlaceholder: 'Deck name',
     deckDescr: 'Description:',
     deckDescrPlaceholder: 'Deck description (optional)',
     deckTags: 'Tags:',
