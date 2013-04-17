@@ -64,8 +64,25 @@ var Storable = Chitin.Observable.extend({
 var Decks = Storable.extend({
     defaults: {
         key: 'decks',
-        attrs: PredefinedDecks,
+        attrs: [],
         storage: Storage
+    },
+
+    initialize: function (options) {
+        Storable.__super__.initialize.call(this, options);
+
+        this.storage = new this.params.storage({key: this.params.key});
+        this.attrs = _.merge([], options.attrs, this.storage.loadDump());
+    },
+
+    save: function () {
+        var attrs = _.filter(
+            this.attrs,
+            function (deck) {
+                return !deck.builtIn
+            }
+        );
+        this.storage.save(attrs);
     },
 
     deleteDeck: function (deckIndex) {
@@ -133,10 +150,10 @@ var OmniCard = Chitin.Application.extend({
         this.pair = this.prefs.getPair();
 
         this._getLang();
-        this.locale = locale[this.lang];
+        this.locale = locale[this.lang] || locale.en;
 
         if (this.pair) {
-            this.prepareDecks();
+            this.prepareDecks(PredefinedDecks[this.pair]);
         }
 
         this.on('languagesChosen', this.onLang, this);
@@ -151,10 +168,6 @@ var OmniCard = Chitin.Application.extend({
             key: key,
             attrs: decks
         });
-
-        if (decks) {
-            this.decks.save()
-        }
     },
 
     onLang: function (data) {
@@ -167,7 +180,7 @@ var OmniCard = Chitin.Application.extend({
 
         this.pair = this.prefs.getPair();
 
-        this.prepareDecks(_.cloneDeep(PredefinedDecks[this.pair]));
+        this.prepareDecks(PredefinedDecks[this.pair]);
 
         this.trigger('startWork');
     },

@@ -7,6 +7,7 @@ PredefinedDecks['ru-pl'] = [
         "description": "Колода составлена на основе <a href=\"http://ru.wikipedia.org/wiki/%D0%A1%D0%BF%D0%B8%D1%81%D0%BE%D0%BA_%D0%A1%D0%B2%D0%BE%D0%B4%D0%B5%D1%88%D0%B0\">списка Сводеша</a>",
         "tags": ["словарный запас"],
         "testable": true,
+        "builtIn": true,
         "content": [
             {
                 "q": "я",
@@ -840,6 +841,7 @@ PredefinedDecks['ru-pl'] = [
         "description": "Несколько существительных, описывающих предметы интерьера и быта.",
         "tags": ["словарный запас", "существительные"],
         "testable": true,
+        "builtIn": true,
         "content": [
             {
                 "q": "стол",
@@ -985,6 +987,7 @@ PredefinedDecks['ru-pl'] = [
         "description": "Часто употребляющиеся прилагательные (в именительном падеже).",
         "tags": ["словарный запас", "прилагательные"],
         "testable": true,
+        "builtIn": true,
         "content": [
             {
                 "q": "узкий",
@@ -1066,6 +1069,7 @@ PredefinedDecks['ru-pl'] = [
         "description": "Некоторые глаголы I спряжения. Инфинитив и 6 форм настоящего времени. 26 глаголов.",
         "tags": ["глаголы", "грамматика"],
         "testable": true,
+        "builtIn": true,
         "content": [
             {
                 "a": "wykonywać",
@@ -1803,6 +1807,7 @@ PredefinedDecks['ru-pl'] = [
         "description": "Некоторые глаголы II спряжения, в т. ч. с чередованием согласных. Инфинитив и 6 форм настоящего времени. 10 глаголов.",
         "tags": ["глаголы", "грамматика"],
         "testable": true,
+        "builtIn": true,
         "content": [
             {
                 "a": "mówić",
@@ -2120,6 +2125,7 @@ PredefinedDecks['ru-pl'] = [
         "description": "Некоторые глаголы III спряжения. Инфинитив и 6 форм настоящего времени. 11 глаголов.",
         "tags": ["глаголы", "грамматика"],
         "testable": true,
+        "builtIn": true,
         "content": [
             {
                 "a": "mieć",
@@ -2437,6 +2443,7 @@ PredefinedDecks['ru-pl'] = [
         "description": "Некоторые глаголы IV спряжения. Инфинитив и 6 форм настоящего времени. 5 глаголов.",
         "tags": ["глаголы", "грамматика"],
         "testable": true,
+        "builtIn": true,
         "content": [
             {
                 "a": "jeść",
@@ -2586,6 +2593,7 @@ PredefinedDecks['ru-pl'] = [
         "description": "Существительные и прилагательные, имеющие отношение к пище.",
         "tags": ["существительные", "прилагательные", "словарный запас"],
         "testable": true,
+        "builtIn": true,
         "content": [
             {
                 "a": "pieczywo",
