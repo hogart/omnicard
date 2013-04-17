@@ -41,6 +41,8 @@ locale.en = {
     helpAlso: 'You can (and should) also create your own deck, which is great because it forces you to train in writing.',
 
     faq: 'FAQ',
+    faqDeckQ: 'What is a card? What is a deck?',
+    faqDeckA: 'Card is a pair of question (on your native language) and answer (on language that you learn). Deck is a set of such cards, combined together by any criteria you like.',
     faqEditQ: 'How do I edit deck?',
     faqEditA: 'Open that deck and note two icons in the top right corner of description. Clicking pencil icon brings up deck editing mode, and trash can deletes this deck.',
     faqCreateQ: 'How do I create new deck?',
@@ -115,6 +117,8 @@ locale.en = {
     clearAll: 'Clear all',
     clearAllHelp: 'Deletes all decks and settings entirely. You must know what you\'re doing.',
     confirmClearAll: 'This will erase all your decks, reset all settings and reload entire application.\nAre you sure you want to do this?',
+
+    changeLang: 'Change interface language',
 
 
     dump: 'Share decks',

@@ -3,8 +3,8 @@ var PredefinedDecks = {};
 
 PredefinedDecks['ru-pl'] = [
     {
-        "name": "Список Сводеша",
-        "description": "На основе списков Сводеша для русского и польских языков (с удаленными неоднозначностями).",
+        "name": "«Список Сводеша»",
+        "description": "Колода составлена на основе <a href=\"http://ru.wikipedia.org/wiki/%D0%A1%D0%BF%D0%B8%D1%81%D0%BE%D0%BA_%D0%A1%D0%B2%D0%BE%D0%B4%D0%B5%D1%88%D0%B0\">списка Сводеша</a>",
         "tags": ["словарный запас"],
         "testable": true,
         "content": [

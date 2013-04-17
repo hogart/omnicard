@@ -8,15 +8,11 @@ var widgets = {
     })
 };
 
-widgets.Pristine = widgets.Abstract.extend({
-    tpl: 'pristine',
-
-    events: {
-        'submit form': 'onSubmit'
-    },
+widgets.LangSelect = widgets.Abstract.extend({
+    tpl: 'langSelect',
 
     initialize: function (options) {
-        widgets.Pristine.__super__.initialize.call(this, options);
+        widgets.LangSelect.__super__.initialize.call(this, options);
 
         this.render({
             lang: this.bus.lang,
@@ -25,6 +21,25 @@ widgets.Pristine = widgets.Abstract.extend({
                 ru: 'Русский'
             }
         });
+    }
+});
+
+widgets.Pristine = widgets.Abstract.extend({
+    tpl: 'pristine',
+
+    events: {
+        'submit form': 'onSubmit'
+    },
+
+    subWidgets: {
+        '.js-changeLang': widgets.LangSelect
+    },
+
+    initialize: function (options) {
+        widgets.Pristine.__super__.initialize.call(this, options);
+
+        this.render({});
+        this.ensureSubWidgets();
     },
 
     onSubmit: function (evt) {
@@ -562,19 +577,31 @@ widgets.Settings = widgets.Abstract.extend({
 
     events: {
         'click .js-dump': function () { this.bus.trigger('displayDump') },
-        'click .js-reset': 'onResetClick'
+        'click .js-reset': 'onResetClick',
+        'click .js-changeLang': 'onChangeLang'
+    },
+
+    subWidgets: {
+        '.js-langSelect': widgets.LangSelect
     },
 
     initialize: function (options) {
         widgets.Settings.__super__.initialize.call(this, options);
 
         this.render({});
+        this.ensureSubWidgets();
     },
 
     onResetClick: function () {
         if (confirm(this.bus.locale.confirmClearAll)) {
             this.bus.reset();
         }
+    },
+
+    onChangeLang: function () {
+        var lang = this.$('[name="interface"]').val();
+        this.bus.prefs.set({interface: lang});
+        window.location.reload();
     }
 });
 

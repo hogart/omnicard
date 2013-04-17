@@ -100,11 +100,7 @@
         </label>
         <label class="span4">
           <%= locale.welcomeInterface %><br/>
-          <select name="interface">
-            <% _.each(langs, function (name, code) {  %>
-            <option value="<%= code %>" <% if (code == lang) { print('selected="selected"') } %>><%= name %></option>
-            <% }); %>
-          </select>
+          <div class="js-changeLang"></div>
         </label>
 
         <div>
@@ -129,6 +125,9 @@
           <p><%= locale.helpAlso %></p>
           <h4 class="muted"><%= locale.faq %></h4>
           <dl>
+            <dt><%= locale.faqDeckQ %></dt>
+            <dd><%= locale.faqDeckA %></dd>
+
             <dt><%= locale.faqEditQ %></dt>
             <dd><%= locale.faqEditA %></dd>
 
@@ -397,10 +396,27 @@
       <button class="btn btn-primary js-dump"><i class="icon-hdd icon-white"></i> <%= locale.importExport %></button><br/>
       <%= locale.importExportHelp %>
     </p>
+
     <p>
       <button class="btn btn-danger js-reset"><i class="icon-fire icon-white"></i> <%= locale.clearAll %></button><br/>
       <%= locale.clearAllHelp %>
     </p>
+
+    <hr/>
+
+    <p>
+      <%= locale.welcomeInterface %>
+      <div class="js-langSelect"></div>
+      <button class="btn js-changeLang"><%= locale.changeLang %></button>
+    </p>
+  </script>
+
+  <script class="js-tpl-langSelect" type="text/x-template">
+    <select name="interface">
+      <% _.each(langs, function (name, code) {  %>
+      <option value="<%= code %>" <% if (code == lang) { print('selected="selected"') } %>><%= name %></option>
+      <% }); %>
+    </select>
   </script>
 
   <script class="js-tpl-dump" type="text/x-template">
