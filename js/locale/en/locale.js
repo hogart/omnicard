@@ -44,7 +44,9 @@ locale.en = {
     faqDeckQ: 'What is a card? What is a deck?',
     faqDeckA: 'Card is a pair of question (on your native language) and answer (on language that you learn). Deck is a set of such cards, combined together by any criteria you like.',
     faqEditQ: 'How do I edit deck?',
-    faqEditA: 'Open that deck and note two icons in the top right corner of description. Clicking pencil icon brings up deck editing mode, and trash can deletes this deck.',
+    faqEditA: 'Open that deck and note two icons in the top right corner of description. ' +
+        'Clicking pencil icon brings up deck editing mode, and trash can deletes this deck. ' +
+        'Built-in deck can only be hidden (closed eye icon).',
     faqCreateQ: 'How do I create new deck?',
     faqCreateA: 'Use <span class="badge">Add deck…</span> button located beneath deck list.',
 
@@ -71,6 +73,8 @@ locale.en = {
     editDeck: 'Edit deck',
     deleteDeck: 'Delete deck',
     deleteDeckConfirm: 'Are you sure you want to delete this deck?',
+    hideDeck: 'Hide deck',
+    hideDeckConfirm: 'Are you sure you want to hide this deck?',
     showCorrections: 'Show correct answers',
     createDeck: 'Create new deck',
     importDeck: 'Import deck',

@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="css/deckNav.css"/>
   <link rel="stylesheet" href="css/deckView.css"/>
   <link rel="stylesheet" href="css/root.css"/>
+  <link rel="stylesheet" href="css/deckList.css"/>
 
 
   <script src="js/lodash.js"></script>
@@ -45,6 +46,8 @@
 
         <div class="js-start"></div>
 
+        <div class="js-deckList"></div>
+
         <div class="js-deck deckView"></div>
 
         <div class="js-edit"></div>
@@ -69,8 +72,12 @@
 
   <script class="js-tpl-nav" type="text/x-template">
     <ul class="nav nav-list">
-      <li class="nav-header"><h6><i class="icon-book"></i> <%= locale.decksHeader %></h6></li>
-      <% _.each(decks, function(deck, id) { %><li class="deckNav-item deckNav-item__deck js-deckItem" data-id="<%= id %>"><%= deck.name %></li><% }); %>
+      <li class="nav-header deckNav-item js-decksItem"><h6><i class="icon-book"></i> <%= locale.decksHeader %></h6></li>
+
+      <% _.each(decks, function(deck, index) { if (!(deck.id in hiddenDecks)) {  %>
+        <li class="deckNav-item deckNav-item__deck js-deckItem" data-id="<%= index %>"><%= deck.name %></li>
+      <% }}); %>
+
       <li class="deckNav-item js-addDeck"><i class="icon-plus"></i> <%= locale.newDeck %></li>
       <li><hr/></li>
 
@@ -158,11 +165,75 @@
       <button class="btn btn-primary js-show <% if (verbosity) { print('hidden') }%>"><%= locale.helpShow %></button>
   </script>
 
+  <script class="js-tpl-deckList" type="text/x-template">
+    <h4 class="muted"><%= locale.bulkTitle %></h4>
+    <table class="table deckList">
+      <thead>
+        <tr>
+          <td>
+            <label class="checkbox"><input type="checkbox" class="js-selectAll" title="<% locale.bulkSelectAll %>"/></label>
+          </td>
+          <td>
+            <% locale.bulkName %>
+          </td>
+          <td>
+            <% locale.bulkDescription %>
+          </td>
+          <td>
+            <% locale.bulkOperations %>
+          </td>
+        </tr>
+      </thead>
+      <tbody>
+        <% _.each(decks, function(deck, index) { %>
+          <tr data-id="<%= index %>">
+            <td><label class="checkbox"><input type="checkbox"/></label></td>
+            <td><%= deck.name %></td>
+            <td><%= deck.description %></td>
+            <td>
+              <div class="btn-group deckList-operations">
+                <button class="btn js-editDeck" title="<%= locale.editDeck %>"><i class="icon-pencil"></i></button>
+                <% if (deck.builtIn) { %>
+                  <% if (deck.id in hiddenDecks) { %>
+                    <button class="btn js-unhideDeck" title="<%= locale.unhideDeck %>"><i class="icon-eye-open"></i></button>
+                  <% } else { %>
+                    <button class="btn js-hideDeck" title="<%= locale.hideDeck %>"><i class="icon-eye-close"></i></button>
+                  <% } %>
+                <% } %>
+              </div>
+            </td>
+            <td></td>
+          </tr>
+        <% }); %>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td>
+            <input type="checkbox" class="js-selectAll" title="<% locale.bulkSelectAll %>"/>
+          </td>
+          <td>
+            <% locale.bulkName %>
+          </td>
+          <td>
+            <% locale.bulkDescription %>
+          </td>
+          <td>
+            <% locale.bulkOperations %>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </script>
+
   <script class="js-tpl-deck" type="text/x-template">
     <div class="well deckView-header">
       <div class="btn-group pull-right">
         <button class="btn js-editDeck" title="<%= locale.editDeck %>"><i class="icon-pencil"></i></button>
-        <button class="btn js-deleteDeck" title="<%= locale.deleteDeck %>"><i class="icon-trash"></i></button>
+        <% if (deck.builtIn) { %>
+          <button class="btn js-hideDeck" title="<%= locale.hideDeck %>"><i class="icon-eye-close"></i></button>
+        <% } else { %>
+          <button class="btn js-deleteDeck" title="<%= locale.deleteDeck %>"><i class="icon-trash"></i></button>
+        <% } %>
       </div>
       <h4 class="muted"><%= deck.name %> (<%= deck.content.length %>)</h4>
       <% if (deck.description) { %><p><%= deck.description %></p><% } %>
@@ -301,23 +372,43 @@
       <fieldset>
         <legend><%= locale.deckProperties %></legend>
 
-        <label><%= locale.deckName %><br/>
-          <input type="text" placeholder="<%= locale.deckNamePlaceholder %>" name="name" required="required" value="<%= deck.name %>" class="span7"/>
-        </label>
+        <% if (deck.builtIn) { %>
+          <label><%= locale.deckName %><br/>
+            <input type="text" value="<%= deck.name %>" class="span7" disabled="disabled"/>
+          </label>
 
-        <label><%= locale.deckDescr %><br/>
-          <textarea name="description" placeholder="<%= locale.deckDescrPlaceholder %>" class="span7" rows="3"><%= deck.description %></textarea>
-        </label>
+          <label><%= locale.deckDescr %><br/>
+            <textarea class="span7" rows="3" disabled="disabled"><%= deck.description %></textarea>
+          </label>
 
-        <label><%= locale.deckTags %><br/>
-          <input type="text" name="tags" placeholder="<%= locale.deckTagsPlaceholder %>" class="span7" value="<%= deck.tags.join(', ') %>"/>
-          <span class="help-block"><%= locale.deckTagsHelp %></span>
-        </label>
+          <label><%= locale.deckTags %><br/>
+            <input type="text" class="span7" value="<%= deck.tags.join(', ') %>" disabled="disabled"/>
+            <span class="help-block"><%= locale.deckTagsHelp %></span>
+          </label>
 
-        <label class="checkbox">
-          <input type="checkbox" name="testable" <% if (deck.testable) { print('checked="checked"'); } %>/> <%= locale.deckTestable %>
-          <span class="help-block"><%= locale.deckTestableHelp %></span>
-        </label>
+          <label class="checkbox">
+            <input type="checkbox" disabled="disabled" name="testable" <% if (deck.testable) { print('checked="checked"'); } %>/> <%= locale.deckTestable %>
+            <span class="help-block"><%= locale.deckTestableHelp %></span>
+          </label>
+        <% } else { %>
+          <label><%= locale.deckName %><br/>
+            <input type="text" placeholder="<%= locale.deckNamePlaceholder %>" name="name" required="required" value="<%= deck.name %>" class="span7"/>
+          </label>
+
+          <label><%= locale.deckDescr %><br/>
+            <textarea name="description" placeholder="<%= locale.deckDescrPlaceholder %>" class="span7" rows="3"><%= deck.description %></textarea>
+          </label>
+
+          <label><%= locale.deckTags %><br/>
+            <input type="text" name="tags" placeholder="<%= locale.deckTagsPlaceholder %>" class="span7" value="<%= deck.tags.join(', ') %>"/>
+            <span class="help-block"><%= locale.deckTagsHelp %></span>
+          </label>
+
+          <label class="checkbox">
+            <input type="checkbox" name="testable" <% if (deck.testable) { print('checked="checked"'); } %>/> <%= locale.deckTestable %>
+            <span class="help-block"><%= locale.deckTestableHelp %></span>
+          </label>
+        <% } %>
       </fieldset>
 
       <fieldset>
@@ -342,51 +433,63 @@
             <% _.each(deck.content, function (card, index) { %>
               <div class="js-cardForm">
                 <label><%= locale.question %><br/>
-                  <input type="text" value="<%= card.q %>" class="js-question span7" name="cardq"/>
+                  <% if (deck.builtIn) { %>
+                    <input type="text" value="<%= card.q %>" class="js-question span7" name="cardq" disabled="disabled"/>
+                  <% } else { %>
+                    <input type="text" value="<%= card.q %>" class="js-question span7" name="cardq"/>
+                  <% } %>
                 </label>
                 <label><%= locale.answer %><br/>
-                  <input type="text" value="<%= card.a %>" class="js-answer span7" name="carda"/>
+                  <% if (deck.builtIn) { %>
+                    <input type="text" value="<%= card.a %>" class="js-answer span7" name="carda" disabled="disabled"/>
+                  <% } else { %>
+                    <input type="text" value="<%= card.a %>" class="js-answer span7" name="carda"/>
+                  <% } %>
                 </label>
 
-                <button class="js-deleteCard btn btn-danger btn-small"><%= locale.deleteCard %></button>
+                <% if (!deck.builtIn) { %><button class="js-deleteCard btn btn-danger btn-small"><%= locale.deleteCard %></button><% } %>
                 <hr/>
               </div>
             <% }) %>
           </div>
 
-        <div class="js-addCard">
-          <span class="help-block"><%= locale.addCard %></span>
-          <label><%= locale.question %><br/>
-            <input type="text" value="" class="js-question span7"/>
-          </label>
-          <label><%= locale.answer %><br/>
-            <input type="text" value="" class="js-answer span7"/>
-          </label>
-
-          <button class="js-confirm btn btn-success btn-small" type="button"><%= locale.addCard %></button>
-        </div>
-
-        <div class="js-cardTemplate hidden">
-          <div class="js-cardForm">
+        <% if (!deck.builtIn) { %>
+          <div class="js-addCard">
+            <span class="help-block"><%= locale.addCard %></span>
             <label><%= locale.question %><br/>
-              <input type="text" class="js-question span7" name="cardq"/>
+              <input type="text" value="" class="js-question span7"/>
             </label>
             <label><%= locale.answer %><br/>
-              <input type="text" class="js-answer span7" name="carda"/>
+              <input type="text" value="" class="js-answer span7"/>
             </label>
 
-            <button class="js-deleteCard btn btn-danger btn-small"><%= locale.deleteCard %></button>
-            <hr/>
+            <button class="js-confirm btn btn-success btn-small" type="button"><%= locale.addCard %></button>
           </div>
-        </div>
+
+          <div class="js-cardTemplate hidden">
+            <div class="js-cardForm">
+              <label><%= locale.question %><br/>
+                <input type="text" class="js-question span7" name="cardq"/>
+              </label>
+              <label><%= locale.answer %><br/>
+                <input type="text" class="js-answer span7" name="carda"/>
+              </label>
+
+              <button class="js-deleteCard btn btn-danger btn-small"><%= locale.deleteCard %></button>
+              <hr/>
+            </div>
+          </div>
+        <% } %>
       </fieldset>
 
       <br/>
 
-      <div class="form-actions">
-        <button class="btn btn-primary" type="submit"><%= locale.deckSave %></button>
-        <button class="btn" type="reset"><%= locale.cancel %></button>
-      </div>
+      <% if (!deck.builtIn) { %>
+        <div class="form-actions">
+          <button class="btn btn-primary" type="submit"><%= locale.deckSave %></button>
+          <button class="btn" type="reset"><%= locale.cancel %></button>
+        </div>
+      <% } %>
     </form>
   </script>
 

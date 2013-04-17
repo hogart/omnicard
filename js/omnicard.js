@@ -112,7 +112,8 @@ var Preferences = Storable.extend({
         key: 'prefs',
         storage: Storage,
         attrs: {
-            showCorrections: true
+            showCorrections: true,
+            hiddenDecks: {}
         }
     },
 
@@ -133,6 +134,11 @@ var Preferences = Storable.extend({
         if (data.native && data.learn) {
             this.set({pair: {native: data.native, learn: data.learn}});
         }
+    },
+
+    hideDeck: function (deckId) {
+        this.attrs.hiddenDecks[deckId] = true;
+        this.save();
     }
 });
 
@@ -204,6 +210,10 @@ var OmniCard = Chitin.Application.extend({
         }
 
         this.lang = lang || 'en';
+    },
+
+    hideDeck: function (deckId) {
+        this.prefs.hideDeck(deckId);
     }
 });
 

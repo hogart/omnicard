@@ -57,7 +57,8 @@ widgets.Nav = widgets.Abstract.extend({
     events: {
         'click .js-deckItem': 'onDeckClick',
         'click .js-addDeck': 'onAddDeck',
-        'click .js-settingsItem': 'onSettings'
+        'click .js-settingsItem': 'onSettings'/*,
+        'click .js-decksItem': 'onDeckList'*/
     },
 
     initialize: function (options) {
@@ -72,6 +73,7 @@ widgets.Nav = widgets.Abstract.extend({
         this.decks = this.params.decks.attrs;
 
         this.render({
+            hiddenDecks: this.bus.prefs.attrs.hiddenDecks,
             decks: this.decks
         });
     },
@@ -90,6 +92,10 @@ widgets.Nav = widgets.Abstract.extend({
 
     onSettings: function () {
         this.bus.trigger('displaySettings');
+    },
+
+    onDeckList: function () {
+        this.bus.trigger('displayDecks');
     }
 });
 
@@ -311,6 +317,23 @@ widgets.Score = widgets.Abstract.extend({
     }
 });
 
+widgets.DeckList = widgets.Abstract.extend({
+    tpl: 'deckList',
+
+    initialize: function (options) {
+        widgets.DeckList.__super__.initialize.call(this, options);
+
+        this.rr();
+    },
+
+    rr: function () {
+        this.render({
+            decks: this.bus.decks.attrs,
+            hiddenDecks: this.bus.prefs.attrs.hiddenDecks
+        });
+    }
+});
+
 widgets.Deck = widgets.Abstract.extend({
     tpl: 'deck',
 
@@ -325,7 +348,8 @@ widgets.Deck = widgets.Abstract.extend({
         'testComplete .js-test': 'onTestComplete',
 
         'click .js-editDeck': 'onEditDeck',
-        'click .js-deleteDeck': 'onDeleteDeck'
+        'click .js-deleteDeck': 'onDeleteDeck',
+        'click .js-hideDeck': 'onHideDeck'
     },
 
     _ui: {
@@ -377,6 +401,10 @@ widgets.Deck = widgets.Abstract.extend({
 
     onDeleteDeck: function () {
         this.bus.trigger('deleteDeck', this.params.deck);
+    },
+
+    onHideDeck: function () {
+        this.bus.trigger('hideDeck', this.params.deck);
     },
 
     setState: function (state) {
@@ -681,8 +709,10 @@ widgets.Root = widgets.Abstract.extend({
         'editDeck': 'editDeck',
         'addDeck': 'editDeck',
         'deleteDeck': 'deleteDeck',
+        'hideDeck': 'hideDeck',
         'displayDump': 'displayDump',
-        'displaySettings': 'displaySettings'
+        'displaySettings': 'displaySettings',
+        'displayDecks': 'displayDecks'
     },
 
     initialize: function (options) {
@@ -710,6 +740,7 @@ widgets.Root = widgets.Abstract.extend({
         this.unregisterChild('.js-pristine');
         this.unregisterChild('.js-start');
         this.unregisterChild('.js-deck');
+        this.unregisterChild('.js-deckList');
         this.unregisterChild('.js-edit');
         this.unregisterChild('.js-settings');
         this.unregisterChild('.js-dump');
@@ -730,6 +761,18 @@ widgets.Root = widgets.Abstract.extend({
             this.bus.decks.deleteDeck(deck[0]);
             this._clearScreen();
         }
+    },
+
+    hideDeck: function (deck) {
+        if (confirm(this.bus.locale.hideDeckConfirm)) {
+            this.bus.hideDeck(deck[1].id);
+            this._clearScreen();
+        }
+    },
+
+    displayDecks: function () {
+        this._clearScreen();
+        this.registerChild('.js-deckList', widgets.DeckList, {});
     },
 
     displayDeck: function (deck) {
