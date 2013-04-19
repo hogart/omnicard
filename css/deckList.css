@@ -1,0 +1,8 @@
+.deckList {}
+
+    .deckList .deckList-operations {
+        opacity: 0;
+    }
+    .deckList tr:hover .deckList-operations {
+        opacity: 1;
+    }
