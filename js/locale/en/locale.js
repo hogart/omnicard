@@ -69,11 +69,17 @@ locale.en = {
     helpHide: 'Don\'t show me this',
     helpShow: 'Show help',
 
+    bulkTitle: 'Decks management',
+    bulkSelectAll: 'Select all',
+    bulkName: 'Title',
+    bulkDescription: 'Description',
+    bulkOperations: 'Actions',
 
     editDeck: 'Edit deck',
     deleteDeck: 'Delete deck',
     deleteDeckConfirm: 'Are you sure you want to delete this deck?',
     hideDeck: 'Hide deck',
+    unhideDeck: 'Reveal deck',
     hideDeckConfirm: 'Are you sure you want to hide this deck?',
     showCorrections: 'Show correct answers',
     createDeck: 'Create new deck',

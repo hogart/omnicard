@@ -70,11 +70,17 @@ locale.ru = {
     helpHide: 'Не показывать это',
     helpShow: 'Показать подсказку',
 
+    bulkTitle: 'Управление колодами',
+    bulkSelectAll: 'Выбрать все',
+    bulkName: 'Название',
+    bulkDescription: 'Описание',
+    bulkOperations: 'Actions',
 
     editDeck: 'Редактировать колоду',
     deleteDeck: 'Удалить колоду',
     deleteDeckConfirm: 'Вы действительно хотите удалить колоду?',
     hideDeck: 'Скрыть колоду',
+    unhideDeck: 'Показывать колоду',
     hideDeckConfirm: 'Вы действительно хотите скрыть колоду?',
     showCorrections: 'Показывать правильные ответы',
     createDeck: 'Создать колоду',
