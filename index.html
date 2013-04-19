@@ -179,18 +179,22 @@
     <table class="table deckList">
       <thead>
         <tr>
-          <td>
-            <label class="checkbox"><input type="checkbox" class="js-selectAll" title="<% locale.bulkSelectAll %>"/></label>
-          </td>
-          <td>
-            <% locale.bulkName %>
-          </td>
-          <td>
-            <% locale.bulkDescription %>
-          </td>
-          <td>
-            <% locale.bulkOperations %>:
-          </td>
+          <th>
+            <label class="checkbox"><input type="checkbox" class="js-selectAll" title="<%= locale.bulkSelectAll %>"/></label>
+          </th>
+          <th>
+            <%= locale.bulkName %>
+          </th>
+          <th>
+            <%= locale.bulkDescription %>
+          </th>
+          <th>
+            <div class="btn-group">
+              <button class="btn js-show" title="<%= locale.bulkShow %>" disabled="disabled"><i class="icon-eye-open"></i></button>
+              <button class="btn js-hide" title="<%= locale.bulkHide %>" disabled="disabled"><i class="icon-eye-close"></i></button>
+              <button class="btn js-export" title="<%= locale.bulkExport %>" disabled="disabled"><i class="icon-hdd"></i></button>
+            </div>
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -215,22 +219,26 @@
           </tr>
         <% }); %>
       </tbody>
-      <tfoot>
+      <!--<tfoot>
         <tr>
           <td>
-            <input type="checkbox" class="js-selectAll" title="<% locale.bulkSelectAll %>"/>
+            <label class="checkbox"><input type="checkbox" class="js-selectAll" title="<% locale.bulkSelectAll %>"/></label>
           </td>
           <td>
-            <% locale.bulkName %>
+            <%= locale.bulkName %>
           </td>
           <td>
-            <% locale.bulkDescription %>
+            <%= locale.bulkDescription %>
           </td>
           <td>
-            <% locale.bulkOperations %>
+              <div class="btn-group">
+                <button class="btn js-show" title="<%= locale.bulkShow %>" disabled="disabled"><i class="icon-eye-open"></i></button>
+                <button class="btn js-hide" title="<%= locale.bulkHide %>" disabled="disabled"><i class="icon-eye-close"></i></button>
+                <button class="btn js-export" title="<%= locale.bulkExport %>" disabled="disabled"><i class="icon-hdd"></i></button>
+            </div>
           </td>
         </tr>
-      </tfoot>
+      </tfoot>-->
     </table>
   </script>
 

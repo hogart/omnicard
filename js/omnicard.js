@@ -79,19 +79,21 @@ var Decks = Storable.extend({
         var attrs = _.filter(
             this.attrs,
             function (deck) {
-                return !deck.builtIn
+                return deck ? !deck.builtIn : false
             }
         );
         this.storage.save(attrs);
     },
 
-    deleteDeck: function (deckIndex) {
+    deleteDeck: function (deckIndex, options) {
         this.attrs[deckIndex] = null;
-        this.attrs = _.compact(this.attrs);
 
-        this.save();
+        options = options || {silent: false};
+        if (!options.silent) {
+            this.save();
 
-        this.trigger('update');
+            this.trigger('update');
+        }
     }
 }, {
     createDeck: function () {
@@ -138,6 +140,11 @@ var Preferences = Storable.extend({
 
     hideDeck: function (deckId) {
         this.attrs.hiddenDecks[deckId] = true;
+        this.save();
+    },
+
+    unhideDeck: function (deckId) {
+        delete this.attrs.hiddenDecks[deckId];
         this.save();
     }
 });
@@ -214,6 +221,9 @@ var OmniCard = Chitin.Application.extend({
 
     hideDeck: function (deckId) {
         this.prefs.hideDeck(deckId);
+    },
+    unhideDeck: function (deckId) {
+        this.prefs.unhideDeck(deckId);
     }
 });
 

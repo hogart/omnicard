@@ -57,8 +57,8 @@ widgets.Nav = widgets.Abstract.extend({
     events: {
         'click .js-deckItem': 'onDeckClick',
         'click .js-addDeck': 'onAddDeck',
-        'click .js-settingsItem': 'onSettings'/*,
-        'click .js-decksItem': 'onDeckList'*/
+        'click .js-settingsItem': 'onSettings',
+        'click .js-decksItem': 'onDeckList'
     },
 
     initialize: function (options) {
@@ -320,10 +320,26 @@ widgets.Score = widgets.Abstract.extend({
 widgets.DeckList = widgets.Abstract.extend({
     tpl: 'deckList',
 
+    events: {
+        'change .js-selectAll': 'selectAll',
+        'change tbody input[type="checkbox"]': 'selectAny',
+        'click .js-hide': 'onHide',
+        'click .js-show': 'onShow',
+        'click .js-export': 'onExport'
+    },
+
+    _ui: {
+        selectAll: '.js-selectAll',
+        boxes: 'tbody input[type="checkbox"]',
+        buttons: 'thead button'
+    },
+
     initialize: function (options) {
         widgets.DeckList.__super__.initialize.call(this, options);
 
         this.rr();
+
+        this.listenTo(this.bus.decks, 'update', this.rr);
     },
 
     rr: function () {
@@ -331,6 +347,78 @@ widgets.DeckList = widgets.Abstract.extend({
             decks: this.bus.decks.attrs,
             hiddenDecks: this.bus.prefs.attrs.hiddenDecks
         });
+    },
+
+    selectAll: function () {
+        var checked = this.ui.selectAll.prop('checked');
+
+        this.ui.boxes.prop('checked', checked);
+
+        this._enableButtons(checked);
+    },
+
+    selectAny: function () {
+        this._enableButtons(this._getChecked().length)
+    },
+
+    onHide: function () {
+        var checked = this._getChecked(),
+            bus = this.bus;
+
+        checked.each(function (index, node) {
+            var deck = bus.decks.attrs[index];
+            if (deck.builtIn) {
+                bus.hideDeck(deck.id);
+            } else {
+                bus.decks.deleteDeck(index, {silent: true});
+            }
+        });
+
+        bus.decks.save();
+        bus.decks.trigger('update');
+    },
+
+    onShow: function () {
+        var checked = this._getChecked(),
+            bus = this.bus;
+
+        checked.each(function (index, node) {
+            var deck = bus.decks.attrs[index];
+            if (deck.builtIn) {
+                bus.unhideDeck(deck.id);
+            }
+        });
+
+        bus.decks.trigger('update');
+    },
+
+    onExport: function () {
+        var checked = this._getChecked(),
+            bus = this.bus,
+            exportArr = [],
+            exported = {};
+
+        checked.each(function (index, node) {
+            exportArr.push(
+                _.omit(bus.decks.attrs[index], ['builtIn', 'id'])
+            );
+        });
+
+        exported[this.bus.pair] = exportArr;
+
+        console.log(JSON.stringify(exported));
+    },
+
+    _enableButtons: function (enable) {
+        if (enable) {
+            this.ui.buttons.prop('disabled', false);
+        } else {
+            this.ui.buttons.prop('disabled', true);
+        }
+    },
+
+    _getChecked: function () {
+        return this.ui.boxes.filter(':checked');
     }
 });
 

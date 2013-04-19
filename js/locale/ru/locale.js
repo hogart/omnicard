@@ -74,7 +74,9 @@ locale.ru = {
     bulkSelectAll: 'Выбрать все',
     bulkName: 'Название',
     bulkDescription: 'Описание',
-    bulkOperations: 'Actions',
+    bulkShow: 'Показывать выбранные',
+    bulkHide: 'Скрыть/удалить выбранные',
+    bulkExport: 'Экспорт',
 
     editDeck: 'Редактировать колоду',
     deleteDeck: 'Удалить колоду',

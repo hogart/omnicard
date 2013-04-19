@@ -73,7 +73,9 @@ locale.en = {
     bulkSelectAll: 'Select all',
     bulkName: 'Title',
     bulkDescription: 'Description',
-    bulkOperations: 'Actions',
+    bulkShow: 'Show selected decks',
+    bulkHide: 'Hide/delete selected decks',
+    bulkExport: 'Export selected decks',
 
     editDeck: 'Edit deck',
     deleteDeck: 'Delete deck',

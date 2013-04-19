@@ -6,3 +6,7 @@
     .deckList tr:hover .deckList-operations {
         opacity: 1;
     }
+
+    .deckList thead th {
+        vertical-align: top;
+    }
