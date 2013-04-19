@@ -26,7 +26,16 @@
   <script src="js/omnicard.js"></script>
 </head>
 <body>
-  <div class="container-fluid js-root root" data-widget="Root"></div>
+<!--[if lt IE 8]>
+  <div class="alert alert-error">
+    <h4>OmniCard can't  work in this browser / OmniCard не может работать в этом браузере</h4>
+    <a href="http://abetterbrowser.org.">Upgrade your browser / Установите более новый</a>
+    <style>.root { display: none; }</style>
+  </div>
+<![endif]-->
+
+
+  <div class="container-fluid js-root root"></div>
 
 
   <script class="js-tpl-root" type="text/x-template">
@@ -180,7 +189,7 @@
             <% locale.bulkDescription %>
           </td>
           <td>
-            <% locale.bulkOperations %>
+            <% locale.bulkOperations %>:
           </td>
         </tr>
       </thead>
