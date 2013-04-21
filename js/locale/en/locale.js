@@ -63,6 +63,9 @@ locale.en = {
     faqShareA8: 'Sounds more hard then it really is:)',
     faqShareA9: 'Additionally you can import/export cards only, and import/export all decks at once in <span class="badge">Settings</span>.',
 
+    faqManagementQ: 'Can I delete decks en masse?',
+    faqManagementA: 'Click <span class="badge">Decks</span> above deck list. You\'ll find this and other bulk operations there.',
+
     faqFeedbackQ: 'Application misbehaves / error in built-in deck / I have a suggestion / typo / I want to help.',
     faqFeedbackA: 'Keep calm and <a href="https://github.com/hogart/OmniCard/issues/new">contact us</a>. Thanks!',
 

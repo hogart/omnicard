@@ -10,3 +10,16 @@
     .deckList thead th {
         vertical-align: top;
     }
+
+    .deckList .deckList-dump {
+        width: 100%;
+        height: 200px;
+        resize: vertical;
+    }
+
+    .deckList .deckList-dumpWrapper {
+        display: none;
+    }
+        .deckList-full .deckList-dumpWrapper {
+            display: table-row;
+        }

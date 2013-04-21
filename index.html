@@ -163,8 +163,10 @@
               </ol>
               <p><%= locale.faqShareA8 %></p>
               <p><%= locale.faqShareA9 %></p>
-
             </dd>
+
+            <dt><%= locale.faqManagementQ %></dt>
+            <dd><%= locale.faqManagementA %></dd>
 
             <dt><%= locale.faqFeedbackQ %></dt>
             <dd><%= locale.faqFeedbackA %></dd>
@@ -195,6 +197,12 @@
               <button class="btn js-export" title="<%= locale.bulkExport %>" disabled="disabled"><i class="icon-hdd"></i></button>
             </div>
           </th>
+        </tr>
+        <tr class="deckList-dumpWrapper js-dumpWrapper">
+          <td colspan="4">
+            <textarea class="deckList-dump"></textarea>
+            <button class="btn btn-primary js-done"><%= locale.done %></button>
+          </td>
         </tr>
       </thead>
       <tbody>

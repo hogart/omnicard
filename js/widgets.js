@@ -325,13 +325,21 @@ widgets.DeckList = widgets.Abstract.extend({
         'change tbody input[type="checkbox"]': 'selectAny',
         'click .js-hide': 'onHide',
         'click .js-show': 'onShow',
-        'click .js-export': 'onExport'
+        'click .js-export': 'onExport',
+        'click .js-done': function () { this.ui.table.removeClass('deckList-full'); },
+        'click textarea': function () { this.ui.dump[0].select(); },
+
+        'click .js-editDeck': 'onEditDeck',
+        'click .js-hideDeck': 'onHideDeck',
+        'click .js-unhideDeck': 'onShowDeck'
     },
 
     _ui: {
+        table: 'table',
         selectAll: '.js-selectAll',
         boxes: 'tbody input[type="checkbox"]',
-        buttons: 'thead button'
+        buttons: 'thead button',
+        dump: 'textarea'
     },
 
     initialize: function (options) {
@@ -363,15 +371,13 @@ widgets.DeckList = widgets.Abstract.extend({
 
     onHide: function () {
         var checked = this._getChecked(),
-            bus = this.bus;
+            bus = this.bus,
+            hideDeck = _.bind(this._hideDeck, this);
 
         checked.each(function (index, node) {
             var deck = bus.decks.attrs[index];
-            if (deck.builtIn) {
-                bus.hideDeck(deck.id);
-            } else {
-                bus.decks.deleteDeck(index, {silent: true});
-            }
+
+            hideDeck(deck, index);
         });
 
         bus.decks.save();
@@ -406,7 +412,46 @@ widgets.DeckList = widgets.Abstract.extend({
 
         exported[this.bus.pair] = exportArr;
 
-        console.log(JSON.stringify(exported));
+        this.ui.table.addClass('deckList-full');
+        this.ui.dump.val(JSON.stringify(exported));
+    },
+
+    onEditDeck: function (evt) {
+        var tr = $(evt.target).closest('tr'),
+            id = parseInt(tr.attr('data-id')),
+            deck = this.bus.decks.attrs[id];
+
+        this.bus.trigger('editDeck', [id, deck]);
+    },
+
+    onHideDeck: function (evt) {
+        var tr = $(evt.target).closest('tr'),
+            id = parseInt(tr.attr('data-id')),
+            deck = this.bus.decks.attrs[id];
+
+        this._hideDeck(deck, id);
+
+        this.bus.decks.save();
+        this.bus.decks.trigger('update');
+    },
+
+    onShowDeck: function (evt) {
+        var tr = $(evt.target).closest('tr'),
+            id = parseInt(tr.attr('data-id')),
+            deck = this.bus.decks.attrs[id];
+
+        this.bus.unhideDeck(deck.id);
+
+        this.bus.decks.save();
+        this.bus.decks.trigger('update');
+    },
+
+    _hideDeck: function (deck, index) {
+        if (deck.builtIn) {
+            this.bus.hideDeck(deck.id);
+        } else {
+            this.bus.decks.deleteDeck(index, {silent: true});
+        }
     },
 
     _enableButtons: function (enable) {
