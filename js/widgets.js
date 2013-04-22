@@ -703,7 +703,7 @@ widgets.EditDeck = widgets.Abstract.extend({
         newCard.find('.js-question').val( this.ui.newQuestion.val() );
         newCard.find('.js-answer').val( this.ui.newAnswer.val() );
 
-        newCard.appendTo(this.ui.cardList).removeClass('hidden');
+        newCard.appendTo(this.ui.cardList).removeClass('hidden js-cardTemplate');
 
         this.ui.newQuestion.val('');
         this.ui.newAnswer.val('');
