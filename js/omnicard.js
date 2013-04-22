@@ -72,7 +72,10 @@ var Decks = Storable.extend({
         Storable.__super__.initialize.call(this, options);
 
         this.storage = new this.params.storage({key: this.params.key});
-        this.attrs = _.merge([], options.attrs, this.storage.loadDump());
+
+        this.attrs = [];
+        this.attrs.push.apply(this.attrs, options.attrs);
+        this.attrs.push.apply(this.attrs, this.storage.loadDump());
     },
 
     save: function () {
