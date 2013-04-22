@@ -290,7 +290,7 @@
   <script class="js-tpl-testExam" type="text/x-template">
     <h4 class="muted"><%= name %></h4>
     <div class="progress progress-striped active">
-      <div class="bar js-progress" style="width: 0%;"></div>
+      <div class="bar js-progress" style="width: 1%;"></div>
     </div>
     <ul class="unstyled">
       <% _.each(cards, function(card, index) { %>
@@ -314,7 +314,7 @@
   <script class="js-tpl-testTest" type="text/x-template">
     <h4 class="muted"><%= name %></h4>
     <div class="progress progress-striped active">
-      <div class="bar js-progress" style="width: 0%;"></div>
+      <div class="bar js-progress" style="width: 1%;"></div>
     </div>
     <ul class="unstyled">
       <% _.each(cards, function(card, index) { %>
@@ -360,6 +360,17 @@
     <% } else { %>
       <% if (wrong) { %><p class="text-error"><%= locale.wrongs %> <span class="badge badge-warning"><%= wrong %></span></p><% } %>
       <% if (correct) { %><p class="text-success"><%= locale.corrects %> <span class="badge badge-success"><%= correct %></span></p><% } %>
+      <% if (corrections) { %>
+        <dl class="dl-horizontal">
+        <% _.each(corrections, function (correction) { %>
+          <dt><%= correction.q %></dt>
+          <dd>
+            <span class="text-success"><%= correction.a %></span>
+            <del class="text-error"><%= correction.w %></del>
+          </dd>
+        <% }); %>
+        </dl>
+      <% } %>
       <% if (!wrong) { %>
         <p class="text-success"><%= locale.congrats %></p>
       <% } else if (!correct) { %>

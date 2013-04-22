@@ -159,7 +159,15 @@ widgets.ExploreAbstract = widgets.Abstract.extend({
      * @protected
      */
     _renderProgress: function () {
-        this.ui.progress.css({width: Math.ceil(this.currentQuestion / this.cards.length * 100) + '%'})
+        var width = 1;
+
+        width += Math.ceil(this.currentQuestion / this.cards.length * 99);
+
+        this.ui.progress.css({
+            width: width + '%'
+        });
+
+        this.ui.progress.text(this.currentQuestion + '/' + this.cards.length)
     },
 
     next: function () {
@@ -191,6 +199,15 @@ widgets.TestAbstract = widgets.ExploreAbstract.extend({
         widgets.TestAbstract.__super__.initialize.call(this, options);
 
         this.showCorrections = this.bus.prefs.get('showCorrections');
+        this.corrections = [];
+    },
+
+    isCorrect: function (answer, correctAnswer) {
+        if (this.caseSensitive) {
+            return answer == correctAnswer
+        } else {
+            return answer.toLowerCase() == correctAnswer.toLowerCase()
+        }
     },
 
     onAnswer: function (evt) {
@@ -199,7 +216,7 @@ widgets.TestAbstract = widgets.ExploreAbstract.extend({
             answer = this.retrieveAnswer(li),
             correctAnswer = this.cards[this.currentQuestion].a;
 
-        if (answer == correctAnswer) {
+        if (this.isCorrect(answer, correctAnswer)) {
             this.correct++;
             this.next();
         } else {
@@ -209,6 +226,11 @@ widgets.TestAbstract = widgets.ExploreAbstract.extend({
                 li.find('.js-correction').html(correctAnswer).removeClass('hidden');
                 li.find('.js-next').removeClass('hidden');
                 li.find('.js-answerBlock').addClass('hidden');
+                this.corrections.push({
+                    q: this.cards[this.currentQuestion].q,
+                    a: this.cards[this.currentQuestion].a,
+                    w: answer
+                });
             } else {
                 this.next();
             }
@@ -222,7 +244,16 @@ widgets.TestAbstract = widgets.ExploreAbstract.extend({
     },
 
     final: function () {
-        this.$el.trigger('testComplete', {wrong: this.wrong, correct: this.correct});
+        var params = {
+            wrong: this.wrong,
+            correct: this.correct
+        };
+
+        if (this.corrections.length) {
+            params.corrections = this.corrections
+        }
+
+        this.$el.trigger('testComplete', params);
     }
 });
 
@@ -312,7 +343,8 @@ widgets.Score = widgets.Abstract.extend({
             congrats: this.params.congrats,
             wrong: this.params.wrong,
             correct: this.params.correct,
-            testable: this.params.testable
+            testable: this.params.testable,
+            corrections: this.params.corrections
         });
     }
 });
