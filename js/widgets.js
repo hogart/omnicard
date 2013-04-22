@@ -679,13 +679,15 @@ widgets.EditDeck = widgets.Abstract.extend({
         var deckContent = _.pick(deckRaw, ['name', 'description', 'tags', 'content']);
         if (_.isNull(this.id)) {
             this.bus.decks.attrs.push(deckContent);
-            this.bus.decks.set({}); // trick to force save and trigger `update` event
+            this.bus.decks.set({}); // trick to force save
         } else {
             var deck = {};
             deck[this.deck[0]] = deckContent;
 
             this.bus.decks.set(deck);
         }
+
+        this.bus.decks.trigger('update');
 
         this.bus.trigger('displayStart');
     },

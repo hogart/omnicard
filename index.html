@@ -207,7 +207,7 @@
       </thead>
       <tbody>
         <% _.each(decks, function(deck, index) { %>
-          <tr data-id="<%= index %>">
+          <tr data-id="<%= index %>" <% if (deck.id in hiddenDecks) { print('class="muted"'); } %>>
             <td><label class="checkbox"><input type="checkbox"/></label></td>
             <td><%= deck.name %></td>
             <td><%= deck.description %></td>
@@ -220,6 +220,8 @@
                   <% } else { %>
                     <button class="btn js-hideDeck" title="<%= locale.hideDeck %>"><i class="icon-eye-close"></i></button>
                   <% } %>
+                <% } else { %>
+                  <button class="btn js-hideDeck" title="<%= locale.deleteDeck %>"><i class="icon-trash"></i></button>
                 <% } %>
               </div>
             </td>
@@ -227,26 +229,6 @@
           </tr>
         <% }); %>
       </tbody>
-      <!--<tfoot>
-        <tr>
-          <td>
-            <label class="checkbox"><input type="checkbox" class="js-selectAll" title="<% locale.bulkSelectAll %>"/></label>
-          </td>
-          <td>
-            <%= locale.bulkName %>
-          </td>
-          <td>
-            <%= locale.bulkDescription %>
-          </td>
-          <td>
-              <div class="btn-group">
-                <button class="btn js-show" title="<%= locale.bulkShow %>" disabled="disabled"><i class="icon-eye-open"></i></button>
-                <button class="btn js-hide" title="<%= locale.bulkHide %>" disabled="disabled"><i class="icon-eye-close"></i></button>
-                <button class="btn js-export" title="<%= locale.bulkExport %>" disabled="disabled"><i class="icon-hdd"></i></button>
-            </div>
-          </td>
-        </tr>
-      </tfoot>-->
     </table>
   </script>
 

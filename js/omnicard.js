@@ -38,7 +38,9 @@ var Storable = Chitin.Observable.extend({
         _.extend(this.attrs, attrs);
         this.save();
 
-        if (options && !options.silent) {
+        options || (options = {silent: false});
+
+        if (!options.silent) {
             this.trigger('update');
         }
 
@@ -49,7 +51,9 @@ var Storable = Chitin.Observable.extend({
         this.attrs = {};
         this.save();
 
-        if (options && !options.silent) {
+        options || (options = {silent: false});
+
+        if (!options.silent) {
             this.trigger('update');
         }
 
