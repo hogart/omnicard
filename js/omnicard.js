@@ -78,7 +78,8 @@ var Decks = Storable.extend({
         this.storage = new this.params.storage({key: this.params.key});
 
         this.attrs = [];
-        this.attrs.push.apply(this.attrs, options.attrs);
+        this.builtIns = options.attrs;
+        this.attrs.push.apply(this.attrs, this.builtIns);
         this.attrs.push.apply(this.attrs, this.storage.loadDump());
     },
 
@@ -86,10 +87,15 @@ var Decks = Storable.extend({
         var attrs = _.filter(
             this.attrs,
             function (deck) {
-                return deck ? !deck.builtIn : false
+                return !(!deck || deck.builtIn);
             }
         );
+
         this.storage.save(attrs);
+
+        this.attrs = [];
+        this.attrs.push.apply(this.attrs, this.builtIns);
+        this.attrs.push.apply(this.attrs, attrs);
     },
 
     deleteDeck: function (deckIndex, options) {
