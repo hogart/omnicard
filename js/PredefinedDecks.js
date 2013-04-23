@@ -1672,7 +1672,7 @@ PredefinedDecks['ru-pl'] = [
                 "q": "пишу"
             },
             {
-                "a": "piszemy",
+                "a": "piszesz",
                 "q": "пишешь"
             },
             {
@@ -1697,7 +1697,7 @@ PredefinedDecks['ru-pl'] = [
             },
             {
                 "a": "istnieję",
-                "q": "существуют"
+                "q": "существую"
             },
             {
                 "a": "istniejesz",
