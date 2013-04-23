@@ -1,4 +1,8 @@
 var Storage = Chitin.Abstract.extend({
+    defaults: {
+        defaultVal: {}
+    },
+
     initialize: function (options) {
         Storage.__super__.initialize.call(this, options);
     },
@@ -9,7 +13,7 @@ var Storage = Chitin.Abstract.extend({
 
     loadDump: function() {
         var loaded = localStorage.getItem(this.params.key),
-            result = {};
+            result = this.params.defaultVal;
 
         if (loaded) {
             try {
@@ -75,12 +79,15 @@ var Decks = Storable.extend({
     initialize: function (options) {
         Storable.__super__.initialize.call(this, options);
 
-        this.storage = new this.params.storage({key: this.params.key});
+        this.storage = new this.params.storage({key: this.params.key, defaultVal: []});
 
         this.attrs = [];
         this.builtIns = options.attrs;
         this.attrs.push.apply(this.attrs, this.builtIns);
-        this.attrs.push.apply(this.attrs, this.storage.loadDump());
+
+        var dump = this.storage.loadDump();
+
+        this.attrs.push.apply(this.attrs, dump);
     },
 
     save: function () {
@@ -212,8 +219,8 @@ var OmniCard = Chitin.Application.extend({
     },
 
     reset: function () {
-        this.prefs.reset();
-        this.decks.reset();
+        this.prefs.reset({silent: true});
+        this.decks.reset({silent: true});
 
         window.location.reload();
     },
