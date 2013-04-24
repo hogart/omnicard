@@ -265,7 +265,7 @@
                 throw new Error('Invalid tpl selector: "' + tpl + '" — no such nodes or too many.');
             }
 
-            return _.template(tplNode.text());
+            return _.template(tplNode.html());
         },
     
         render: function (data) {
