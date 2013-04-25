@@ -209,7 +209,7 @@
           <tr data-id="<%= index %>" <% if (deck.id in hiddenDecks) { print('class="muted"'); } %>>
             <td><label class="checkbox"><input type="checkbox"/></label></td>
             <td><%= deck.name %></td>
-            <td><%= deck.description %></td>
+            <td><%= deck.description.replace(/\n/mg, '<br/>') %></td>
             <td>
               <div class="btn-group deckList-operations">
                 <button class="btn js-editDeck" title="<%= locale.editDeck %>"><i class="icon-pencil"></i></button>
@@ -242,7 +242,7 @@
         <% } %>
       </div>
       <h4 class="muted"><%= deck.name %> (<%= deck.content.length %>)</h4>
-      <% if (deck.description) { %><p><%= deck.description %></p><% } %>
+      <% if (deck.description) { %><p><%= deck.description.replace(/\n/mg, '<br/>') %></p><% } %>
       <% if (deck.tags && deck.tags.length) { %><p class="text-right muted"><small><%= deck.tags.join(', ') %></small></p><% } %>
       <label class="checkbox">
         <input type="checkbox" name="showCorrections" <% if (showCorrections) { print('checked="checked"') } %>/> <%= locale.showCorrections %>
