@@ -3274,7 +3274,7 @@ define('PredefinedDecks',{
                     "q": "выполнять"
                 },
                 {
-                    "a": "wykonuje",
+                    "a": "wykonuję",
                     "q": "выполняю"
                 },
                 {
