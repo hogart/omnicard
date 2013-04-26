@@ -1,8 +1,4 @@
-if (!locale) {
-    var locale = {};
-};
-
-locale.en = {
+define({
     q: {
         open: '‘',
         close: '’'
@@ -139,4 +135,4 @@ locale.en = {
     dump: 'Share decks',
     dumpHelp: 'Copy contents of this field and send it as text via email, any <a href="http://pastebin.com/">pastebin</a>, etc.',
     dumpFormatting: 'Nice formatting'
-};
+});

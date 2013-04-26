@@ -5,25 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>OmniCard</title>
 
-  <link rel="stylesheet" href="css/bootstrap.min.css"/>
-  <link rel="stylesheet" href="css/bootstrap-responsive.min.css"/>
-  <link rel="stylesheet" href="css/deckNav.css"/>
-  <link rel="stylesheet" href="css/deckView.css"/>
-  <link rel="stylesheet" href="css/root.css"/>
-  <link rel="stylesheet" href="css/deckList.css"/>
+  <script src="js/requireConfig.js"></script>
+  <script>
+    if (window.location.port != '80') {
+      document.write('<link rel="stylesheet" href="app.css"/>');
+    } else {
+      document.write('<link rel="stylesheet" href="app-min.css"/>');
+      require.paths['app'] = '../app-min';
+    }
+  </script>
 
-  <script src="js/lodash.js"></script>
-  <script src="js/jquery.js"></script>
-  <script src="js/jquery.form2JSON.js"></script>
-  <script src="js/Chitin.js"></script>
-
-  <script src="js/locale/en/locale.js"></script>
-  <script src="js/locale/ru/locale.js"></script>
-
-  <script src="js/widgets.js"></script>
-  <script src="js/PredefinedDecks.js"></script>
-  <script src="js/omnicard.js"></script>
+  <script src="js/require.js" data-main="app"></script>
 </head>
+
 <body>
 <!--[if lt IE 8]>
   <div class="alert alert-error">

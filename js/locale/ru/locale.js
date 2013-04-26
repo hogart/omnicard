@@ -1,8 +1,4 @@
-if (!locale) {
-    var locale = {};
-};
-
-locale.ru = {
+define({
     q: {
         open: '«',
         close: '»'
@@ -139,4 +135,4 @@ locale.ru = {
 
     dumpHelp: 'Скопируйте содержимое этого поля и отправьте его по электронной почте, через <a href="http://pastebin.com/">pastebin</a>-сервис, и т.д.',
     dumpFormatting: 'С форматированием'
-};
+});
