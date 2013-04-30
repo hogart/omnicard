@@ -3451,7 +3451,7 @@ define('PredefinedDecks',{
                 },
                 {
                     "a": "ciągnie",
-                    "q": "тянут"
+                    "q": "тянет"
                 },
                 {
                     "a": "ciągniemy",
