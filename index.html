@@ -7,9 +7,9 @@
 
   <script src="js/requireConfig.js"></script>
   <script>
-    var hasPort = !!window.location.port,
-        isFile = location.protocol.indexOf('file') != -1;
-    if (hasPort || isFile) {
+    var hasPort = !!window.location.port, // port is not 80
+        isFile = location.protocol.indexOf('file') != -1; // launched from local filesystem
+    if (hasPort || isFile) { // so serving debug version
       document.write('<link rel="stylesheet" href="app.css"/>');
     } else {
       document.write('<link rel="stylesheet" href="app-min.css"/>');
