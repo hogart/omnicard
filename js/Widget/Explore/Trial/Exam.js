@@ -9,7 +9,7 @@ define(
             tpl: 'testExam',
 
             retrieveAnswer: function (container) {
-                return $.trim(container.find('input[type="text"]').val());
+                return container.find('input[type="text"]').val().trim();
             }
         });
 

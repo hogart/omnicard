@@ -2,7 +2,7 @@ define(
     [
         'Widget/Abstract',
         'Widget/LangSelect',
-        'jquery.form2JSON'
+        'lib/vendor/jquery.form2JSON'
     ],
     function (WidgetAbstract, WidgetLangSelect) {
         'use strict';

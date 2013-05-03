@@ -49,7 +49,7 @@ define(
                 this.pair = data.native + '-' + data.learn;
 
                 this.prefs.setPair(data);
-                this.prefs.set({interface: data.interface});
+                this.prefs.set({'interface': data.interface});
                 this.lang = data.interface;
                 this.locale = locale[this.lang];
 

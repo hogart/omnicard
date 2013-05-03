@@ -34,7 +34,7 @@ define(
 
             onChangeLang: function () {
                 var lang = this.$('[name="interface"]').val();
-                this.bus.prefs.set({interface: lang});
+                this.bus.prefs.set({'interface': lang});
                 window.location.reload();
             }
         });

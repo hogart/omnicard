@@ -1,7 +1,8 @@
 define(
     [
         'Widget/Abstract',
-        '_'
+        '_',
+        'lib/vendor/jquery.form2JSON'
     ],
     function (WidgetAbstract, _) {
         'use strict';
@@ -63,7 +64,7 @@ define(
                 var deckRaw = this.ui.frm.form2JSON({
                     tags: function (tags) {
                         return _.map(tags.split(','), function (tag) {
-                            return $.trim(tag)
+                            return tag.trim()
                         })
                     }
                 });
@@ -72,8 +73,8 @@ define(
 
                 deckRaw.content = [];
                 _.each(deckRaw.cardq, function (cardQuestion, index) {
-                    var q = $.trim(cardQuestion),
-                        a = $.trim(deckRaw.carda[index]);
+                    var q = cardQuestion.trim(),
+                        a = deckRaw.carda[index].trim();
 
                     if (q && a) {
                         deckRaw.content.push({
@@ -139,7 +140,7 @@ define(
                     ta = container.find('textarea'),
                     isDeck = container.hasClass('js-dumpDeck');
 
-                var content = $.trim(ta.val());
+                var content = ta.val().trim();
 
                 if (!content) {
                     this.toggleDumpster(evt);
