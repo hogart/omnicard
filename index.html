@@ -6,7 +6,7 @@
   <title>OmniCard</title>
 
   <script src="js/requireConfig.js"></script>
-  <script>
+  <script>//window.onerror = function (msg, file, line) { alert([msg, file, line].join()) }
     var hasPort = !!window.location.port, // port is not 80
         isFile = location.protocol.indexOf('file') != -1; // launched from local filesystem
     if (hasPort || isFile) { // so serving debug version
@@ -30,7 +30,9 @@
   <![endif]-->
 
 
-  <div class="container-fluid js-root root"></div>
+  <div class="container-fluid js-root root">
+    <div class="progress progress-striped active"><div class="bar" style="width: 100%"></div></div>
+  </div>
 
 
   <script class="js-tpl-root" type="text/x-template">
