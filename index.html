@@ -5,19 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>OmniCard</title>
 
-  <script src="js/requireConfig.js"></script>
-  <script>//window.onerror = function (msg, file, line) { alert([msg, file, line].join()) }
+  <script>//window.onerror = function (msg, file, line) { alert([msg, file, line].join('\n')) }
     var hasPort = !!window.location.port, // port is not 80
-        isFile = location.protocol.indexOf('file') != -1; // launched from local filesystem
-    if (hasPort || isFile) { // so serving debug version
+        isFile = location.protocol.indexOf('file') != -1, // launched from local filesystem
+        isDev = hasPort || isFile;
+    if (isDev) { // so serving debug version
       document.write('<link rel="stylesheet" href="app.css"/>');
     } else {
       document.write('<link rel="stylesheet" href="app-min.css"/>');
-      require.paths['app'] = '../app-min';
+
     }
   </script>
-
-  <script src="js/lib/vendor/require.js" data-main="app"></script>
 </head>
 
 <body>
@@ -31,7 +29,8 @@
 
 
   <div class="container-fluid js-root root">
-    <div class="progress progress-striped active"><div class="bar" style="width: 100%"></div></div>
+    <br/>
+    <div class="progress progress-striped active"><div class="bar" style="width: 100%">OmniCard</div></div>
   </div>
 
 
@@ -429,66 +428,68 @@
       <fieldset>
         <legend><%= locale.deckCards %> <% if (deck.content.length) { print('(' + deck.content.length + ')') } %></legend>
 
-          <div class="form-actions js-dump js-dumpCards">
-            <% if (deck.isNew) { %>
-              <button class="btn js-import" type="button"><i class="icon icon-download"></i> <%= locale.deckCardsImport %></button>
-            <% } else { %>
-              <button class="btn js-export" type="button"><i class="icon icon-upload"></i> <%= locale.deckCardsExport %></button>
-            <% } %>
-            <div class="hidden js-dumpster">
-              <br/>
-              <br/>
-              <textarea class="span7" rows="5" placeholder="<%= locale.deckCardsPaste %>"><%= cardsDump %></textarea>
-              <span class="help-block"><%= locale.deckCardsHelp %></span>
-              <button class="btn btn-primary js-done" type="button"><%= locale.done %></button>
-            </div>
+        <div class="form-actions js-dump js-dumpCards">
+          <% if (deck.isNew) { %>
+            <button class="btn js-import" type="button"><i class="icon icon-download"></i> <%= locale.deckCardsImport %></button>
+          <% } else { %>
+            <button class="btn js-export" type="button"><i class="icon icon-upload"></i> <%= locale.deckCardsExport %></button>
+          <% } %>
+          <div class="hidden js-dumpster">
+            <br/>
+            <br/>
+            <textarea class="span7" rows="5" placeholder="<%= locale.deckCardsPaste %>"><%= cardsDump %></textarea>
+            <span class="help-block"><%= locale.deckCardsHelp %></span>
+            <button class="btn btn-primary js-done" type="button"><%= locale.done %></button>
           </div>
+        </div>
 
-          <div class="js-cardList">
-            <% _.each(deck.content, function (card, index) { %>
-              <div class="js-cardForm">
-                <label><%= locale.question %><br/>
-                  <% if (deck.builtIn) { %>
-                    <input type="text" value="<%= card.q %>" class="js-question span7" name="cardq" disabled="disabled"/>
-                  <% } else { %>
-                    <input type="text" value="<%= card.q %>" class="js-question span7" name="cardq"/>
-                  <% } %>
+        <div class="js-cardList">
+          <% _.each(deck.content, function (card, index) { %>
+            <div class="js-cardForm">
+              <div class="row-fluid">
+                <label class="span3">
+                  <%= locale.question %><br/>
+                  <input type="text" value="<%= card.q %>" class="js-question" name="cardq" <% if (deck.builtIn) { %>disabled="disabled"<% } %>/>
                 </label>
-                <label><%= locale.answer %><br/>
-                  <% if (deck.builtIn) { %>
-                    <input type="text" value="<%= card.a %>" class="js-answer span7" name="carda" disabled="disabled"/>
-                  <% } else { %>
-                    <input type="text" value="<%= card.a %>" class="js-answer span7" name="carda"/>
-                  <% } %>
+                <label class="span3">
+                  <%= locale.answer %><br/>
+                  <input type="text" value="<%= card.a %>" class="js-answer" name="carda" <% if (deck.builtIn) { %>disabled="disabled"<% } %>/>
                 </label>
-
-                <% if (!deck.builtIn) { %><button class="js-deleteCard btn btn-danger btn-small"><%= locale.deleteCard %></button><% } %>
-                <hr/>
               </div>
-            <% }) %>
-          </div>
+
+              <% if (!deck.builtIn) { %><button class="js-deleteCard btn btn-danger btn-small"><%= locale.deleteCard %></button><% } %>
+              <hr/>
+            </div>
+          <% }) %>
+        </div>
+
+
 
         <% if (!deck.builtIn) { %>
           <div class="js-addCard">
-            <span class="help-block"><%= locale.addCard %></span>
-            <label><%= locale.question %><br/>
-              <input type="text" value="" class="js-question span7"/>
-            </label>
-            <label><%= locale.answer %><br/>
-              <input type="text" value="" class="js-answer span7"/>
-            </label>
+            <div class="row-fluid">
+              <span class="help-block"><%= locale.addCard %></span>
+              <label class="span3"><%= locale.question %><br/>
+                <input type="text" value="" class="js-question"/>
+              </label>
+              <label class="span3"><%= locale.answer %><br/>
+                <input type="text" value="" class="js-answer"/>
+              </label>
+            </div>
 
             <button class="js-confirm btn btn-success btn-small" type="button"><%= locale.addCard %></button>
           </div>
 
           <div class="js-cardTemplate hidden">
             <div class="js-cardForm">
-              <label><%= locale.question %><br/>
-                <input type="text" class="js-question span7" name="cardq"/>
-              </label>
-              <label><%= locale.answer %><br/>
-                <input type="text" class="js-answer span7" name="carda"/>
-              </label>
+              <div class="row-fluid">
+                <label class="span3"><%= locale.question %><br/>
+                  <input type="text" class="js-question" name="cardq"/>
+                </label>
+                <label class="span3"><%= locale.answer %><br/>
+                  <input type="text" class="js-answer" name="carda"/>
+                </label>
+              </div>
 
               <button class="js-deleteCard btn btn-danger btn-small"><%= locale.deleteCard %></button>
               <hr/>
@@ -556,5 +557,9 @@
       </div>
     </form>
   </script>
+
+  <script src="js/requireConfig.js"></script>
+  <script>!isDev && (require.paths['app'] = '../app-min');</script>
+  <script src="js/lib/vendor/require.js" data-main="app"></script>
 </body>
 </html>

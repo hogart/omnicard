@@ -90,7 +90,7 @@ define(
                     this.bus.decks.set({}); // trick to force save
                 } else {
                     var deck = {};
-                    deck[this.deck[0]] = deckContent;
+                    deck[this.id] = deckContent;
 
                     this.bus.decks.set(deck);
                 }
