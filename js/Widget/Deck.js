@@ -24,12 +24,17 @@ define(
 
                 'click .js-editDeck': 'onEditDeck',
                 'click .js-deleteDeck': 'onDeleteDeck',
-                'click .js-hideDeck': 'onHideDeck'
+                'click .js-hideDeck': 'onHideDeck',
+                'click .js-addCard': 'onAddCard',
+
+                'click .js-confirmAdd': 'addCard'
             },
 
             _ui: {
                 score: '.js-score',
-                showCorrections: '[name="showCorrections"]'
+                showCorrections: '[name="showCorrections"]',
+                addCardForm: '.js-addCardForm',
+                addCardBtn: '.js-addCard'
             },
 
             initialize: function (options) {
@@ -38,6 +43,10 @@ define(
                 this.deck = this.params.deck[1]; // deck is sent as [id, deckObject]
                 this.testable = this.deck.testable && this.deck.content.length > 3;
 
+                this.rr();
+            },
+
+            rr: function () {
                 this.render({
                     deck: this.deck,
                     testable: this.testable,
@@ -106,6 +115,24 @@ define(
 
             onShowCorrectionsChange: function (evt) {
                 this.bus.prefs.set({showCorrections: this.ui.showCorrections.is(':checked')})
+            },
+
+            onAddCard: function () {
+                this.ui.addCardForm.toggleClass('hidden');
+                this.ui.addCardBtn.toggleClass('active');
+            },
+
+            addCard: function () {
+                var q = this.ui.addCardForm.find('.js-question').val().trim(),
+                    a = this.ui.addCardForm.find('.js-answer').val().trim();
+
+                if (q && a) {
+                    this.deck.content.push({q: q, a: a});
+                    this.bus.decks.set({});
+                    this.rr();
+                } else {
+                    alert(this.bus.locale.invalidCard);
+                }
             }
         });
 

@@ -13,6 +13,7 @@ define({
     cancel: 'Cancel',
     save: 'Save',
     invalidFormat: 'Invalid format',
+    invalidCard: 'Please fill both sides of card',
 
     welcomeHeader: 'Welcome to OmniCard!',
     welcomeFirst: 'We help you learn languages via famous flash-card method.',

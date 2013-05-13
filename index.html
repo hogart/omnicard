@@ -235,9 +235,25 @@
         <% if (deck.builtIn) { %>
           <button class="btn js-hideDeck" title="<%= locale.hideDeck %>"><i class="icon-eye-close"></i></button>
         <% } else { %>
+          <button class="btn js-addCard" title="<%= locale.addCard %>"><i class="icon-plus"></i></button>
           <button class="btn js-deleteDeck" title="<%= locale.deleteDeck %>"><i class="icon-trash"></i></button>
         <% } %>
       </div>
+
+      <div class="js-addCardForm hidden">
+        <div class="row-fluid">
+          <span class="help-block"><%= locale.addCard %></span>
+          <label class="span4"><%= locale.question %><br/>
+            <input type="text" value="" class="js-question input-medium"/>
+          </label>
+          <label class="span4"><%= locale.answer %><br/>
+            <input type="text" value="" class="js-answer input-medium"/>
+          </label>
+        </div>
+
+        <button class="js-confirmAdd btn btn-success btn-small" type="button"><%= locale.addCard %></button>
+      </div>
+
       <h4 class="muted"><%= deck.name %> (<%= deck.content.length %>)</h4>
       <% if (deck.description) { %><p><%= deck.description.replace(/\n/mg, '<br/>') %></p><% } %>
       <% if (deck.tags && deck.tags.length) { %><p class="text-right muted"><small><%= deck.tags.join(', ') %></small></p><% } %>

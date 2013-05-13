@@ -13,6 +13,7 @@ define({
     cancel: 'Отмена',
     save: 'Сохранить',
     invalidFormat: 'Некорректный формат',
+    invalidCard: 'Пожалуйста, укажите обе стороны карточки',
 
 
     welcomeHeader: 'Добро пожаловать в OmniCard!',
