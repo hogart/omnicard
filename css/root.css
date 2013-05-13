@@ -22,3 +22,9 @@
         .root-hero .root-well {
             margin-bottom: 0;
         }
+
+@media (max-width: 979px) {
+    .root .root-body {
+        padding-top: 45px;
+    }
+}

@@ -871,13 +871,16 @@ define('Widget/Nav',
                 'click .js-deckItem': 'onDeckClick',
                 'click .js-addDeck': 'onAddDeck',
                 'click .js-settingsItem': 'onSettings',
-                'click .js-decksItem': 'onDeckList'
+                'click .js-decksItem': 'onDeckList',
+                'click .js-help': 'onHelp'
             },
 
             initialize: function (options) {
                 WidgetNav.__super__.initialize.call(this, options);
 
                 this.listenTo(this.bus.decks, 'update', this.rr);
+
+                this.active = false;
 
                 this.rr();
             },
@@ -892,23 +895,57 @@ define('Widget/Nav',
             },
 
             onDeckClick: function (evt) {
-                var target = $(evt.target ),
-                    index = target.index() - 1,
+                evt.preventDefault();
+
+                var target = $(evt.target).closest('li'),
+                    index = parseInt(target.attr('data-id')),
                     deck = [index, this.decks[index]];
 
+                this._toggleDD(false);
                 this.bus.trigger('displayDeck', deck);
             },
 
-            onAddDeck: function () {
+            onAddDeck: function (evt) {
+                evt.preventDefault();
+
+                this._toggleDD(false);
                 this.bus.trigger('addDeck');
             },
 
-            onSettings: function () {
+            onSettings: function (evt) {
+                evt.preventDefault();
+
+                this._toggleDD(false);
                 this.bus.trigger('displaySettings');
             },
 
-            onDeckList: function () {
-                this.bus.trigger('displayDecks');
+            onDeckList: function (evt) {
+                evt.preventDefault();
+
+                var target = $(evt.target).closest('.js-decksItem');
+
+                if (target.hasClass('js-header')) {
+                    if (document.documentElement.clientWidth >= 980) {
+                        this.bus.trigger('displayDecks');
+                    } else {
+                        this._toggleDD(!this.active);
+                    }
+                } else {
+                    this._toggleDD(false);
+                    this.bus.trigger('displayDecks');
+                }
+            },
+
+            onHelp: function (evt) {
+                evt.preventDefault();
+
+                this._toggleDD(false);
+                this.bus.trigger('displayStart');
+            },
+
+            _toggleDD: function (show) {
+                this.active = !!show;
+                this.$el.toggleClass('active', !!show);
             }
         });
 
@@ -1978,7 +2015,9 @@ define('locale/en/locale',{
 
     license: 'MIT license',
     decksHeader: 'Decks',
+    manageDecks: 'Manage decks…',
     newDeck: 'Add deck…',
+    help: 'Help',
     settings: 'Settings',
 
     done: 'Done',
@@ -2005,7 +2044,7 @@ define('locale/en/locale',{
     examExplanation: 'Hardest mode. You should enter answers manually. This is particularly useful in writing training.',
 
 
-    helpHeader: 'Choose a deck on your left and start learning!',
+    helpHeader: 'Choose a deck from menu and start learning!',
     helpFirst: 'Each deck provides several modes in which it can be discovered.',
     helpAlso: 'You can (and should) also create your own deck, which is great because it forces you to train in writing.',
 
@@ -2013,9 +2052,10 @@ define('locale/en/locale',{
     faqDeckQ: 'What is a card? What is a deck?',
     faqDeckA: 'Card is a pair of question (on your native language) and answer (on language that you learn). Deck is a set of such cards, combined together by any criteria you like.',
     faqEditQ: 'How do I edit deck?',
-    faqEditA: 'Open that deck and note two icons in the top right corner of description. ' +
+    faqEditA: 'Open that deck and note row of icons in the top right corner of description. ' +
         'Clicking pencil icon brings up deck editing mode, and trash can deletes this deck. ' +
-        'Built-in deck can only be hidden (closed eye icon).',
+        'Built-in deck can only be hidden (closed eye icon). ' +
+        'Clicking plus icon will open form for quick card adding (only for custom decks).',
     faqCreateQ: 'How do I create new deck?',
     faqCreateA: 'Use <span class="badge">Add deck…</span> button located beneath deck list.',
 
@@ -2118,6 +2158,8 @@ define('locale/ru/locale',{
     license: 'Лицензия MIT',
     decksHeader: 'Колоды',
     newDeck: 'Добавить колоду',
+    manageDecks: 'Операции с колодами…',
+    help: 'Справка',
     settings: 'Настройки',
 
     done: 'Готово',
@@ -2145,7 +2187,7 @@ define('locale/ru/locale',{
     examExplanation: 'Самый сложный режим: ответы надо вводить вручную. Это особенно полезно для тренировки навыков письма.',
 
 
-    helpHeader: 'Выбирайте колоду из списка слева и начинайте изучение!',
+    helpHeader: 'Выбирайте колоду из меню и начинайте изучение!',
     helpFirst: 'Каждая колода предоставляет несколько режимов, в которых ее можно листать.',
     helpAlso: 'Также можно (и нужно) создавать свои колоды, что развивает навыки письма на изучаемом языке.',
 
@@ -2153,9 +2195,10 @@ define('locale/ru/locale',{
     faqDeckQ: 'Что такое карточка? Что такое колода?',
     faqDeckA: 'Карточка это пара из вопроса (на родном языке) и ответа (на изучаемом). Колода — набор таких карточек, составленный по любому критерию.',
     faqEditQ: 'Как редактировать/удалить колоду?',
-    faqEditA: 'Откройте ее и обратите внимание на две иконки в правом верхнем углу описания. ' +
+    faqEditA: 'Откройте ее и обратите внимание на ряд иконок в правом верхнем углу описания. ' +
         'Иконка с карандашом открывает редактирование, а мусорная корзина удаляет колоду. ' +
-        'Встроенные колоды можно только скрыть (иконка с закрытым глазом).',
+        'Встроенные колоды можно только скрыть (иконка с закрытым глазом). ' +
+        'Иконка с плюсиком открывает форму быстрого добавления карточки (только для созданных колод).',
     faqCreateQ: 'Как создать колоду?',
     faqCreateA: 'Используйте кнопку <span class="badge">Добавить колоду…</span> под списком колод слева.',
 

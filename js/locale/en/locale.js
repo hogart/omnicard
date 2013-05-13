@@ -6,7 +6,9 @@ define({
 
     license: 'MIT license',
     decksHeader: 'Decks',
+    manageDecks: 'Manage decks…',
     newDeck: 'Add deck…',
+    help: 'Help',
     settings: 'Settings',
 
     done: 'Done',
@@ -33,7 +35,7 @@ define({
     examExplanation: 'Hardest mode. You should enter answers manually. This is particularly useful in writing training.',
 
 
-    helpHeader: 'Choose a deck on your left and start learning!',
+    helpHeader: 'Choose a deck from menu and start learning!',
     helpFirst: 'Each deck provides several modes in which it can be discovered.',
     helpAlso: 'You can (and should) also create your own deck, which is great because it forces you to train in writing.',
 
@@ -41,9 +43,10 @@ define({
     faqDeckQ: 'What is a card? What is a deck?',
     faqDeckA: 'Card is a pair of question (on your native language) and answer (on language that you learn). Deck is a set of such cards, combined together by any criteria you like.',
     faqEditQ: 'How do I edit deck?',
-    faqEditA: 'Open that deck and note two icons in the top right corner of description. ' +
+    faqEditA: 'Open that deck and note row of icons in the top right corner of description. ' +
         'Clicking pencil icon brings up deck editing mode, and trash can deletes this deck. ' +
-        'Built-in deck can only be hidden (closed eye icon).',
+        'Built-in deck can only be hidden (closed eye icon). ' +
+        'Clicking plus icon will open form for quick card adding (only for custom decks).',
     faqCreateQ: 'How do I create new deck?',
     faqCreateA: 'Use <span class="badge">Add deck…</span> button located beneath deck list.',
 

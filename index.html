@@ -13,7 +13,6 @@
       document.write('<link rel="stylesheet" href="app.css"/>');
     } else {
       document.write('<link rel="stylesheet" href="app-min.css"/>');
-
     }
   </script>
 </head>
@@ -27,7 +26,6 @@
     </div>
   <![endif]-->
 
-
   <div class="container-fluid js-root root">
     <br/>
     <div class="progress progress-striped active"><div class="bar" style="width: 100%">OmniCard</div></div>
@@ -38,16 +36,9 @@
     <div class="row-fluid js-pristine root-pristine root-hero"></div>
 
     <div class="row-fluid root-work">
-      <h3 class="muted span6 offset3 hidden-phone">OmniCard</h3>
-    </div>
+      <div class="nv js-nav"></div>
 
-    <div class="row-fluid root-work">
-
-      <div class="span3">
-        <div class="well sidebar-nav js-nav deckNav"></div>
-      </div>
-
-      <div class="span9">
+      <div class="span9 root-body">
 
         <div class="js-start"></div>
 
@@ -76,18 +67,26 @@
   </script>
 
   <script class="js-tpl-nav" type="text/x-template">
-    <ul class="nav nav-list">
-      <li class="nav-header deckNav-item js-decksItem"><h6><i class="icon-book"></i> <%= locale.decksHeader %></h6></li>
-
-      <% _.each(decks, function(deck, index) { if (!(deck.id in hiddenDecks)) {  %>
-        <li class="deckNav-item deckNav-item__deck js-deckItem" data-id="<%= index %>"><%= deck.name %></li>
-      <% }}); %>
-
-      <li class="deckNav-item js-addDeck"><i class="icon-plus"></i> <%= locale.newDeck %></li>
-      <li><hr/></li>
-
-      <li class="nav-header deckNav-item js-settingsItem"><h6><i class="icon-cog"></i> <%= locale.settings %>…</h6></li>
-    </ul>
+    <div class="nv-inner">
+      <div class="nv-brand js-help"><a href="#">OmniCard</a></div>
+      <ul class="nav">
+        <li>
+          <dl class="nv-dropdown">
+            <dt class="js-decksItem js-header"><a href="#"><i class="icon-book"></i><span><%= locale.decksHeader %></span></a></dt>
+            <dd>
+              <ul class="unstyled">
+                <% _.each(decks, function(deck, index) { if (!(deck.id in hiddenDecks)) {  %>
+                  <li class="js-deckItem" data-id="<%= index %>"><a><%= deck.name %></a></li>
+                <% }}); %>
+              </ul>
+              <a class="nv-allDecks js-decksItem" href="#"><i class="icon-th-list"></i><%= locale.manageDecks %></a>
+            </dd>
+          </dl>
+        </li>
+        <li class="js-addDeck"><a href="#"><i class="icon-plus"></i><span><%= locale.newDeck %></span></a></li>
+        <li class="js-settingsItem"><a href="#"><i class="icon-cog"></i><span><%= locale.settings %>…</span></a></li>
+      </ul>
+    </div>
   </script>
 
   <script class="js-tpl-pristine" type="text/x-template">
@@ -146,6 +145,9 @@
             <dt><%= locale.faqCreateQ %></dt>
             <dd><%= locale.faqCreateA %></dd>
 
+            <dt><%= locale.faqManagementQ %></dt>
+            <dd><%= locale.faqManagementA %></dd>
+
             <dt><%= locale.faqShareQ %></dt>
             <dd>
               <ol>
@@ -160,9 +162,6 @@
               <p><%= locale.faqShareA8 %></p>
               <p><%= locale.faqShareA9 %></p>
             </dd>
-
-            <dt><%= locale.faqManagementQ %></dt>
-            <dd><%= locale.faqManagementA %></dd>
 
             <dt><%= locale.faqFeedbackQ %></dt>
             <dd><%= locale.faqFeedbackA %></dd>

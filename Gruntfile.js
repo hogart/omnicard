@@ -20,7 +20,7 @@ module.exports = function (grunt) {
             css: {
                 options: {
                     baseUrl: 'css/',
-                    optimizeCss: 'standard.keepLines',
+                    optimizeCss: 'standard.keepComments',
                     cssIn: 'app.css',
                     out: 'app-min.css'
                 }
