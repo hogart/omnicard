@@ -285,23 +285,19 @@
     <div class="progress progress-striped active">
       <div class="bar js-progress" style="width: 1%;"></div>
     </div>
-    <ul class="unstyled">
-      <% _.each(cards, function(card, index) { %>
-        <li class="js-card form-inline<% if (index) { %> hidden<% } %>">
-          <label><h3><%= card.q %></h3>
-            <div class="input-append">
-              <input class="input-large" type="text" lang="<%= lang.learn %>"/>
-              <div class="btn-group js-answerBlock">
-                <button class="btn btn-success js-answer"><%= locale.answer %></button>
-                <button class="btn btn-warning js-skip"><%= locale.skip %></button>
-              </div>
-            </div>
-          </label>
-          <div class="js-correction text-error hidden"></div>
-          <button class="btn js-next hidden"><%= locale.next %></button>
-        </li>
-      <% }); %>
-    </ul>
+    <div>
+      <label><h3 class="js-qHeader"><%= cards[0].q %></h3>
+        <div class="input-append">
+          <input class="input-large" type="text" lang="<%= lang.learn %>"/>
+          <div class="btn-group js-answerBlock">
+            <button class="btn btn-success js-answer"><%= locale.answer %></button>
+            <button class="btn btn-warning js-skip"><%= locale.skip %></button>
+          </div>
+        </div>
+      </label>
+      <div class="js-correction text-error hidden"></div>
+      <button class="btn js-next hidden"><%= locale.next %></button>
+    </div>
   </script>
 
   <script class="js-tpl-testTest" type="text/x-template">

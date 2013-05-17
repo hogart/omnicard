@@ -43,18 +43,22 @@ define(
                     this.wrong++;
 
                     if (this.showCorrections) {
-                        li.find('.js-correction').html(correctAnswer).removeClass('hidden');
-                        li.find('.js-next').removeClass('hidden');
-                        li.find('.js-answerBlock').addClass('hidden');
-                        this.corrections.push({
-                            q: this.cards[this.currentQuestion].q,
-                            a: this.cards[this.currentQuestion].a,
-                            w: answer
-                        });
+                        this.renderCorrection(li, answer, correctAnswer);
                     } else {
                         this.next();
                     }
                 }
+            },
+
+            renderCorrection: function (container, answer, correctAnswer) {
+                li.find('.js-correction').html(correctAnswer).removeClass('hidden');
+                li.find('.js-next').removeClass('hidden');
+                li.find('.js-answerBlock').addClass('hidden');
+                this.corrections.push({
+                    q: this.cards[this.currentQuestion].q,
+                    a: this.cards[this.currentQuestion].a,
+                    w: answer
+                });
             },
 
             onSkip: function () {
