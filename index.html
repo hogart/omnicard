@@ -290,7 +290,7 @@
         <li class="js-card form-inline<% if (index) { %> hidden<% } %>">
           <label><h3><%= card.q %></h3>
             <div class="input-append">
-              <input class="input-large" type="text"/>
+              <input class="input-large" type="text" lang="<%= lang.learn %>"/>
               <div class="btn-group js-answerBlock">
                 <button class="btn btn-success js-answer"><%= locale.answer %></button>
                 <button class="btn btn-warning js-skip"><%= locale.skip %></button>
@@ -464,11 +464,11 @@
               <div class="row-fluid">
                 <label class="span3">
                   <%= locale.question %><br/>
-                  <input type="text" value="<%= card.q %>" class="js-question" name="cardq" <% if (deck.builtIn) { %>disabled="disabled"<% } %>/>
+                  <input type="text" value="<%= card.q %>" class="js-question" name="cardq" lang="<%= lang.native %>" spellcheck="true" <% if (deck.builtIn) { %>disabled="disabled"<% } %>/>
                 </label>
                 <label class="span3">
                   <%= locale.answer %><br/>
-                  <input type="text" value="<%= card.a %>" class="js-answer" name="carda" <% if (deck.builtIn) { %>disabled="disabled"<% } %>/>
+                  <input type="text" value="<%= card.a %>" class="js-answer" name="carda" lang="<%= lang.learn %>" spellcheck="true" <% if (deck.builtIn) { %>disabled="disabled"<% } %>/>
                 </label>
               </div>
 
@@ -485,10 +485,10 @@
             <div class="row-fluid">
               <span class="help-block"><%= locale.addCard %></span>
               <label class="span3"><%= locale.question %><br/>
-                <input type="text" value="" class="js-question"/>
+                <input type="text" value="" class="js-question" lang="<%= lang.native %>" spellcheck="true"/>
               </label>
               <label class="span3"><%= locale.answer %><br/>
-                <input type="text" value="" class="js-answer"/>
+                <input type="text" value="" class="js-answer" lang="<%= lang.learn %>" spellcheck="true"/>
               </label>
             </div>
 
@@ -499,10 +499,10 @@
             <div class="js-cardForm">
               <div class="row-fluid">
                 <label class="span3"><%= locale.question %><br/>
-                  <input type="text" class="js-question" name="cardq"/>
+                  <input type="text" class="js-question" name="cardq" lang="<%= lang.native %>" spellcheck="true"/>
                 </label>
                 <label class="span3"><%= locale.answer %><br/>
-                  <input type="text" class="js-answer" name="carda"/>
+                  <input type="text" class="js-answer" name="carda" lang="<%= lang.learn %>" spellcheck="true"/>
                 </label>
               </div>
 
