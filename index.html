@@ -286,15 +286,14 @@
       <div class="bar js-progress" style="width: 1%;"></div>
     </div>
     <div>
-      <label><h3 class="js-qHeader"><%= cards[0].q %></h3>
-        <div class="input-append">
-          <input class="input-large" type="text" lang="<%= lang.learn %>"/>
-          <div class="btn-group js-answerBlock">
-            <button class="btn btn-success js-answer"><%= locale.answer %></button>
-            <button class="btn btn-warning js-skip"><%= locale.skip %></button>
-          </div>
+      <h3 class="js-qHeader"><%= cards[0].q %></h3>
+      <div class="input-append">
+        <input class="input-large" type="text" lang="<%= lang.learn %>" placeholder=""/>
+        <div class="btn-group js-answerBlock">
+          <button class="btn btn-success js-answer"><%= locale.answer %></button>
+          <button class="btn btn-warning js-skip"><%= locale.skip %></button>
         </div>
-      </label>
+      </div>
       <div class="js-correction text-error hidden"></div>
       <button class="btn js-next hidden"><%= locale.next %></button>
     </div>
