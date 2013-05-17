@@ -38,6 +38,7 @@ define(
 
             onDeckClick: function (evt) {
                 evt.preventDefault();
+                evt.stopPropagation();
 
                 var target = $(evt.target).closest('li'),
                     index = parseInt(target.attr('data-id')),
@@ -63,6 +64,7 @@ define(
 
             onDeckList: function (evt) {
                 evt.preventDefault();
+                evt.stopPropagation();
 
                 var target = $(evt.target).closest('.js-decksItem');
 
