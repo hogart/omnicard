@@ -13,6 +13,7 @@ define(
                 'click .js-addDeck': 'onAddDeck',
                 'click .js-settingsItem': 'onSettings',
                 'click .js-decksItem': 'onDeckList',
+                'click dl': 'onDlClick',
                 'click .js-help': 'onHelp'
             },
 
@@ -74,6 +75,12 @@ define(
                 } else {
                     this._toggleDD(false);
                     this.bus.trigger('displayDecks');
+                }
+            },
+
+            onDlClick: function (evt) {
+                if (document.documentElement.clientWidth < 980 && !this.active) {
+                    this._toggleDD(!this.active);
                 }
             },
 

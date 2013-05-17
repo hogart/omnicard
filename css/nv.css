@@ -36,7 +36,8 @@
         .nv-inner .nav > li {
             margin-bottom: 1em;
         }
-            .nv-inner .nav > li > a {
+            .nv-inner .nav > li > a,
+            .nv-inner ul > li > a {
                 cursor: pointer;
             }
 
