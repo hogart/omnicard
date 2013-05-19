@@ -51,9 +51,9 @@ define(
             },
 
             renderCorrection: function (container, answer, correctAnswer) {
-                li.find('.js-correction').html(correctAnswer).removeClass('hidden');
-                li.find('.js-next').removeClass('hidden');
-                li.find('.js-answerBlock').addClass('hidden');
+                container.find('.js-correction').html(correctAnswer).removeClass('hidden');
+                container.find('.js-next').removeClass('hidden');
+                container.find('.js-answerBlock').addClass('hidden');
                 this.corrections.push({
                     q: this.cards[this.currentQuestion].q,
                     a: this.cards[this.currentQuestion].a,
