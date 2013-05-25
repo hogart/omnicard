@@ -375,7 +375,7 @@
 
   <script class="js-tpl-editDeck" type="text/x-template">
     <form class="form">
-      <h4 class="muted"><% if (!deck.isNew) { %><%= locale.editDeck %> <%= locale.q.open %><%= deck.name %><%= locale.q.close %><% } else { print(locale.createDeck) } %></h4>
+      <h4 class="muted"><%= !deck.isNew ? locale.editDeck + ' ' + locale.q.open + deck.name + locale.q.close : locale.createDeck %></h4>
 
       <div class="form-actions js-dump js-dumpDeck">
         <% if (deck.isNew) { %>
@@ -387,7 +387,7 @@
         <div class="hidden js-dumpster">
           <br/>
           <br/>
-          <textarea class="span7" rows="5" placeholder="<%= locale.pasteDeck %>"><% if (!deck.isNew) { print(JSON.stringify(deck)); } %></textarea>
+          <textarea class="span7" rows="5" placeholder="<%= locale.pasteDeck %>"><%= !deck.isNew ? JSON.stringify(deck) : '' %></textarea>
           <span class="help-block"><%= locale.shareDeckHelp %></span>
           <button class="btn btn-primary js-done" type="button"><%= locale.done %></button>
         </div>
@@ -411,7 +411,7 @@
           </label>
 
           <label class="checkbox">
-            <input type="checkbox" disabled="disabled" name="testable" <% if (deck.testable) { print('checked="checked"'); } %>/> <%= locale.deckTestable %>
+            <input type="checkbox" disabled="disabled" name="testable" <%= deck.testable ? 'checked="checked"' : '' %>/> <%= locale.deckTestable %>
             <span class="help-block"><%= locale.deckTestableHelp %></span>
           </label>
         <% } else { %>
@@ -429,14 +429,14 @@
           </label>
 
           <label class="checkbox">
-            <input type="checkbox" name="testable" <% if (deck.testable) { print('checked="checked"'); } %>/> <%= locale.deckTestable %>
+            <input type="checkbox" name="testable" <%= deck.testable ? 'checked="checked"' : '' %>/> <%= locale.deckTestable %>
             <span class="help-block"><%= locale.deckTestableHelp %></span>
           </label>
         <% } %>
       </fieldset>
 
       <fieldset>
-        <legend><%= locale.deckCards %> <% if (deck.content.length) { print('(' + deck.content.length + ')') } %></legend>
+        <legend><%= locale.deckCards %> <%= deck.content.length ? '(' + deck.content.length + ')' : '' %></legend>
 
         <div class="form-actions js-dump js-dumpCards">
           <% if (deck.isNew) { %>
@@ -459,11 +459,11 @@
               <div class="row-fluid">
                 <label class="span3">
                   <%= locale.question %><br/>
-                  <input type="text" value="<%= card.q %>" class="js-question" name="cardq" lang="<%= lang.native %>" spellcheck="true" <% if (deck.builtIn) { %>disabled="disabled"<% } %>/>
+                  <input type="text" value="<%= card.q %>" class="js-question" name="cardq" lang="<%= lang.native %>" spellcheck="true" <%= deck.builtIn ? 'disabled="disabled"' : '' %>/>
                 </label>
                 <label class="span3">
                   <%= locale.answer %><br/>
-                  <input type="text" value="<%= card.a %>" class="js-answer" name="carda" lang="<%= lang.learn %>" spellcheck="true" <% if (deck.builtIn) { %>disabled="disabled"<% } %>/>
+                  <input type="text" value="<%= card.a %>" class="js-answer" name="carda" lang="<%= lang.learn %>" spellcheck="true" <%= deck.builtIn ? 'disabled="disabled"' : '' %>/>
                 </label>
               </div>
 
