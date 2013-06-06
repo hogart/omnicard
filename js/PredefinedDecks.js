@@ -241,7 +241,7 @@ define({
                     "a": "las"
                 },
                 {
-                    "q": "плод, овощ",
+                    "q": "плод, фрукт",
                     "a": "owoc"
                 },
                 {
@@ -849,7 +849,8 @@ define({
                 },
                 {
                     "q": "тетрадь",
-                    "a": "zeszyt"
+                    "a": "zeszyt",
+                    "eg": "To mój [[answer]]"
                 },
                 {
                     "q": "авторучка",
@@ -893,7 +894,8 @@ define({
                 },
                 {
                     "q": "книга",
-                    "a": "książka"
+                    "a": "książka",
+                    "eg": "Ta [[answer]] jest ciężka"
                 },
                 {
                     "q": "дамская сумочка",
@@ -909,7 +911,8 @@ define({
                 },
                 {
                     "q": "стена",
-                    "a": "ściana"
+                    "a": "ściana",
+                    "eg": "[[answer]] jest biała"
                 },
                 {
                     "q": "доска",
@@ -1107,7 +1110,8 @@ define({
                 },
                 {
                     "a": "gotuję",
-                    "q": "готовлю"
+                    "q": "готовлю",
+                    "eg": "[[answer]] śniadanie."
                 },
                 {
                     "a": "gotujesz",
@@ -1714,7 +1718,8 @@ define({
         },
         {
             "a": "bierze",
-            "q": "берет"
+            "q": "берет",
+            "eg": "Urzędnik [[answer]] łapówki"
         },
         {
             "a": "bierzemy",
@@ -1726,7 +1731,8 @@ define({
         },
         {
             "a": "biorą",
-            "q": "берут"
+            "q": "берут",
+            "eg": "Urzędniki [[answer]] łapówki"
         },
         {
             "a": "prać",
@@ -1824,20 +1830,52 @@ define({
             "builtIn": true,
             "content": [
                 {
+                    "a": "lubić",
+                    "q": "любить"
+                },
+                {
+                    "a": "lubię",
+                    "q": "люблю",
+                    "eg": "[[answer]] czytać księżki"
+                },
+                {
+                    "a": "lubisz",
+                    "q": "любишь"
+                },
+                {
+                    "a": "lubi",
+                    "q": "любит"
+                },
+                {
+                    "a": "lubimy",
+                    "q": "любим"
+                },
+                {
+                    "a": "lubicie",
+                    "q": "лю́бите"
+                },
+                {
+                    "a": "lubią",
+                    "q": "любят"
+                },
+                {
                     "a": "mówić",
                     "q": "говорить"
                 },
                 {
                     "a": "mówię",
-                    "q": "говорю"
+                    "q": "говорю",
+                    "eg": "[[answer]] po rosyjsku."
                 },
                 {
                     "a": "mówisz",
-                    "q": "говоришь"
+                    "q": "говоришь",
+                    "eg": "Czy [[answer]] po polsku?"
                 },
                 {
                     "a": "mówi",
-                    "q": "говорит"
+                    "q": "говорит",
+                    "eg": "Czy pan [[answer]] po angielsku?"
                 },
                 {
                     "a": "mówimy",
@@ -2148,11 +2186,13 @@ define({
                 },
                 {
                     "a": "mam",
-                    "q": "имею"
+                    "q": "имею",
+                    "eg": "[[answer]] 21 lat."
                 },
                 {
                     "a": "masz",
-                    "q": "имеешь"
+                    "q": "имеешь",
+                    "eg": "Jak się [[answer]]?"
                 },
                 {
                     "a": "ma",
@@ -2176,7 +2216,8 @@ define({
                 },
                 {
                     "a": "nazywam się",
-                    "q": "называюсь"
+                    "q": "называюсь",
+                    "eg": "[[answer]] Anna Novak"
                 },
                 {
                     "a": "nazywasz się",
@@ -2256,7 +2297,8 @@ define({
                 },
                 {
                     "a": "grać",
-                    "q": "играть"
+                    "q": "играть",
+                    "eg": "Lubię [[answer]] w tenisa."
                 },
                 {
                     "a": "gram",
@@ -2316,7 +2358,8 @@ define({
                 },
                 {
                     "a": "czekam",
-                    "q": "жду"
+                    "q": "жду",
+                    "eg": "[[answer]] na ciebie"
                 },
                 {
                     "a": "czekasz",
@@ -2380,7 +2423,8 @@ define({
                 },
                 {
                     "a": "kocha",
-                    "q": "любит"
+                    "q": "любит",
+                    "eg": "Anna [[answer]] Piotra."
                 },
                 {
                     "a": "kochamy",

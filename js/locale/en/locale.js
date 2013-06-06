@@ -87,6 +87,7 @@ define({
     unhideDeck: 'Reveal deck',
     hideDeckConfirm: 'Are you sure you want to hide this deck?',
     showCorrections: 'Show correct answers',
+    showExamples: 'Show usage examples (if any)',
     createDeck: 'Create new deck',
     importDeck: 'Import deck',
     exportDeck: 'Export whole deck',
@@ -104,7 +105,7 @@ define({
     deckTestableHelp: 'If deck is suitable for creating test automatically? (Won\'t work on deck shorter than 5 cards).',
     deckCards: 'Deck cards',
     deckCardsImport: 'Import cards',
-    deckCardsExport: 'Export cards',
+    deckCardsExport: 'Export cards (without examples)',
     deckCardsPaste: 'Paste cards here',
     deckCardsHelp: 'Newline separates cards; tab or 4 spaces separates question form answer (question first)',
     deleteCard: 'Delete card',
@@ -113,6 +114,7 @@ define({
 
     answer: 'Answer',
     question: 'Question',
+    example: 'Example: insert [[answer]] where card answer should be',
     next: 'Next',
     skip: 'Skip',
 

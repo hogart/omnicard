@@ -15,6 +15,7 @@ define(
                 cardList: '.js-cardList',
                 newQuestion: '.js-addCard .js-question',
                 newAnswer: '.js-addCard .js-answer',
+                newExample: '.js-addCard .js-example',
 
                 dumpDeck: '.js-dumpDeck',
                 dumpDeckDumpster: '.js-dumpDeck .js-dumpster',
@@ -74,13 +75,16 @@ define(
                 deckRaw.content = [];
                 _.each(deckRaw.cardq, function (cardQuestion, index) {
                     var q = cardQuestion.trim(),
-                        a = deckRaw.carda[index].trim();
+                        a = deckRaw.carda[index].trim(),
+                        eg = deckRaw.cardeg[index].trim(),
+                        card = {};
 
                     if (q && a) {
-                        deckRaw.content.push({
-                            q: q,
-                            a: a
-                        })
+                        card.q = q;
+                        card.a = a;
+                        eg && (card.eg = eg);
+
+                        deckRaw.content.push(card);
                     }
                 });
 
@@ -112,11 +116,13 @@ define(
                 var newCard = this.$('.js-cardTemplate').clone();
                 newCard.find('.js-question').val( this.ui.newQuestion.val() );
                 newCard.find('.js-answer').val( this.ui.newAnswer.val() );
+                newCard.find('.js-example').val( this.ui.newExample.val() );
 
                 newCard.appendTo(this.ui.cardList).removeClass('hidden js-cardTemplate');
 
                 this.ui.newQuestion.val('');
                 this.ui.newAnswer.val('');
+                this.ui.newExample.val('');
             },
 
             deleteCard: function (evt) {

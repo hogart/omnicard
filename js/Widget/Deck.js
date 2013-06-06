@@ -18,6 +18,7 @@ define(
                 'click .js-startExam': 'onStartExam',
 
                 'change [name="showCorrections"]': 'onShowCorrectionsChange',
+                'change [name="showExamples"]': 'onShowExamplesChange',
 
                 'meditationOver .js-test': 'onMeditationComplete',
                 'testComplete .js-test': 'onTestComplete',
@@ -33,6 +34,7 @@ define(
             _ui: {
                 score: '.js-score',
                 showCorrections: '[name="showCorrections"]',
+                showExamples: '[name="showExamples"]',
                 addCardForm: '.js-addCardForm',
                 addCardBtn: '.js-addCard'
             },
@@ -50,7 +52,8 @@ define(
                 this.render({
                     deck: this.deck,
                     testable: this.testable,
-                    showCorrections: this.bus.prefs.get('showCorrections')
+                    showCorrections: this.bus.prefs.get('showCorrections'),
+                    showExamples: this.bus.prefs.get('showExamples')
                 });
 
                 this.setState('browsing');
@@ -117,17 +120,29 @@ define(
                 this.bus.prefs.set({showCorrections: this.ui.showCorrections.is(':checked')})
             },
 
+            onShowExamplesChange: function (evt) {
+                this.bus.prefs.set({showExamples: this.ui.showExamples.is(':checked')})
+            },
+
             onAddCard: function () {
                 this.ui.addCardForm.toggleClass('hidden');
                 this.ui.addCardBtn.toggleClass('active');
             },
 
             addCard: function () {
-                var q = this.ui.addCardForm.find('.js-question').val().trim(),
-                    a = this.ui.addCardForm.find('.js-answer').val().trim();
+                var find = this.ui.addCardForm.find.bind(this.ui.addCardForm),
+                    q = find('.js-question').val().trim(),
+                    a = find('.js-answer').val().trim(),
+                    eg = find('.js-example').val().trim(),
+
+                    newCard = {};
 
                 if (q && a) {
-                    this.deck.content.push({q: q, a: a});
+                    newCard.q = q;
+                    newCard.a = a;
+                    eg && (newCard.eg = eg);
+
+                    this.deck.content.push(newCard);
                     this.bus.decks.set({});
                     this.rr();
                 } else {

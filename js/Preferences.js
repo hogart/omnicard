@@ -14,6 +14,7 @@ define(
                 storage: Storage,
                 attrs: {
                     showCorrections: true,
+                    showExamples: true,
                     hiddenDecks: {}
                 }
             },

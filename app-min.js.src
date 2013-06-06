@@ -696,6 +696,7 @@ define('Preferences',
                 storage: Storage,
                 attrs: {
                     showCorrections: true,
+                    showExamples: true,
                     hiddenDecks: {}
                 }
             },
@@ -741,7 +742,21 @@ define('Widget/Abstract',
     function (Chitin, _) {
         var WidgetAbstract = Chitin.Widget.extend({
             render: function (data) {
-                data = _.extend(data, {locale: this.bus.locale});
+                var bus = this.bus,
+                    prefAttrs = bus.prefs.attrs,
+                    pair = prefAttrs.pair;
+
+                data = _.extend(
+                    data,
+                    {
+                        locale: bus.locale,
+                        lang: {
+                            'interface': prefAttrs.interface,
+                            learn: pair ? pair.learn : '',
+                            native: pair ? pair.native : ''
+                        }
+                    }
+                );
 
                 WidgetAbstract.__super__.render.call(this, data);
             }
@@ -872,6 +887,7 @@ define('Widget/Nav',
                 'click .js-addDeck': 'onAddDeck',
                 'click .js-settingsItem': 'onSettings',
                 'click .js-decksItem': 'onDeckList',
+                'click dl': 'onDlClick',
                 'click .js-help': 'onHelp'
             },
 
@@ -896,6 +912,7 @@ define('Widget/Nav',
 
             onDeckClick: function (evt) {
                 evt.preventDefault();
+                evt.stopPropagation();
 
                 var target = $(evt.target).closest('li'),
                     index = parseInt(target.attr('data-id')),
@@ -921,6 +938,7 @@ define('Widget/Nav',
 
             onDeckList: function (evt) {
                 evt.preventDefault();
+                evt.stopPropagation();
 
                 var target = $(evt.target).closest('.js-decksItem');
 
@@ -933,6 +951,12 @@ define('Widget/Nav',
                 } else {
                     this._toggleDD(false);
                     this.bus.trigger('displayDecks');
+                }
+            },
+
+            onDlClick: function (evt) {
+                if (document.documentElement.clientWidth < 980 && !this.active) {
+                    this._toggleDD(!this.active);
                 }
             },
 
@@ -1009,6 +1033,7 @@ define('Widget/EditDeck',
                 cardList: '.js-cardList',
                 newQuestion: '.js-addCard .js-question',
                 newAnswer: '.js-addCard .js-answer',
+                newExample: '.js-addCard .js-example',
 
                 dumpDeck: '.js-dumpDeck',
                 dumpDeckDumpster: '.js-dumpDeck .js-dumpster',
@@ -1068,13 +1093,16 @@ define('Widget/EditDeck',
                 deckRaw.content = [];
                 _.each(deckRaw.cardq, function (cardQuestion, index) {
                     var q = cardQuestion.trim(),
-                        a = deckRaw.carda[index].trim();
+                        a = deckRaw.carda[index].trim(),
+                        eg = deckRaw.cardeg[index].trim(),
+                        card = {};
 
                     if (q && a) {
-                        deckRaw.content.push({
-                            q: q,
-                            a: a
-                        })
+                        card.q = q;
+                        card.a = a;
+                        eg && (card.eg = eg);
+
+                        deckRaw.content.push(card);
                     }
                 });
 
@@ -1106,11 +1134,13 @@ define('Widget/EditDeck',
                 var newCard = this.$('.js-cardTemplate').clone();
                 newCard.find('.js-question').val( this.ui.newQuestion.val() );
                 newCard.find('.js-answer').val( this.ui.newAnswer.val() );
+                newCard.find('.js-example').val( this.ui.newExample.val() );
 
                 newCard.appendTo(this.ui.cardList).removeClass('hidden js-cardTemplate');
 
                 this.ui.newQuestion.val('');
                 this.ui.newAnswer.val('');
+                this.ui.newExample.val('');
             },
 
             deleteCard: function (evt) {
@@ -1361,7 +1391,8 @@ define('Widget/Explore/Abstract',
                 this.render({
                     name: this.name,
                     cards: this.cards,
-                    current: this.currentQuestion
+                    current: this.currentQuestion,
+                    showExamples: this.bus.prefs.get('showExamples')
                 });
                 this._renderProgress();
             },
@@ -1466,18 +1497,22 @@ define('Widget/Explore/Trial/Abstract',
                     this.wrong++;
 
                     if (this.showCorrections) {
-                        li.find('.js-correction').html(correctAnswer).removeClass('hidden');
-                        li.find('.js-next').removeClass('hidden');
-                        li.find('.js-answerBlock').addClass('hidden');
-                        this.corrections.push({
-                            q: this.cards[this.currentQuestion].q,
-                            a: this.cards[this.currentQuestion].a,
-                            w: answer
-                        });
+                        this.renderCorrection(li, answer, correctAnswer);
                     } else {
                         this.next();
                     }
                 }
+            },
+
+            renderCorrection: function (container, answer, correctAnswer) {
+                container.find('.js-correction').html(correctAnswer).removeClass('hidden');
+                container.find('.js-next').removeClass('hidden');
+                container.find('.js-answerBlock').addClass('hidden');
+                this.corrections.push({
+                    q: this.cards[this.currentQuestion].q,
+                    a: this.cards[this.currentQuestion].a,
+                    w: answer
+                });
             },
 
             onSkip: function () {
@@ -1580,6 +1615,21 @@ define('Widget/Explore/Trial/Exam',
         var WidgetExploreTrialExam = WidgetExploreTrialAbstract.extend({
             tpl: 'testExam',
 
+            _ui: function () {
+                return _.extend(
+                    {},
+                    WidgetExploreTrialExam.__super__._ui,
+                    {
+                        qHeader: '.js-qHeader',
+                        qExample: '.js-qExample',
+                        input: 'input[type="text"]',
+                        correction: '.js-correction',
+                        next: '.js-next',
+                        answerBlock: '.js-answerBlock'
+                    }
+                );
+            },
+
             events: function () {
                 return _.extend(
                     {},
@@ -1594,15 +1644,40 @@ define('Widget/Explore/Trial/Exam',
                 );
             },
 
-            retrieveAnswer: function (container) {
-                return container.find('input[type="text"]').val().trim();
+            retrieveAnswer: function () {
+                return this.ui.input.val().trim();
+            },
+
+            renderCorrection: function (container, answer, correctAnswer) {
+                this.ui.correction.html(correctAnswer).removeClass('hidden');
+                this.ui.next.removeClass('hidden');
+                this.ui.answerBlock.addClass('hidden');
+                this.corrections.push({
+                    q: this.cards[this.currentQuestion].q,
+                    a: this.cards[this.currentQuestion].a,
+                    w: answer
+                });
             },
 
             next: function (evt) {
-                WidgetExploreTrialExam.__super__.next.call(this, evt);
+                this.currentQuestion++;
 
-                if (this.currentQuestion < this.cards.length) {
-                    this.ui.items.eq(this.currentQuestion).find('input[type="text"]').focus();
+                this._renderProgress();
+
+                if (this.currentQuestion == this.cards.length) {
+                    this.final();
+                } else {
+                    this.ui.qHeader.text(this.cards[this.currentQuestion].q);
+                    var eg = this.cards[this.currentQuestion].eg;
+                    this.ui.qExample.text(
+                        (eg ? eg.replace(/\[\[answer\]\]/mg, '…') : '')
+                    );
+                    this.ui.input.val('');
+                    this.ui.input.focus();
+
+                    this.ui.correction.html('').addClass('hidden');
+                    this.ui.next.addClass('hidden');
+                    this.ui.answerBlock.removeClass('hidden');
                 }
             }
         });
@@ -1656,6 +1731,7 @@ define('Widget/Deck',
                 'click .js-startExam': 'onStartExam',
 
                 'change [name="showCorrections"]': 'onShowCorrectionsChange',
+                'change [name="showExamples"]': 'onShowExamplesChange',
 
                 'meditationOver .js-test': 'onMeditationComplete',
                 'testComplete .js-test': 'onTestComplete',
@@ -1671,6 +1747,7 @@ define('Widget/Deck',
             _ui: {
                 score: '.js-score',
                 showCorrections: '[name="showCorrections"]',
+                showExamples: '[name="showExamples"]',
                 addCardForm: '.js-addCardForm',
                 addCardBtn: '.js-addCard'
             },
@@ -1688,7 +1765,8 @@ define('Widget/Deck',
                 this.render({
                     deck: this.deck,
                     testable: this.testable,
-                    showCorrections: this.bus.prefs.get('showCorrections')
+                    showCorrections: this.bus.prefs.get('showCorrections'),
+                    showExamples: this.bus.prefs.get('showExamples')
                 });
 
                 this.setState('browsing');
@@ -1755,17 +1833,29 @@ define('Widget/Deck',
                 this.bus.prefs.set({showCorrections: this.ui.showCorrections.is(':checked')})
             },
 
+            onShowExamplesChange: function (evt) {
+                this.bus.prefs.set({showExamples: this.ui.showExamples.is(':checked')})
+            },
+
             onAddCard: function () {
                 this.ui.addCardForm.toggleClass('hidden');
                 this.ui.addCardBtn.toggleClass('active');
             },
 
             addCard: function () {
-                var q = this.ui.addCardForm.find('.js-question').val().trim(),
-                    a = this.ui.addCardForm.find('.js-answer').val().trim();
+                var find = this.ui.addCardForm.find.bind(this.ui.addCardForm),
+                    q = find('.js-question').val().trim(),
+                    a = find('.js-answer').val().trim(),
+                    eg = find('.js-example').val().trim(),
+
+                    newCard = {};
 
                 if (q && a) {
-                    this.deck.content.push({q: q, a: a});
+                    newCard.q = q;
+                    newCard.a = a;
+                    eg && (newCard.eg = eg);
+
+                    this.deck.content.push(newCard);
                     this.bus.decks.set({});
                     this.rr();
                 } else {
@@ -2096,6 +2186,7 @@ define('locale/en/locale',{
     unhideDeck: 'Reveal deck',
     hideDeckConfirm: 'Are you sure you want to hide this deck?',
     showCorrections: 'Show correct answers',
+    showExamples: 'Show usage examples (if any)',
     createDeck: 'Create new deck',
     importDeck: 'Import deck',
     exportDeck: 'Export whole deck',
@@ -2113,7 +2204,7 @@ define('locale/en/locale',{
     deckTestableHelp: 'If deck is suitable for creating test automatically? (Won\'t work on deck shorter than 5 cards).',
     deckCards: 'Deck cards',
     deckCardsImport: 'Import cards',
-    deckCardsExport: 'Export cards',
+    deckCardsExport: 'Export cards (without examples)',
     deckCardsPaste: 'Paste cards here',
     deckCardsHelp: 'Newline separates cards; tab or 4 spaces separates question form answer (question first)',
     deleteCard: 'Delete card',
@@ -2122,6 +2213,7 @@ define('locale/en/locale',{
 
     answer: 'Answer',
     question: 'Question',
+    example: 'Example: insert [[answer]] where card answer should be',
     next: 'Next',
     skip: 'Skip',
 
@@ -2239,6 +2331,7 @@ define('locale/ru/locale',{
     unhideDeck: 'Показывать колоду',
     hideDeckConfirm: 'Вы действительно хотите скрыть колоду?',
     showCorrections: 'Показывать правильные ответы',
+    showExamples: 'Показывать примеры употребления (если есть)',
     createDeck: 'Создать колоду',
     importDeck: 'Импортировать колоду',
     exportDeck: 'Экспортировать колоду целиком',
@@ -2256,7 +2349,7 @@ define('locale/ru/locale',{
     deckTestableHelp: 'Подходит ли колода для автоматического создания тестов? (Не работает на колодах меньше 5 карточек).',
     deckCards: 'Карточки в колоде',
     deckCardsImport: 'Импортировать карточки',
-    deckCardsExport: 'Экспортировать карточки',
+    deckCardsExport: 'Экспортировать карточки (без примеров)',
     deckCardsPaste: 'Вставьте карточки сюда',
     deckCardsHelp: 'Перевод строки разделяет карточки, табуляция или 4 пробела разделяет вопрос и ответ (вопрос идет первым)',
     deleteCard: 'Удалить карточки',
@@ -2265,6 +2358,7 @@ define('locale/ru/locale',{
 
     answer: 'Ответ',
     question: 'Вопрос',
+    example: 'Пример: Вставьте [[answer]] вместо ответа карточки',
     next: 'Следующий',
     skip: 'Пропустить',
 
@@ -2549,7 +2643,7 @@ define('PredefinedDecks',{
                     "a": "las"
                 },
                 {
-                    "q": "плод, овощ",
+                    "q": "плод, фрукт",
                     "a": "owoc"
                 },
                 {
@@ -3157,7 +3251,8 @@ define('PredefinedDecks',{
                 },
                 {
                     "q": "тетрадь",
-                    "a": "zeszyt"
+                    "a": "zeszyt",
+                    "eg": "To mój [[answer]]"
                 },
                 {
                     "q": "авторучка",
@@ -3201,7 +3296,8 @@ define('PredefinedDecks',{
                 },
                 {
                     "q": "книга",
-                    "a": "książka"
+                    "a": "książka",
+                    "eg": "Ta [[answer]] jest ciężka"
                 },
                 {
                     "q": "дамская сумочка",
@@ -3217,7 +3313,8 @@ define('PredefinedDecks',{
                 },
                 {
                     "q": "стена",
-                    "a": "ściana"
+                    "a": "ściana",
+                    "eg": "[[answer]] jest biała"
                 },
                 {
                     "q": "доска",
@@ -3415,7 +3512,8 @@ define('PredefinedDecks',{
                 },
                 {
                     "a": "gotuję",
-                    "q": "готовлю"
+                    "q": "готовлю",
+                    "eg": "[[answer]] śniadanie."
                 },
                 {
                     "a": "gotujesz",
@@ -4022,7 +4120,8 @@ define('PredefinedDecks',{
         },
         {
             "a": "bierze",
-            "q": "берет"
+            "q": "берет",
+            "eg": "Urzędnik [[answer]] łapówki"
         },
         {
             "a": "bierzemy",
@@ -4034,7 +4133,8 @@ define('PredefinedDecks',{
         },
         {
             "a": "biorą",
-            "q": "берут"
+            "q": "берут",
+            "eg": "Urzędniki [[answer]] łapówki"
         },
         {
             "a": "prać",
@@ -4132,20 +4232,52 @@ define('PredefinedDecks',{
             "builtIn": true,
             "content": [
                 {
+                    "a": "lubić",
+                    "q": "любить"
+                },
+                {
+                    "a": "lubię",
+                    "q": "люблю",
+                    "eg": "[[answer]] czytać księżki"
+                },
+                {
+                    "a": "lubisz",
+                    "q": "любишь"
+                },
+                {
+                    "a": "lubi",
+                    "q": "любит"
+                },
+                {
+                    "a": "lubimy",
+                    "q": "любим"
+                },
+                {
+                    "a": "lubicie",
+                    "q": "лю́бите"
+                },
+                {
+                    "a": "lubią",
+                    "q": "любят"
+                },
+                {
                     "a": "mówić",
                     "q": "говорить"
                 },
                 {
                     "a": "mówię",
-                    "q": "говорю"
+                    "q": "говорю",
+                    "eg": "[[answer]] po rosyjsku."
                 },
                 {
                     "a": "mówisz",
-                    "q": "говоришь"
+                    "q": "говоришь",
+                    "eg": "Czy [[answer]] po polsku?"
                 },
                 {
                     "a": "mówi",
-                    "q": "говорит"
+                    "q": "говорит",
+                    "eg": "Czy pan [[answer]] po angielsku?"
                 },
                 {
                     "a": "mówimy",
@@ -4456,11 +4588,13 @@ define('PredefinedDecks',{
                 },
                 {
                     "a": "mam",
-                    "q": "имею"
+                    "q": "имею",
+                    "eg": "[[answer]] 21 lat."
                 },
                 {
                     "a": "masz",
-                    "q": "имеешь"
+                    "q": "имеешь",
+                    "eg": "Jak się [[answer]]?"
                 },
                 {
                     "a": "ma",
@@ -4484,7 +4618,8 @@ define('PredefinedDecks',{
                 },
                 {
                     "a": "nazywam się",
-                    "q": "называюсь"
+                    "q": "называюсь",
+                    "eg": "[[answer]] Anna Novak"
                 },
                 {
                     "a": "nazywasz się",
@@ -4564,7 +4699,8 @@ define('PredefinedDecks',{
                 },
                 {
                     "a": "grać",
-                    "q": "играть"
+                    "q": "играть",
+                    "eg": "Lubię [[answer]] w tenisa."
                 },
                 {
                     "a": "gram",
@@ -4624,7 +4760,8 @@ define('PredefinedDecks',{
                 },
                 {
                     "a": "czekam",
-                    "q": "жду"
+                    "q": "жду",
+                    "eg": "[[answer]] na ciebie"
                 },
                 {
                     "a": "czekasz",
@@ -4688,7 +4825,8 @@ define('PredefinedDecks',{
                 },
                 {
                     "a": "kocha",
-                    "q": "любит"
+                    "q": "любит",
+                    "eg": "Anna [[answer]] Piotra."
                 },
                 {
                     "a": "kochamy",

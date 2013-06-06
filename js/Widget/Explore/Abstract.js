@@ -26,7 +26,8 @@ define(
                 this.render({
                     name: this.name,
                     cards: this.cards,
-                    current: this.currentQuestion
+                    current: this.currentQuestion,
+                    showExamples: this.bus.prefs.get('showExamples')
                 });
                 this._renderProgress();
             },

@@ -14,6 +14,7 @@ define(
                     WidgetExploreTrialExam.__super__._ui,
                     {
                         qHeader: '.js-qHeader',
+                        qExample: '.js-qExample',
                         input: 'input[type="text"]',
                         correction: '.js-correction',
                         next: '.js-next',
@@ -60,6 +61,10 @@ define(
                     this.final();
                 } else {
                     this.ui.qHeader.text(this.cards[this.currentQuestion].q);
+                    var eg = this.cards[this.currentQuestion].eg;
+                    this.ui.qExample.text(
+                        (eg ? eg.replace(/\[\[answer\]\]/mg, '…') : '')
+                    );
                     this.ui.input.val('');
                     this.ui.input.focus();
 

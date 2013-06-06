@@ -250,6 +250,11 @@
           </label>
         </div>
 
+        <div class="row-fluid"><span></span>
+          <label class="span8"><%= locale.example %><br/>
+            <input type="text" value="" class="js-example input-medium"/>
+          </label>
+        </div>
         <button class="js-confirmAdd btn btn-success btn-small" type="button"><%= locale.addCard %></button>
       </div>
 
@@ -257,7 +262,10 @@
       <% if (deck.description) { %><p><%= deck.description.replace(/\n/mg, '<br/>') %></p><% } %>
       <% if (deck.tags && deck.tags.length) { %><p class="text-right muted"><small><%= deck.tags.join(', ') %></small></p><% } %>
       <label class="checkbox">
-        <input type="checkbox" name="showCorrections" <% if (showCorrections) { print('checked="checked"') } %>/> <%= locale.showCorrections %>
+        <input type="checkbox" name="showCorrections" <%= showCorrections ? 'checked="checked"' : '' %>/> <%= locale.showCorrections %>
+      </label>
+      <label class="checkbox">
+        <input type="checkbox" name="showExamples" <%= showExamples ? 'checked="checked"' : '' %>/> <%= locale.showExamples %>
       </label>
       <div class="btn-group">
         <button class="btn js-startMeditation"><%= locale.meditation %></button>
@@ -285,7 +293,7 @@
     <div class="progress progress-striped active">
       <div class="bar js-progress" style="width: 1%;"></div>
     </div>
-    <div>
+    <div class="card">
       <h3 class="js-qHeader"><%= cards[0].q %></h3>
       <div class="input-append">
         <input class="input-large" type="text" lang="<%= lang.learn %>" placeholder=""/>
@@ -294,6 +302,7 @@
           <button class="btn btn-warning js-skip"><%= locale.skip %></button>
         </div>
       </div>
+      <% if (cards[0].eg && showExamples) { %><p class="cardExample js-qExample"><%= cards[0].eg.replace(/\[\[answer\]\]/mg, '…') %></p><% } %>
       <div class="js-correction text-error hidden"></div>
       <button class="btn js-next hidden"><%= locale.next %></button>
     </div>
@@ -306,13 +315,14 @@
     </div>
     <ul class="unstyled">
       <% _.each(cards, function(card, index) { %>
-        <li class="js-card form-inline<% if (index) { %> hidden<% } %>">
+        <li class="js-card card form-inline<% if (index) { %> hidden<% } %>">
           <h3><%= card.q %></h3>
           <% _.each(card.a, function (answer) { %>
             <label class="radio">
               <input type="radio" name="testTest" value="<%= answer %>"/>
               <%= answer %>
-            </label><br/>
+            </label>
+            <% if (card.eg && showExamples) { %><p class="cardExample"><%= card.eg.replace(/\[\[answer\]\]/mg, '…') %></p><% } %>
           <% }); %>
           <br/>
           <div class="js-correction text-error hidden"></div>
@@ -333,9 +343,9 @@
     </div>
     <ul class="unstyled">
       <% _.each(cards, function(card, index) { %>
-        <li class="js-card form-inline<% if (index) { %> hidden<% } %>">
-          <h3><%= card.a %></h3>
-          <h3><%= card.q %></h3>
+        <li class="js-card card form-inline<% if (index) { %> hidden<% } %>">
+          <h3><%= card.a %> <span style="font-weight: normal;">—</span> <%= card.q %></h3>
+          <% if (card.eg && showExamples) { %><p class="cardExample"><%= card.eg.replace(/\[\[answer\]\]/mg, card.a) %></p><% } %>
           <button class="btn btn-warning js-next"><%= locale.next %></button>
         </li>
       <% }); %>
@@ -466,6 +476,12 @@
                   <input type="text" value="<%= card.a %>" class="js-answer" name="carda" lang="<%= lang.learn %>" spellcheck="true" <%= deck.builtIn ? 'disabled="disabled"' : '' %>/>
                 </label>
               </div>
+              <div class="row-fluid">
+                <label class="span6">
+                  <%= locale.example %><br/>
+                  <input type="text" value="<%= card.eg %>" class="js-example" name="cardeg" lang="<%= lang.learn %>" spellcheck="true" <%= deck.builtIn ? 'disabled="disabled"' : '' %>/>
+                </label>
+              </div>
 
               <% if (!deck.builtIn) { %><button class="js-deleteCard btn btn-danger btn-small"><%= locale.deleteCard %></button><% } %>
               <hr/>
@@ -479,11 +495,19 @@
           <div class="js-addCard">
             <div class="row-fluid">
               <span class="help-block"><%= locale.addCard %></span>
-              <label class="span3"><%= locale.question %><br/>
+              <label class="span3">
+                <%= locale.question %><br/>
                 <input type="text" value="" class="js-question" lang="<%= lang.native %>" spellcheck="true"/>
               </label>
-              <label class="span3"><%= locale.answer %><br/>
+              <label class="span3">
+                <%= locale.answer %><br/>
                 <input type="text" value="" class="js-answer" lang="<%= lang.learn %>" spellcheck="true"/>
+              </label>
+            </div>
+            <div class="row-fluid"><span></span>
+              <label class="span6">
+                <%= locale.example %><br/>
+                <input type="text" value="" class="js-example" lang="<%= lang.learn %>" spellcheck="true"/>
               </label>
             </div>
 
@@ -493,11 +517,19 @@
           <div class="js-cardTemplate hidden">
             <div class="js-cardForm">
               <div class="row-fluid">
-                <label class="span3"><%= locale.question %><br/>
+                <label class="span3">
+                  <%= locale.question %><br/>
                   <input type="text" class="js-question" name="cardq" lang="<%= lang.native %>" spellcheck="true"/>
                 </label>
-                <label class="span3"><%= locale.answer %><br/>
+                <label class="span3">
+                  <%= locale.answer %><br/>
                   <input type="text" class="js-answer" name="carda" lang="<%= lang.learn %>" spellcheck="true"/>
+                </label>
+              </div>
+              <div class="row-fluid">
+                <label class="span6">
+                  <%= locale.example %><br/>
+                  <input type="text" class="js-example" name="cardeg" lang="<%= lang.learn %>" spellcheck="true"/>
                 </label>
               </div>
 
