@@ -1,0 +1,10 @@
+.card {
+}
+
+    .card .cardExample {
+        font-style: italic;
+        opacity: .7;
+    }
+        .card .cardExample::first-letter {
+            text-transform: uppercase;
+        }
