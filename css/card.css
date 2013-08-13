@@ -8,3 +8,8 @@
         .card .cardExample::first-letter {
             text-transform: uppercase;
         }
+
+    .card .cardIpa {
+        font-size: 90%;
+        margin-bottom: 1em;
+    }

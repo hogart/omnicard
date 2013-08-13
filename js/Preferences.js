@@ -15,6 +15,7 @@ define(
                 attrs: {
                     showCorrections: true,
                     showExamples: true,
+                    showTranscriptions: true,
                     hiddenDecks: {}
                 }
             },

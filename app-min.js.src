@@ -697,6 +697,7 @@ define('Preferences',
                 attrs: {
                     showCorrections: true,
                     showExamples: true,
+                    showTranscriptions: true,
                     hiddenDecks: {}
                 }
             },
@@ -1041,13 +1042,279 @@ define('Widget/Start',
         return WidgetStart;
     }
 );
+define('Widget/EditCard',
+    [
+        'Widget/Abstract'
+    ],
+
+    function (WidgetAbstract) {
+        
+
+        /**
+         *
+         * @class
+         * @extends WidgetAbstract
+         */
+        var WidgetEditCard = WidgetAbstract.extend(/** @lends WidgetEditCard.prototype*/ {
+            tpl: 'editCard',
+
+            events: {
+                'click .js-toggleAdd': 'onToggleAdd',
+                'click .js-confirm': 'onConfirm',
+                'click .js-cancel': 'onReset',
+                'click .js-delete': 'onDelete'
+            },
+
+            /**
+             * @constructor
+             * @param {Object} options
+             * @param {Object} options.deck
+             * @param {Object} options.card
+             */
+            initialize: function (options) {
+                WidgetEditCard.__super__.initialize.call(this, options);
+
+                this.deck = this.params.deck;
+
+                this.parent = this.params.parent;
+
+                if ('index' in this.params) {
+                    this.index = Number(this.params.index)
+                } else {
+                    this.index = null;
+                }
+
+                // temp storage for when toggling visibility
+                this.stored = {
+                    cardq: '',
+                    carda: '',
+                    cardeg: '',
+                    cardipa: ''
+                };
+
+                this.rr();
+            },
+
+            rr: function () {
+                var data = {
+                    disabled: this.params.deck.builtIn ? 'disabled="disabled"' : '',
+                    card: this.params.card || {},
+                    isAdd: !!this.params.isAdd
+                };
+
+                this.render(data);
+            },
+
+            show: function () {
+                this.$el.removeClass('hidden');
+
+                _.each(this.stored, function (val, key) {
+                    this.$('input[name="' + key + '"]').val(val);
+                }, this)
+            },
+
+            hide: function () {
+                this.stored = this.$el.form2JSON();
+
+                this.$('input').val('');
+                this.$el.addClass('hidden');
+            },
+
+            onToggleAdd: function (evt) {
+                var btn = $(evt.target).closest('.btn'),
+                    row = btn.closest('.row-fluid'),
+                    input = row.find('input');
+
+                if (row.hasClass('present')) {
+                    this.stored[input[0].name] = input.val(); // store temporarily
+                    input.val('');
+                } else {
+                    row.find('input').focus().val(this.stored[input[0].name]); // restore when show again
+                }
+
+                row.toggleClass('absent present');
+                btn.toggleClass('btn-danger');
+            },
+
+            onConfirm: function (evt) {
+                var card = {};
+
+                _.each(this.stored, function (value, key) {
+                    var val = this.$('input[name="' + key + '"]').val().trim();
+
+                    if (val) {
+                        card[key.substr(4)] = val;
+                    }
+                }, this);
+
+                if (card.q && card.a) {
+                    this.parent.trigger('submit', card, this.index);
+                } else {
+                    alert(this.bus.locale.invalidCard);
+                }
+            },
+
+            onReset: function (evt) {
+                this.parent.trigger('cancel', this);
+            },
+
+            onDelete: function (evt) {
+                this.parent.trigger('delete', this.index);
+            }
+        });
+
+
+        return WidgetEditCard;
+    }
+);
+define('Widget/EditDeckCards',
+    [
+        'Widget/Abstract',
+        'Widget/EditCard'
+    ],
+
+    function (WidgetAbstract, WidgetEditCard) {
+        
+
+        /**
+         *
+         * @class
+         * @extends WidgetAbstract
+         */
+        var WidgetEditDeckCards = WidgetAbstract.extend(/** @lends WidgetEditDeckCards.prototype*/ {
+            tpl: 'editDeckCards',
+
+            _ui: function () {
+                var ui = {};
+
+                if (!this.deck.builtIn) {
+                    ui['tbody'] = 'tbody';
+                }
+
+                return ui;
+            },
+
+            events: function () {
+                var events = {};
+
+                if (!this.deck.builtIn) {
+                    events['click tbody tr'] = 'onRowClick';
+                    events['click tfoot .js-add'] = 'onAddClick';
+                }
+
+                return events;
+            },
+
+            formSelector: '.js-formRow td',
+
+            /**
+             * @constructor
+             * @param {Object} options
+             * @param {Object} options.deck
+             */
+            initialize: function (options) {
+                this.deck = options.deck;
+
+                WidgetEditDeckCards.__super__.initialize.call(this, options);
+
+                this.rr();
+
+                this.formRowStub = $('<tr class="js-formRow"><td colspan="4"></td></tr>');
+
+                this.on('submit', this.onEditCard, this);
+                this.on('cancel', this.onEditCardCancel, this);
+                this.on('delete', this.onEditCardDelete, this);
+            },
+
+            rr: function () {
+                this.render({deck: this.deck});
+
+                this._ensureUI();
+            },
+
+            onRowClick: function (evt) {
+                var row = $(evt.target).closest('tr'),
+                    index = row.attr('data-id');
+
+                if (_.isUndefined(index)) {
+                    return;
+                }
+
+                var formRow = this.formRowStub.clone();
+
+                row.after(formRow);
+
+                row.addClass('hidden');
+
+                // TODO: fix registerChild in Chitin.js so it would accept elements too
+                // TODO: fix registerChild in Chitin.js so it would return created child
+                this.registerChild(
+                    this.formSelector + this.index,
+                    WidgetEditCard,
+                    {
+                        el: formRow.find('td'),
+                        deck: this.deck,
+                        card: this.deck.content[index],
+                        index: index,
+                        parent: this
+                    }
+                );
+            },
+
+            onEditCardCancel: function (form) {
+                var formRow = form.$el.parent('tr'),
+                    cardRow = formRow.prev(),
+                    index = Number(cardRow.attr('data-id'));
+
+                this.unregisterChild(this.formSelector + index);
+
+                cardRow.removeClass('hidden');
+                formRow.remove();
+            },
+
+            onEditCard: function (card, index) {
+                if (index !== null) {
+                    this.deck.content[index] = card
+                } else {
+                    this.deck.content.push(card);
+                }
+
+                this.rr();
+            },
+
+            onEditCardDelete: function (index) {
+                this.deck.content.splice(index, 1);
+
+                this.rr();
+            },
+
+            onAddClick: function (evt) {
+                var formRow = this.formRowStub.clone();
+                formRow.appendTo(this.ui.tbody);
+
+                this.registerChild(
+                    this.formSelector + 'new',
+                    WidgetEditCard,
+                    {
+                        el: formRow.find('td'),
+                        deck: this.deck,
+                        parent: this
+                    }
+                );
+            }
+        });
+
+        return WidgetEditDeckCards;
+    }
+);
 define('Widget/EditDeck',
     [
         'Widget/Abstract',
+        'Widget/EditDeckCards',
         '_',
         'lib/vendor/jquery.form2JSON'
     ],
-    function (WidgetAbstract, _) {
+    function (WidgetAbstract, WidgetEditDeckCards, _) {
         
 
         var WidgetEditDeck = WidgetAbstract.extend({
@@ -1074,11 +1341,13 @@ define('Widget/EditDeck',
             events: {
                 'submit form': 'onSubmit',
                 'reset form': 'onReset',
-                'click .js-confirm': 'addCard',
-                'click .js-deleteCard': 'deleteCard',
 
                 'click .js-dump .js-import, .js-dump .js-export': 'toggleDumpster',
                 'click .js-dump .js-done': 'doneDumpster'
+            },
+
+            subWidgets: {
+                '.js-cardTable': [WidgetEditDeckCards, function () { return {deck: this.deck} }]
             },
 
             initialize: function (options) {
@@ -1100,6 +1369,8 @@ define('Widget/EditDeck',
                 }).join('\n');
 
                 this.render(tplData);
+
+                this.ensureSubWidgets();
             },
 
             onSubmit: function (evt) {
@@ -1108,36 +1379,22 @@ define('Widget/EditDeck',
                 var deckRaw = this.ui.frm.form2JSON({
                     tags: function (tags) {
                         return _.map(tags.split(','), function (tag) {
-                            return tag.trim()
+                            return tag.trim();
                         })
+                    },
+
+                    testable: function (testable) { // checkbox voodoo
+                        return !!testable;
                     }
                 });
 
-                deckRaw.testable = !!deckRaw.testable;
-
-                deckRaw.content = [];
-                _.each(deckRaw.cardq, function (cardQuestion, index) {
-                    var q = cardQuestion.trim(),
-                        a = deckRaw.carda[index].trim(),
-                        eg = deckRaw.cardeg[index].trim(),
-                        card = {};
-
-                    if (q && a) {
-                        card.q = q;
-                        card.a = a;
-                        eg && (card.eg = eg);
-
-                        deckRaw.content.push(card);
-                    }
-                });
-
-                var deckContent = _.pick(deckRaw, ['name', 'description', 'tags', 'content']);
                 if (_.isNull(this.id)) {
-                    this.bus.decks.attrs.push(deckContent);
+                    _.extend(this.deck, deckRaw);
+                    this.bus.decks.attrs.push(this.deck);
                     this.bus.decks.set({}); // trick to force save
                 } else {
                     var deck = {};
-                    deck[this.id] = deckContent;
+                    deck[this.id] = this.deck;
 
                     this.bus.decks.set(deck);
                 }
@@ -1153,26 +1410,6 @@ define('Widget/EditDeck',
                 this.renderDeck();
 
                 return false;
-            },
-
-            addCard: function () {
-                var newCard = this.$('.js-cardTemplate').clone();
-                newCard.find('.js-question').val( this.ui.newQuestion.val() );
-                newCard.find('.js-answer').val( this.ui.newAnswer.val() );
-                newCard.find('.js-example').val( this.ui.newExample.val() );
-
-                newCard.appendTo(this.ui.cardList).removeClass('hidden js-cardTemplate');
-
-                this.ui.newQuestion.val('');
-                this.ui.newAnswer.val('');
-                this.ui.newExample.val('');
-            },
-
-            deleteCard: function (evt) {
-                var trgt = $(evt.target),
-                    card = trgt.closest('.js-cardForm');
-
-                card.remove();
             },
 
             toggleDumpster: function (evt) {
@@ -1417,7 +1654,8 @@ define('Widget/Explore/Abstract',
                     name: this.name,
                     cards: this.cards,
                     current: this.currentQuestion,
-                    showExamples: this.bus.prefs.get('showExamples')
+                    showExamples: this.bus.prefs.get('showExamples'),
+                    showTranscriptions: this.bus.prefs.get('showTranscriptions')
                 });
                 this._renderProgress();
             },
@@ -1677,9 +1915,11 @@ define('Widget/Explore/Trial/Exam',
                 this.ui.correction.html(correctAnswer).removeClass('hidden');
                 this.ui.next.removeClass('hidden');
                 this.ui.answerBlock.addClass('hidden');
+
+                var card = this.cards[this.currentQuestion];
                 this.corrections.push({
-                    q: this.cards[this.currentQuestion].q,
-                    a: this.cards[this.currentQuestion].a,
+                    q: card.q,
+                    a: card.a,
                     w: answer
                 });
             },
@@ -1742,9 +1982,11 @@ define('Widget/Deck',
         'Widget/Explore/Meditation',
         'Widget/Explore/Trial/Test',
         'Widget/Explore/Trial/Exam',
-        'Widget/Score'
+        'Widget/Score',
+
+        'Widget/EditCard'
     ],
-    function (WidgetAbstract, WidgetExploreMeditation, WidgetExploreTrialTest, WidgetExploreTrialExam, WidgetScore) {
+    function (WidgetAbstract, WidgetExploreMeditation, WidgetExploreTrialTest, WidgetExploreTrialExam, WidgetScore, WidgetEditCard) {
         
 
         var WidgetDeck = WidgetAbstract.extend({
@@ -1757,6 +1999,7 @@ define('Widget/Deck',
 
                 'change [name="showCorrections"]': 'onShowCorrectionsChange',
                 'change [name="showExamples"]': 'onShowExamplesChange',
+                'change [name="showTranscriptions"]': 'onShowTranscriptionsChange',
 
                 'meditationOver .js-test': 'onMeditationComplete',
                 'testComplete .js-test': 'onTestComplete',
@@ -1764,17 +2007,20 @@ define('Widget/Deck',
                 'click .js-editDeck': 'onEditDeck',
                 'click .js-deleteDeck': 'onDeleteDeck',
                 'click .js-hideDeck': 'onHideDeck',
-                'click .js-addCard': 'onAddCard',
-
-                'click .js-confirmAdd': 'addCard'
+                'click .js-addCard': 'onAddCardClick'
             },
 
             _ui: {
                 score: '.js-score',
                 showCorrections: '[name="showCorrections"]',
                 showExamples: '[name="showExamples"]',
+                showTranscriptions: '[name="showTranscriptions"]',
                 addCardForm: '.js-addCardForm',
                 addCardBtn: '.js-addCard'
+            },
+
+            subWidgets: {
+                '.js-addCardForm': [WidgetEditCard, function () { return {deck: this.deck, isAdd: true, parent: this} }]
             },
 
             initialize: function (options) {
@@ -1784,6 +2030,9 @@ define('Widget/Deck',
                 this.testable = this.deck.testable && this.deck.content.length > 3;
 
                 this.rr();
+
+                this.on('submit', this.onNewCard, this);
+                this.on('cancel', this.onNewCardCancel, this);
             },
 
             rr: function () {
@@ -1791,8 +2040,11 @@ define('Widget/Deck',
                     deck: this.deck,
                     testable: this.testable,
                     showCorrections: this.bus.prefs.get('showCorrections'),
-                    showExamples: this.bus.prefs.get('showExamples')
+                    showExamples: this.bus.prefs.get('showExamples'),
+                    showTranscriptions: this.bus.prefs.get('showTranscriptions')
                 });
+
+                this.ensureSubWidgets();
 
                 this.setState('browsing');
             },
@@ -1862,30 +2114,29 @@ define('Widget/Deck',
                 this.bus.prefs.set({showExamples: this.ui.showExamples.is(':checked')})
             },
 
-            onAddCard: function () {
-                this.ui.addCardForm.toggleClass('hidden');
+            onShowTranscriptionsChange: function (evt) {
+                this.bus.prefs.set({showTranscriptions: this.ui.showTranscriptions.is(':checked')})
+            },
+
+            onAddCardClick: function (evt) {
+                if (this.ui.addCardBtn.hasClass('active')) {
+                    this.children['.js-addCardForm'].hide();
+                } else {
+                    this.children['.js-addCardForm'].show();
+                }
+
                 this.ui.addCardBtn.toggleClass('active');
             },
 
-            addCard: function () {
-                var find = this.ui.addCardForm.find.bind(this.ui.addCardForm),
-                    q = find('.js-question').val().trim(),
-                    a = find('.js-answer').val().trim(),
-                    eg = find('.js-example').val().trim(),
+            onNewCardCancel: function () {
+                this.children['.js-addCardForm'].hide();
+                this.ui.addCardBtn.removeClass('active');
+            },
 
-                    newCard = {};
-
-                if (q && a) {
-                    newCard.q = q;
-                    newCard.a = a;
-                    eg && (newCard.eg = eg);
-
-                    this.deck.content.push(newCard);
-                    this.bus.decks.set({});
-                    this.rr();
-                } else {
-                    alert(this.bus.locale.invalidCard);
-                }
+            onNewCard: function (card) {
+                this.deck.content.push(card);
+                this.bus.decks.set({});
+                this.rr();
             }
         });
 
@@ -2212,6 +2463,7 @@ define('locale/en/locale',{
     hideDeckConfirm: 'Are you sure you want to hide this deck?',
     showCorrections: 'Show correct answers',
     showExamples: 'Show usage examples (if any)',
+    showTranscriptions: 'Show transcriptions (if any)',
     createDeck: 'Create new deck',
     importDeck: 'Import deck',
     exportDeck: 'Export whole deck',
@@ -2239,6 +2491,11 @@ define('locale/en/locale',{
     answer: 'Answer',
     question: 'Question',
     example: 'Example: insert [[answer]] where card answer should be',
+    exampleAdd: 'Click to add example',
+    exampleShort: 'Example',
+    ipa: 'Transcription/pronunciation (IPA or any other)',
+    ipaAdd: 'Click to add transcription/pronunciation',
+    ipaShort: 'Transcription',
     next: 'Next',
     skip: 'Skip',
 
@@ -2357,6 +2614,7 @@ define('locale/ru/locale',{
     hideDeckConfirm: 'Вы действительно хотите скрыть колоду?',
     showCorrections: 'Показывать правильные ответы',
     showExamples: 'Показывать примеры употребления (если есть)',
+    showTranscriptions: 'Показывать транскрипцию (если есть)',
     createDeck: 'Создать колоду',
     importDeck: 'Импортировать колоду',
     exportDeck: 'Экспортировать колоду целиком',
@@ -2384,6 +2642,9 @@ define('locale/ru/locale',{
     answer: 'Ответ',
     question: 'Вопрос',
     example: 'Пример: Вставьте [[answer]] вместо ответа карточки',
+    exampleAdd: 'Кликните, чтобы добавить пример в карточку',
+    ipa: 'Транскрипция/произношение (МФА или любая другая)',
+    ipaAdd: 'Кликните, чтобы добавить транскрипцию.произношение',
     next: 'Следующий',
     skip: 'Пропустить',
 

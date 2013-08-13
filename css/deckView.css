@@ -21,3 +21,8 @@
     .deckView__scoring .deckView-score {
         display: block;
     }
+
+    .deckView-header .deckView-cardForm {
+        clear: both;
+        margin-top: 3em;
+    }

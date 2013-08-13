@@ -4,9 +4,11 @@ define(
         'Widget/Explore/Meditation',
         'Widget/Explore/Trial/Test',
         'Widget/Explore/Trial/Exam',
-        'Widget/Score'
+        'Widget/Score',
+
+        'Widget/EditCard'
     ],
-    function (WidgetAbstract, WidgetExploreMeditation, WidgetExploreTrialTest, WidgetExploreTrialExam, WidgetScore) {
+    function (WidgetAbstract, WidgetExploreMeditation, WidgetExploreTrialTest, WidgetExploreTrialExam, WidgetScore, WidgetEditCard) {
         'use strict';
 
         var WidgetDeck = WidgetAbstract.extend({
@@ -19,6 +21,7 @@ define(
 
                 'change [name="showCorrections"]': 'onShowCorrectionsChange',
                 'change [name="showExamples"]': 'onShowExamplesChange',
+                'change [name="showTranscriptions"]': 'onShowTranscriptionsChange',
 
                 'meditationOver .js-test': 'onMeditationComplete',
                 'testComplete .js-test': 'onTestComplete',
@@ -26,17 +29,20 @@ define(
                 'click .js-editDeck': 'onEditDeck',
                 'click .js-deleteDeck': 'onDeleteDeck',
                 'click .js-hideDeck': 'onHideDeck',
-                'click .js-addCard': 'onAddCard',
-
-                'click .js-confirmAdd': 'addCard'
+                'click .js-addCard': 'onAddCardClick'
             },
 
             _ui: {
                 score: '.js-score',
                 showCorrections: '[name="showCorrections"]',
                 showExamples: '[name="showExamples"]',
+                showTranscriptions: '[name="showTranscriptions"]',
                 addCardForm: '.js-addCardForm',
                 addCardBtn: '.js-addCard'
+            },
+
+            subWidgets: {
+                '.js-addCardForm': [WidgetEditCard, function () { return {deck: this.deck, isAdd: true, parent: this} }]
             },
 
             initialize: function (options) {
@@ -46,6 +52,9 @@ define(
                 this.testable = this.deck.testable && this.deck.content.length > 3;
 
                 this.rr();
+
+                this.on('submit', this.onNewCard, this);
+                this.on('cancel', this.onNewCardCancel, this);
             },
 
             rr: function () {
@@ -53,8 +62,11 @@ define(
                     deck: this.deck,
                     testable: this.testable,
                     showCorrections: this.bus.prefs.get('showCorrections'),
-                    showExamples: this.bus.prefs.get('showExamples')
+                    showExamples: this.bus.prefs.get('showExamples'),
+                    showTranscriptions: this.bus.prefs.get('showTranscriptions')
                 });
+
+                this.ensureSubWidgets();
 
                 this.setState('browsing');
             },
@@ -124,30 +136,29 @@ define(
                 this.bus.prefs.set({showExamples: this.ui.showExamples.is(':checked')})
             },
 
-            onAddCard: function () {
-                this.ui.addCardForm.toggleClass('hidden');
+            onShowTranscriptionsChange: function (evt) {
+                this.bus.prefs.set({showTranscriptions: this.ui.showTranscriptions.is(':checked')})
+            },
+
+            onAddCardClick: function (evt) {
+                if (this.ui.addCardBtn.hasClass('active')) {
+                    this.children['.js-addCardForm'].hide();
+                } else {
+                    this.children['.js-addCardForm'].show();
+                }
+
                 this.ui.addCardBtn.toggleClass('active');
             },
 
-            addCard: function () {
-                var find = this.ui.addCardForm.find.bind(this.ui.addCardForm),
-                    q = find('.js-question').val().trim(),
-                    a = find('.js-answer').val().trim(),
-                    eg = find('.js-example').val().trim(),
+            onNewCardCancel: function () {
+                this.children['.js-addCardForm'].hide();
+                this.ui.addCardBtn.removeClass('active');
+            },
 
-                    newCard = {};
-
-                if (q && a) {
-                    newCard.q = q;
-                    newCard.a = a;
-                    eg && (newCard.eg = eg);
-
-                    this.deck.content.push(newCard);
-                    this.bus.decks.set({});
-                    this.rr();
-                } else {
-                    alert(this.bus.locale.invalidCard);
-                }
+            onNewCard: function (card) {
+                this.deck.content.push(card);
+                this.bus.decks.set({});
+                this.rr();
             }
         });
 

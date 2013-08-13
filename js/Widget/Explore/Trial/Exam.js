@@ -45,9 +45,11 @@ define(
                 this.ui.correction.html(correctAnswer).removeClass('hidden');
                 this.ui.next.removeClass('hidden');
                 this.ui.answerBlock.addClass('hidden');
+
+                var card = this.cards[this.currentQuestion];
                 this.corrections.push({
-                    q: this.cards[this.currentQuestion].q,
-                    a: this.cards[this.currentQuestion].a,
+                    q: card.q,
+                    a: card.a,
                     w: answer
                 });
             },

@@ -27,7 +27,8 @@ define(
                     name: this.name,
                     cards: this.cards,
                     current: this.currentQuestion,
-                    showExamples: this.bus.prefs.get('showExamples')
+                    showExamples: this.bus.prefs.get('showExamples'),
+                    showTranscriptions: this.bus.prefs.get('showTranscriptions')
                 });
                 this._renderProgress();
             },

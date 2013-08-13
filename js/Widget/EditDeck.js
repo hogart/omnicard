@@ -1,10 +1,11 @@
 define(
     [
         'Widget/Abstract',
+        'Widget/EditDeckCards',
         '_',
         'lib/vendor/jquery.form2JSON'
     ],
-    function (WidgetAbstract, _) {
+    function (WidgetAbstract, WidgetEditDeckCards, _) {
         'use strict';
 
         var WidgetEditDeck = WidgetAbstract.extend({
@@ -31,11 +32,13 @@ define(
             events: {
                 'submit form': 'onSubmit',
                 'reset form': 'onReset',
-                'click .js-confirm': 'addCard',
-                'click .js-deleteCard': 'deleteCard',
 
                 'click .js-dump .js-import, .js-dump .js-export': 'toggleDumpster',
                 'click .js-dump .js-done': 'doneDumpster'
+            },
+
+            subWidgets: {
+                '.js-cardTable': [WidgetEditDeckCards, function () { return {deck: this.deck} }]
             },
 
             initialize: function (options) {
@@ -57,6 +60,8 @@ define(
                 }).join('\n');
 
                 this.render(tplData);
+
+                this.ensureSubWidgets();
             },
 
             onSubmit: function (evt) {
@@ -65,36 +70,22 @@ define(
                 var deckRaw = this.ui.frm.form2JSON({
                     tags: function (tags) {
                         return _.map(tags.split(','), function (tag) {
-                            return tag.trim()
+                            return tag.trim();
                         })
+                    },
+
+                    testable: function (testable) { // checkbox voodoo
+                        return !!testable;
                     }
                 });
 
-                deckRaw.testable = !!deckRaw.testable;
-
-                deckRaw.content = [];
-                _.each(deckRaw.cardq, function (cardQuestion, index) {
-                    var q = cardQuestion.trim(),
-                        a = deckRaw.carda[index].trim(),
-                        eg = deckRaw.cardeg[index].trim(),
-                        card = {};
-
-                    if (q && a) {
-                        card.q = q;
-                        card.a = a;
-                        eg && (card.eg = eg);
-
-                        deckRaw.content.push(card);
-                    }
-                });
-
-                var deckContent = _.pick(deckRaw, ['name', 'description', 'tags', 'content']);
                 if (_.isNull(this.id)) {
-                    this.bus.decks.attrs.push(deckContent);
+                    _.extend(this.deck, deckRaw);
+                    this.bus.decks.attrs.push(this.deck);
                     this.bus.decks.set({}); // trick to force save
                 } else {
                     var deck = {};
-                    deck[this.id] = deckContent;
+                    deck[this.id] = this.deck;
 
                     this.bus.decks.set(deck);
                 }
@@ -110,26 +101,6 @@ define(
                 this.renderDeck();
 
                 return false;
-            },
-
-            addCard: function () {
-                var newCard = this.$('.js-cardTemplate').clone();
-                newCard.find('.js-question').val( this.ui.newQuestion.val() );
-                newCard.find('.js-answer').val( this.ui.newAnswer.val() );
-                newCard.find('.js-example').val( this.ui.newExample.val() );
-
-                newCard.appendTo(this.ui.cardList).removeClass('hidden js-cardTemplate');
-
-                this.ui.newQuestion.val('');
-                this.ui.newAnswer.val('');
-                this.ui.newExample.val('');
-            },
-
-            deleteCard: function (evt) {
-                var trgt = $(evt.target),
-                    card = trgt.closest('.js-cardForm');
-
-                card.remove();
             },
 
             toggleDumpster: function (evt) {
