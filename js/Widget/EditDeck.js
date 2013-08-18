@@ -14,9 +14,6 @@ define(
             _ui: {
                 frm: 'form',
                 cardList: '.js-cardList',
-                newQuestion: '.js-addCard .js-question',
-                newAnswer: '.js-addCard .js-answer',
-                newExample: '.js-addCard .js-example',
 
                 dumpDeck: '.js-dumpDeck',
                 dumpDeckDumpster: '.js-dumpDeck .js-dumpster',
