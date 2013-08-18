@@ -282,7 +282,7 @@
     <div class="card">
       <h3 class="js-qHeader"><%= cards[0].q %></h3>
       <div class="input-append">
-        <input class="input-large" type="text" lang="<%= lang.learn %>" placeholder=""/>
+        <input class="input-large" type="text" lang="<%= lang.learn %>" autocapitalize="off" placeholder=""/>
         <div class="btn-group js-answerBlock">
           <button class="btn btn-success js-answer"><%= locale.answer %></button>
           <button class="btn btn-warning js-skip"><%= locale.skip %></button>
@@ -414,7 +414,7 @@
           </label>
         <% } else { %>
           <label><%= locale.deckName %><br/>
-            <input type="text" placeholder="<%= locale.deckNamePlaceholder %>" name="name" required="required" value="<%= deck.name %>" class="span7"/>
+            <input type="text" value="<%= deck.name %>" class="span7" placeholder="<%= locale.deckNamePlaceholder %>" name="name" required="required"/>
           </label>
 
           <label><%= locale.deckDescr %><br/>
@@ -509,11 +509,11 @@
       <div class="row-fluid">
         <label class="span6">
           <%= locale.question %><br/>
-          <input type="text" value="<%= card.q %>" class="js-question span12" name="cardq" lang="<%= lang.native %>" spellcheck="true" <%= disabled %> />
+          <input type="text" value="<%= card.q %>" class="js-question span12" name="cardq" lang="<%= lang.native %>" spellcheck="true" autocapitalize="off" <%= disabled %> />
         </label>
         <label class="span6">
           <%= locale.answer %><br/>
-          <input type="text" value="<%= card.a %>" class="js-answer span12" name="carda" lang="<%= lang.learn %>" spellcheck="true" <%= disabled %> />
+          <input type="text" value="<%= card.a %>" class="js-answer span12" name="carda" lang="<%= lang.learn %>" spellcheck="true" autocapitalize="off" <%= disabled %> />
         </label>
       </div>
       <div class="row-fluid <%= (card.eg ? 'present' : 'absent') %>">
@@ -522,7 +522,7 @@
           <span class="closed"><%= locale.exampleAdd %></span>
           <span class="btn btn-small js-toggleAdd"><i class="icon"></i></span>
           <br/>
-          <input type="text" value="<%= card.eg %>" class="js-example span12" name="cardeg" lang="<%= lang.learn %>" spellcheck="true" <%= disabled %> />
+          <input type="text" value="<%= card.eg %>" class="span12" name="cardeg" lang="<%= lang.learn %>" spellcheck="true" <%= disabled %> />
         </label>
       </div>
       <div class="row-fluid <%= (card.ipa ? 'present' : 'absent') %>">
@@ -531,7 +531,7 @@
           <span class="closed"><%= locale.ipaAdd %></span>
           <span class="btn btn-small js-toggleAdd"><i class="icon"></i></span>
           <br/>
-          <input type="text" value="<%= card.ipa %>" class="js-example span12" name="cardipa" <%= disabled %> />
+          <input type="text" value="<%= card.ipa %>" class="span12" name="cardipa" autocapitalize="off" autocorrect="off" <%= disabled %> />
         </label>
       </div>
 
