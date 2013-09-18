@@ -76,10 +76,9 @@ define(
                     }
                 });
 
-                delete deckRaw.isNew;
-
                 if (_.isNull(this.id)) {
                     _.extend(this.deck, deckRaw);
+                    delete this.deck.isNew;
                     this.bus.decks.attrs.push(this.deck);
                     this.bus.decks.set({}); // trick to force save
                 } else {
