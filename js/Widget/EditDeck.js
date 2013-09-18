@@ -76,6 +76,8 @@ define(
                     }
                 });
 
+                delete deckRaw.isNew;
+
                 if (_.isNull(this.id)) {
                     _.extend(this.deck, deckRaw);
                     this.bus.decks.attrs.push(this.deck);
