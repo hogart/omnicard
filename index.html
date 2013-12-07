@@ -277,7 +277,7 @@
 
   <script class="js-tpl-testExam" type="text/x-template">
     <h4 class="muted"><%= name %></h4>
-    <div class="progress progress-striped active">
+    <div class="progress progress-striped">
       <div class="bar js-progress" style="width: 1%;"></div>
     </div>
     <div class="card">
@@ -297,12 +297,12 @@
 
   <script class="js-tpl-testTest" type="text/x-template">
     <h4 class="muted"><%= name %></h4>
-    <div class="progress progress-striped active">
+    <div class="progress progress-striped">
       <div class="bar js-progress" style="width: 1%;"></div>
     </div>
     <ul class="unstyled">
       <% _.each(cards, function(card, index) { %>
-        <li class="js-card card form-inline<% if (index) { %> hidden<% } %>">
+        <li class="js-card card form<% if (index) { %> hidden<% } %>">
           <h3><%= card.q %></h3>
           <% _.each(card.a, function (answer) { %>
             <label class="radio">
@@ -325,7 +325,7 @@
 
   <script class="js-tpl-testMeditation" type="text/x-template">
     <h4 class="muted"><%= name %></h4>
-    <div class="progress progress-striped active">
+    <div class="progress progress-striped">
       <div class="bar js-progress" style="width: 0%;"></div>
     </div>
     <ul class="unstyled">

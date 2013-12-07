@@ -1418,7 +1418,7 @@ define({
 
         {
             "id": "verbsI-1",
-            "name": "Глаголы I спряжения, ч.2",
+            "name": "Глаголы I спряжения, ч. 2",
             "description": "Глаголы I спряжения с чередованием в основе. Инфинитив и 6 форм настоящего времени.\n14 глаголов.",
             "tags": ["глаголы", "грамматика"],
             "testable": true,
@@ -2649,6 +2649,500 @@ define({
         },
 
         {
+            "id": "verbsPastIrregularI",
+            "name": "Прошедшее время, ч. 1",
+            "description": "Некоторые распространенные нерегулярные глаголы.\nАналогично спрягаются глаголы: mieć, umieć, myśleć, wiedzieć.",
+            "tags": ["глаголы", "грамматика"],
+            "testable": true,
+            "builtIn": true,
+            "content": [
+                {
+                    "q": "rozumieć (ja, r.m.)",
+                    "a": "rozumiałem"
+                },
+                {
+                    "q": "rozumieć (ja, r.ż.)",
+                    "a": "rozumiałam"
+                },
+                {
+                    "q": "rozumieć (ty, r.m.)",
+                    "a": "rozumiałeś"
+                },
+                {
+                    "q": "rozumieć (ty, r.ż)",
+                    "a": "rozumiałaś"
+                },
+                {
+                    "q": "rozumieć (on, pan)",
+                    "a": "rozumiał"
+                },
+                {
+                    "q": "rozumieć (ona, pani)",
+                    "a": "rozumiała"
+                },
+                {
+                    "q": "rozumieć (ono)",
+                    "a": "rozumiało"
+                },
+                {
+                    "q": "rozumieć (my, r.m.)",
+                    "a": "rozumieliśmy"
+                },
+                {
+                    "q": "rozumieć (my, r.ż.)",
+                    "a": "rozumiałyśmy"
+                },
+                {
+                    "q": "rozumieć (wy, r.m.)",
+                    "a": "rozumieliście"
+                },
+                {
+                    "q": "rozumieć (wy, r.ż.)",
+                    "a": "rozumiałyście"
+                },
+                {
+                    "q": "rozumieć (oni, panowe, państwo)",
+                    "a": "rozumieli"
+                },
+                {
+                    "q": "rozumieć (one, panie)",
+                    "a": "rozumiały"
+                },
+
+                {
+                    "q": "musieć (ja, r.m.)",
+                    "a": "musiałem"
+                },
+                {
+                    "q": "musieć (ja, r.ż.)",
+                    "a": "musiałam"
+                },
+                {
+                    "q": "musieć (ty, r.m.)",
+                    "a": "musiałeś"
+                },
+                {
+                    "q": "musieć (ty, r.ż.)",
+                    "a": "musiałaś"
+                },
+                {
+                    "q": "musieć (on, pan)",
+                    "a": "musiał"
+                },
+                {
+                    "q": "musieć (ona, pani)",
+                    "a": "musiała"
+                },
+                {
+                    "q": "musieć (ono)",
+                    "a": "musiało"
+                },
+                {
+                    "q": "musieć (my, r.m.)",
+                    "a": "musieliśmy"
+                },
+                {
+                    "q": "musieć (my, r.ż.)",
+                    "a": "musiałyśmy"
+                },
+                {
+                    "q": "musieć (wy, r.m.)",
+                    "a": "musieliście"
+                },
+                {
+                    "q": "musieć (wy, r.ż.)",
+                    "a": "musiałyście"
+                },
+                {
+                    "q": "musieć (oni, panowie, państwo)",
+                    "a": "musieli"
+                },
+                {
+                    "q": "musieć (one, panie)",
+                    "a": "musiały"
+                },
+                {
+                    "q": "chcieć (ja, r.m.)",
+                    "a": "chciałem"
+                },
+                {
+                    "q": "chcieć (ja, r.ż.)",
+                    "a": "chciałam"
+                },
+                {
+                    "q": "chcieć (ty, r.m.)",
+                    "a": "chciałeś"
+                },
+                {
+                    "q": "chcieć (ty, r.ż.)",
+                    "a": "chciałaś"
+                },
+                {
+                    "q": "chcieć (on, pan)",
+                    "a": "chciał",
+                    "eg": "On [[answer]] pracować w Warszawie,"
+                },
+                {
+                    "q": "chcieć (ona, pani)",
+                    "a": "chciała"
+                },
+                {
+                    "q": "chcieć (ono)",
+                    "a": "chciało"
+                },
+                {
+                    "q": "chcieć (my, r.m.)",
+                    "a": "chcieliśmy"
+                },
+                {
+                    "q": "chcieć (my, r.ż.)",
+                    "a": "chciałyśmy"
+                },
+                {
+                    "q": "chcieć (wy, r.m.)",
+                    "a": "chcieliście"
+                },
+                {
+                    "q": "chcieć (wy, r.ż.)",
+                    "a": "chciałyście"
+                },
+                {
+                    "q": "chcieć (oni, panowie, państwo)",
+                    "a": "chcieli",
+                    "eg": "Tomek i Andrzej [[answer]] studiować fizykę."
+                },
+                {
+                    "q": "chcieć (one, panie)",
+                    "a": "chciały",
+                    "eg": "Anna i Ewa [[answer]] uczyć się języka włoskiego."
+                }
+            ]
+        },
+
+        {
+            "id": "verbsPastIrregularII",
+            "name": "Прошедшее время, ч. 2",
+            "description": "Некоторые распространенные нерегулярные глаголы — móc, jeść, pójść.",
+            "tags": ["глаголы", "грамматика"],
+            "testable": true,
+            "builtIn": true,
+            "content": [
+                {
+                    "q": "jeść (ja, r.m.)",
+                    "a": "jadłem"
+                },
+                {
+                    "q": "jeść (ja, r.ż.)",
+                    "a": "jadłam"
+                },
+                {
+                    "q": "jeść (ty, r.m.)",
+                    "a": "jadłeś"
+                },
+                {
+                    "q": "jeść (ty, r.ż.)",
+                    "a": "jadłaś",
+                    "eg": "Anna, czy ty już [[answer]] śniadanie?"
+                },
+                {
+                    "q": "jeść (on, pan)",
+                    "a": "jadł",
+                    "eg": "On [[answer]] śniadanie s rodziną."
+                },
+                {
+                    "q": "jeść (ona, pani)",
+                    "a": "jadła"
+                },
+                {
+                    "q": "jeść (ono)",
+                    "a": "jadło"
+                },
+                {
+                    "q": "jeść (my, r.m.)",
+                    "a": "jedliśmy"
+                },
+                {
+                    "q": "jeść (my, r.ż.)",
+                    "a": "jadłyśmy"
+                },
+                {
+                    "q": "jeść (wy, r.m.)",
+                    "a": "jedliście"
+                },
+                {
+                    "q": "jeść (wy, r.ż.)",
+                    "a": "jadłyście"
+                },
+                {
+                    "q": "jeść (oni, panowie, państwo)",
+                    "a": "jedli",
+                    "eg": "Tomek i Andrzej [[answer]] kolacje w restauracji."
+                },
+                {
+                    "q": "jeść (one, panie)",
+                    "a": "jadły",
+                    "eg": "One [[answer]] obiad w restauracji."
+                },
+
+                {
+                    "q": "móc (ja, r.m.)",
+                    "a": "mogłem"
+                },
+                {
+                    "q": "móc (ja, r.ż.)",
+                    "a": "mogłam"
+                },
+                {
+                    "q": "móc (ty, r.m.)",
+                    "a": "mogłeś"
+                },
+                {
+                    "q": "móc (ty, r.ż.)",
+                    "a": "mogłaś"
+                },
+                {
+                    "q": "móc (on, pan)",
+                    "a": "mógl"
+                },
+                {
+                    "q": "móc (ona, pani)",
+                    "a": "mogła"
+                },
+                {
+                    "q": "móc (ono)",
+                    "a": "mogło"
+                },
+                {
+                    "q": "móc (my, r.m.)",
+                    "a": "mogliśmy"
+                },
+                {
+                    "q": "móc (my, r.ż.)",
+                    "a": "mogłyśmy"
+                },
+                {
+                    "q": "móc (wy, r.m.)",
+                    "a": "mogliście"
+                },
+                {
+                    "q": "móc (wy, r.ż.)",
+                    "a": "mogłyście"
+                },
+                {
+                    "q": "móc (oni, panowie, państwo)",
+                    "a": "mogli"
+                },
+                {
+                    "q": "móc (one, panie)",
+                    "a": "mogły"
+                },
+                {
+                    "q": "pójść (ja, r.m.)",
+                    "a": "poszedłem"
+                },
+                {
+                    "q": "pójść (ja, r.ż.)",
+                    "a": "poszłam"
+                },
+                {
+                    "q": "pójść (ty, r.m.)",
+                    "a": "poszedłeś"
+                },
+                {
+                    "q": "pójść (ty, r.ż.)",
+                    "a": "poszłaś"
+                },
+                {
+                    "q": "pójść (on, pan)",
+                    "a": "poszedł",
+                    "eg": "Czy pan [[answer]] na spacer?"
+                },
+                {
+                    "q": "pójść (ona, pani)",
+                    "a": "poszła",
+                    "eg": "Anna [[answer]] po zakupy."
+                },
+                {
+                    "q": "pójść (ono)",
+                    "a": "poszło"
+                },
+                {
+                    "q": "pójść (my, r.m.)",
+                    "a": "poszliśmy"
+                },
+                {
+                    "q": "pójść (my, r.ż.)",
+                    "a": "poszłyśmy"
+                },
+                {
+                    "q": "pójść (wy, r.m.)",
+                    "a": "poszliście"
+                },
+                {
+                    "q": "pójść (wy, r.ż.)",
+                    "a": "poszłyście"
+                },
+                {
+                    "q": "pójść (oni, panowie, państwo)",
+                    "a": "poszli",
+                    "eg": "Oni [[answer]] na basen."
+                },
+                {
+                    "q": "pójść (one, panie)",
+                    "a": "poszły",
+                    "eg": "One [[answer]] do kina."
+                }
+            ]
+        },
+        
+        {
+            "name": "Грамматические понятия",
+            "id": "grammar",
+            "description": "Грамматические понятия.",
+            "tags": ["словарный запас"],
+            "testable": true,
+            "builtIn": true,
+            "content": [
+                { "q": "существительное", "a": "rzeczownik" },
+                { "q": "прилагательное", "a": "przymiotnik" },
+                { "q": "глагол", "a": "czasownik" },
+                { "q": "именительный падеж", "a": "mianownik" },
+                { "q": "родительный падеж", "a": "dopełniac", "eg": "kogo? czego?" },
+                { "q": "дательный падеж", "a": "celownik", "eg": "komu? czemu?" },
+                { "q": "винительный падеж", "a": "biernik", "eg": "kogo? co?" },
+                { "q": "творительный падеж", "a": "narzędnik", "eg": "(z) kim? (z) czym?" },
+                { "q": "местный (предложный) падеж", "a": "miejscownik",  "eg": "(o) kim? (o) czym?" },
+                { "q": "звательный падеж", "a": "wołacz", "eg": "[[answer]]em rzeczownika „Litwa” zaczyna się utwór „Pan Tadeusz”" },
+                { "q": "совершенный вид", "a": "aspekt dokonany" },
+                { "q": "несовершенный вид", "a": "aspekt niedokonany" },
+                { "q": "будущее время", "a": "czas przyszły" },
+                { "q": "прошедшее время", "a": "czas przеszły" },
+                { "q": "настощее время", "a": "czas teraźniejszy" },
+                { "q": "(грамматическое) лицо", "a": "osoba" },
+                { "q": "единственное число", "a": "liczba pojedyncza" },
+                { "q": "множественное число", "a": "liczba mnoga" }
+            ]
+        },
+
+        {
+            "id": "toBe",
+            "name": "Глагол być",
+            "description": "Глагол być в настоящем, будущем и прошедшем времени.",
+            "tags": ["грамматика"],
+            "testable": true,
+            "builtIn": true,
+            "content": [
+                {
+                    "q": "być (ja, r.m.), czas przeszły",
+                    "a": "byłem"
+                },
+                {
+                    "q": "być (ja, r.ż.), czas przeszły",
+                    "a": "byłam"
+                },
+                {
+                    "q": "być (ty, r.m.), czas przeszły",
+                    "a": "byłeś"
+                },
+                {
+                    "q": "być (ty, r.ż.), czas przeszły",
+                    "a": "byłaś"
+                },
+                {
+                    "q": "być (on, pan), czas przeszły",
+                    "a": "był",
+                    "eg": "Jerzy nigdy nie [[answer]] w wojsku."
+                },
+                {
+                    "q": "być (ona, pani), czas przeszły",
+                    "a": "była"
+                },
+                {
+                    "q": "być (ono), czas przeszły",
+                    "a": "było"
+                },
+                {
+                    "q": "być (my, r.m.), czas przeszły",
+                    "a": "byliśmy"
+                },
+                {
+                    "q": "być (my, r.ż.), czas przeszły",
+                    "a": "byłyśmy"
+                },
+                {
+                    "q": "być (wy, r.m.), czas przeszły",
+                    "a": "byliście"
+                },
+                {
+                    "q": "być (wy, r.ż.), czas przeszły",
+                    "a": "byłyście"
+                },
+                {
+                    "q": "być (oni, panowie, państwo), czas przeszły",
+                    "a": "byli"
+                },
+                {
+                    "q": "być (one, panie), czas przeszły",
+                    "a": "były"
+                },
+
+                {
+                    "q": "być (ja), czas teraźniejszy",
+                    "a": "jestem",
+                    "eg": "Cześć, kochanie! Już [[answer]] w domu!"
+                },
+                {
+                    "q": "być (ty), czas teraźniejszy",
+                    "a": "jesteś"
+                },
+                {
+                    "q": "być (on, ona, ono), czas teraźniejszy",
+                    "a": "jest",
+                    "eg": "Karol [[answer]] bardzo wysoki."
+                },
+                {
+                    "q": "być (my), czas teraźniejszy",
+                    "a": "jesteśmy"
+                },
+                {
+                    "q": "być (wy), czas teraźniejszy",
+                    "a": "jesteście"
+                },
+                {
+                    "q": "być (oni, one), czas teraźniejszy",
+                    "a": "są"
+                },
+
+                {
+                    "q": "być (ja), czas przyszły",
+                    "a": "będę",
+                    "eg": "Jutro [[answer]] jechał do Warszawy; mam nadzieję, że dojadę."
+                },
+                {
+                    "q": "być (ty), czas przyszły",
+                    "a": "będziesz"
+                },
+                {
+                    "q": "być (on, ona, ono), czas przyszły",
+                    "a": "będzie",
+                    "eg": "Jutro [[answer]] piątek."
+                },
+                {
+                    "q": "być (my), czas przyszły",
+                    "a": "będziemy"
+                },
+                {
+                    "q": "być (wy), czas przyszły",
+                    "a": "będziecie"
+                },
+                {
+                    "q": "być (ja), czas przyszły",
+                    "a": "będą"
+                }
+            ]
+        },
+
+        {
             "id": "food1",
             "name": "Пища",
             "description": "Существительные и прилагательные, имеющие отношение к пище.",
@@ -2868,6 +3362,48 @@ define({
                     "a": "jogurt",
                     "q": "йогурт"
                 }
+            ]
+        },
+
+        {
+            "name": "Время",
+            "id": "time",
+            "description": "Названия месяцев, дней недели, отрезков времени",
+            "tags": ["словарный запас"],
+            "testable": true,
+             builtIn: true,
+            "content": [
+                {"q": "февраль", "a": "luty"},
+                {"q": "март", "a": "marzec"},
+                {"q": "январь", "a": "styczeń"},
+                {"q": "апрель", "a": "kwiecień"},
+                {"q": "май", "a": "maj"},
+                {"q": "июнь", "a": "czerwiec"},
+                {"q": "июль", "a": "lipiec"},
+                {"q": "август", "a": "sierpeń"},
+                {"q": "сентябрь", "a": "wrzesień"},
+                {"q": "октябрь", "a": "pażdziernik"},
+                {"q": "ноябрь", "a": "listopad"},
+                {"q": "декабрь", "a": "grudzień"},
+                {"q": "понедельник", "a": "poniedziałek"},
+                {"q": "вторник", "a": "wtorek"},
+                {"q": "среда", "a": "środa"},
+                {"q": "четверг", "a": "czwartek", "eg": "Wielki [[answer]] — Страстной четверг"},
+                {"q": "пятница", "a": "piątek"},
+                {"q": "суббота", "a": "sobota", "eg": "Wielka [[answer]] — Страстная суббота"},
+                {"q": "воскресенье", "a": "niedziela"},
+                {"q": "неделя", "a": "tydzień"},
+                {"q": "день", "a": "dzień", "eg": "[[answer]] dobry!"},
+                {"q": "час", "a": "godzina", "eg": "[[answer]] szczytu — часы пик"},
+                {"q": "минута", "a": "minuta"},
+                {"q": "год", "a": "rok"},
+                {"q": "век", "a": "wiek"},
+                {"q": "месяц", "a": "miesiąc"},
+                {"q": "сегодня", "a": "dzisiaj"},
+                {"q": "зима", "a": "zima"},
+                {"q": "весна", "a": "wiosna"},
+                {"q": "лето", "a": "lato"},
+                {"q": "осень", "a": "jeseń"}
             ]
         }
     ],
